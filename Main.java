@@ -1,18 +1,13 @@
-class Main {
-    public static void main(String args[])
-    {
-        int size;
-        if(args.length > 0){
-            size = Integer.parseInt(args[0]);
+import java.util.Arrays;
+import java.util.Random;
+
+class losowanie{
+    public static void main(String[] args){
+        Random rzut = new Random();
+        int [] r;
+        for(int i = 0; i < 100; i++){
+             r[i] = rzut.nextInt(100)%2;
         }
-        else {
-            size = 10;
-        }
-        for (int i=0;i<size;i++) {
-            for (int j=-1;j<i;j++){
-                System.out.print("*");
-            }
-            System.out.print("\n");
-        }
+        System.out.print(Arrays.stream(r).count();
     }
 }
