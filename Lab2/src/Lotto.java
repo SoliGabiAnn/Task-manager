@@ -6,7 +6,7 @@ public class Lotto {
     public static void main(String[] args){
 
         int n = 6;
-        ArrayList<Integer> arr1 = new ArrayList<Integer>(n);
+        ArrayList<Integer> arr1 = new ArrayList<>(n);
 
         for (int i = 1; i <= n; i++) {
             int randomNum = (int)(Math.random() * 49);
