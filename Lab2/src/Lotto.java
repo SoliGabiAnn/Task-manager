@@ -11,7 +11,7 @@ public class Lotto {
         for (int i = 1; i <= n; i++) {
             int randomNum = (int)(Math.random() * 49);
             int x = randomNum + 1;
-            if (arr1.contains(x) == false) {
+            if (!arr1.contains(x)) {
                 arr1.add(x);
 
             }else{
