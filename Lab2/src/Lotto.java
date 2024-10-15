@@ -1,5 +1,5 @@
 import java.util.*;
-package com.journaldev.examples;
+
 
 
 public class Lotto {
@@ -18,10 +18,10 @@ public class Lotto {
                 i -= 1;
             }
         }
-        System.out.println("Length of your list = "+args.length);
-
-        for(int i = 0; i< args.length; i++) {
-            System.out.println(String.format("Command Line Argument %d is %s", i, args[i]));
-        }
+//        System.out.println("Length of your list = "+args.length);
+//
+//        for(int i = 0; i< args.length; i++) {
+//            System.out.println(String.format("Command Line Argument %d is %s", i, args[i]));
+//        }
     }
 }
