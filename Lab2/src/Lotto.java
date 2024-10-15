@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+package com.journaldev.examples;
 
 
 public class Lotto {
