@@ -6,6 +6,7 @@ public class Lotto1 {
         ArrayList<Integer> list = new ArrayList<>();
 
         if(args.length == 6) {
+
             for(int i = 0; i< args.length; i++) {
                 int number = Integer.parseInt(args[i]);
                 if((number < 50) & (number > 0 )){
