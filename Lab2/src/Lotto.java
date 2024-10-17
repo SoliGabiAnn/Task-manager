@@ -1,7 +1,5 @@
 import java.util.*;
 
-
-
 public class Lotto {
     public static void main(String[] args){
 
@@ -18,6 +16,7 @@ public class Lotto {
                 i -= 1;
             }
         }
+        System.out.println(arr1);
 //        System.out.println("Length of your list = "+args.length);
 //
 //        for(int i = 0; i< args.length; i++) {
