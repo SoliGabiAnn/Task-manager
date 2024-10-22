@@ -30,11 +30,16 @@ public class  CodingBat {
     }
     public static int countHi(String str) {
         int wynik = 0;
-        for(int i = 1; i < str.length() ; i++){
+        for(int i = 1; i <= str.length() ; i++){
             if(str.contains("hi") == true){
-                i = str.indexOf("hi") + 1;
-                str = str.substring(i, str.length());
-                wynik++;
+                if(str.indexOf("hi") != str.lastIndexOf("hi")){
+                    int x= str.indexOf("hi") + 1;
+                    wynik++;
+                    str = str.substring(x, str.length());
+
+                }else{
+                    wynik++;
+                    i = str.length();       }
             }
         }
         return wynik;
@@ -42,10 +47,11 @@ public class  CodingBat {
 
 
 
+
     public static void main(String[] args){
 
      //   System.out.println(nearHundred(111));
-        System.out.println(countHi("abhi hi hi "));
+        System.out.println(countHi("ABChihi"));
     }
 
 }
