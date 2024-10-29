@@ -1,9 +1,6 @@
 package animals;
 
 public class Parrot extends Bird{
-//    {
-//        this.hasfur;
-//    }
     public String getName() {
         return "parrot";
     }
