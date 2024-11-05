@@ -193,19 +193,55 @@ public class  CodingBat {
     }
     public static String seeColor(String str) {
         String color = "";
-        if(str.length() >= 3){
-            if(str.substring(0,3).equals("red")){
+        if (str.length() >= 3) {
+            if (str.substring(0, 3).equals("red")) {
                 color = "red";
-            }else if(str.length()>=4){
-                if(str.substring(0,4).equals("blue")){
+            } else if (str.length() >= 4) {
+                if (str.substring(0, 4).equals("blue")) {
                     color = "blue";
                 }
-            }else{
+            } else {
                 color = "";
             }
         }
         return color;
     }
+    public static String withoutX2(String str) {
+        String nowy = "";
+        if(!str.contains("x")){
+            nowy = str;
+        }
+        if(str.length() >= 2){
+            if(str.indexOf('x') == 0){
+                nowy = str.substring(1);
+                if(str.charAt(1) == 'x'){
+                    nowy = str.substring(2);
+                }
+            }else if(str.charAt(1) == 'x'){
+                nowy = str.charAt(0) + str.substring(2);
+            }else{
+                nowy = str;
+            }
+        }
+        return nowy;
+    }
+
+    public static boolean catDog(String str) {
+        int licznikcat = 0;
+        int licznikdog = 0;
+        for(int i = 0; i < str.length(); i++){
+            if(str.contains("cat") && str.charAt(i) == 'c'){
+                licznikcat++;
+                str = str.substring(i+2);
+            }else if(str.contains("dog") && str.charAt(i) == 'd'){
+                licznikdog++;
+                str = str.substring(i+2);
+            }
+            i = 0;
+        }
+        return (licznikcat == licznikdog);
+    }
+
 
 
 
@@ -216,12 +252,14 @@ public class  CodingBat {
 //        System.out.println(countHi("ABChihi"));
 //        System.out.println(xyzThere("abc.xyz.xyzxyz"));
 //        System.out.println(haveThree(new int[]{3, 1, 1, 3,3,4,3}));
-        System.out.println(frontBack("abcde"));
-        System.out.println(everyNth("Chocolates", 4));
-        System.out.println(frontTimes("Ab", 4));
-        System.out.println(stringMatch("xxcaazz", "xxbaaz"));
-        System.out.println(has271(new int[]{2,7,3}));
-        System.out.println(seeColor("blu"));
+//        System.out.println(frontBack("abcde"));
+//        System.out.println(everyNth("Chocolates", 4));
+//        System.out.println(frontTimes("Ab", 4));
+//        System.out.println(stringMatch("xxcaazz", "xxbaaz"));
+//        System.out.println(has271(new int[]{2,7,3}));
+//        System.out.println(seeColor("blu"))
+        System.out.println(withoutX2("xh"));
+        System.out.println(catDog("catxdogxdogxcat"));
     }
 
 }

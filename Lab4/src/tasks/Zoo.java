@@ -4,7 +4,7 @@ import animals.*;
 import java.util.Random;
 
 public class Zoo {
-    int rozmiar = 10;
+    int rozmiar = 100;
     Animal[] cages = new Animal[rozmiar];
 
     public Animal[] cage() {
