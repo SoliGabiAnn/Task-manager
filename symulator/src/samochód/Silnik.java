@@ -1,10 +1,13 @@
 package samochód;
 
-public class Silnik{
+public class Silnik extends Komponent{
     private final int maxObroty = 7000;
     private int obroty = 0;
 
-//    Komponent parametry = new Komponent();
+    Silnik(String nazwa, int wagaSilnik, int cenaSilnik){
+        super(nazwa, wagaSilnik, cenaSilnik);
+    }
+
 
     public void uruchom(){
         obroty = 800;
@@ -17,5 +20,8 @@ public class Silnik{
     }
     public void zmniejszObroty(){
         obroty -= 100;
+    }
+    public int getWagaSilnik(){
+        return getWaga();
     }
 }

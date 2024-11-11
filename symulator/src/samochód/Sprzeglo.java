@@ -1,9 +1,11 @@
 package samochód;
 
-public class Sprzeglo extends SkrzyniaBiegow{
+public class Sprzeglo extends Komponent{
     private boolean stanSprzegla = false; // nie jest wciśnięte
 
-    Komponent komponent = new Komponent("Sprzeglo", 10, 2000);
+    Sprzeglo(String nazwa, int wagaSprzeglo, int cenaSprzeglo){
+        super(nazwa, wagaSprzeglo, cenaSprzeglo);
+    }
 
     public boolean wcisnij(){
         stanSprzegla = true;

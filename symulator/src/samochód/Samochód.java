@@ -4,11 +4,20 @@ public class Samochód {
     private boolean stanWlaczenia = false;
     private String nrRej = "";
     private String model = "";
-    private int maxSpeed = 300;
+    private int maxSpeed;
 
-    private Silnik silnik = new Silnik();
-    private SkrzyniaBiegow skrzynia = new SkrzyniaBiegow();
+    private SkrzyniaBiegow skrzynia;
+    private Silnik silnik;
     private Pozycja aktualnapozycja = new Pozycja();
+
+    public Samochód(int iloscBiegow, String nrRejest, String model, int maxSpeed, String nazwa, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
+        silnik = new Silnik(nazwa, wagaSilnik, cenaSilnik);
+        skrzynia = new SkrzyniaBiegow(iloscBiegow, nazwa, wagaSkrzynia, wagaSprzeglo, cenaSkrzynia, cenaSprzeglo);
+        stanWlaczenia = false;
+        this.nrRej = nrRejest;
+        this.model = model;
+        this.maxSpeed = maxSpeed;
+    }
 
     public void wlacz(){
         stanWlaczenia = true;
@@ -20,8 +29,8 @@ public class Samochód {
         aktualnapozycja = cel;
     }
     public int getWagaa(){
-        int wagaSam = skrzynia.parametry.getWaga();
-        return wagaSam;
+        int wagaSuma = skrzynia.getWagaSkrzynia() + silnik.getWagaSilnik();
+        return wagaSuma;
     }
     public int AktPredkosc(){
         return  0;

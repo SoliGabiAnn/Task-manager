@@ -1,12 +1,18 @@
 package samochód;
 
-public class SkrzyniaBiegow {
+public class SkrzyniaBiegow extends Komponent {
     private int aktualnyBieg = 1;       //0 - jest na luzie, 1-5 biegi, 6 wsteczny
-    private int iloscBiegow = 6;
+    private int iloscBiegow;
     private int aktualnePrzelozenie;
 
-    Sprzeglo spr = new Sprzeglo();
-    Komponent parametry = new Komponent("Skrzynia biegów", 60, 6000);
+    Sprzeglo spr;
+
+    SkrzyniaBiegow(int iloscBiegow, String nazwa, int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
+        super(nazwa, wagaSkrzynia, cenaSkrzynia);
+        this.iloscBiegow = iloscBiegow;
+        this.spr = new Sprzeglo(nazwa, wagaSprzeglo, cenaSprzeglo);
+
+    }
 
     public void zwiekszBieg(){
         if(spr.wcisnij() && aktualnyBieg <= iloscBiegow) {
@@ -27,6 +33,9 @@ public class SkrzyniaBiegow {
     }
     public int getAktPrzelozenie(){
         return aktualnePrzelozenie;
+    }
+    public int getWagaSkrzynia(){
+        return getWaga() + spr.getWaga();
     }
 
 }

@@ -241,9 +241,7 @@ public class  CodingBat {
         }
         return (licznikcat == licznikdog);
     }
-
-
-
+    
 
     public static void main(String[] args){
         char mychar = 'a';
@@ -258,8 +256,8 @@ public class  CodingBat {
 //        System.out.println(stringMatch("xxcaazz", "xxbaaz"));
 //        System.out.println(has271(new int[]{2,7,3}));
 //        System.out.println(seeColor("blu"))
-        System.out.println(withoutX2("xh"));
-        System.out.println(catDog("catxdogxdogxcat"));
+//        System.out.println(withoutX2("xh"));
+//        System.out.println(catDog("catxdogxdogxcat"));
     }
 
 }
