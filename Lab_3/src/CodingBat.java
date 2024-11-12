@@ -1,7 +1,7 @@
 public class  CodingBat {
 
 // Warmup 1
-    public static boolean nearHundred(int n) {
+    public boolean nearHundred(int n) {
         int x2 = Math.abs(200 - n);
         int x1 = Math.abs(100 -n);
         if((x1 <= 10) || (x2 <= 10))
@@ -191,6 +191,14 @@ public class  CodingBat {
         }
         return false;
     }
+
+    public boolean has23(int[] nums) {
+        if(nums[0] == 2 || nums[0] == 3 || nums[1] == 2 || nums[1] == 3){
+            return true;
+        }
+        return false;
+    }
+
     public static String seeColor(String str) {
         String color = "";
         if (str.length() >= 3) {
@@ -241,7 +249,12 @@ public class  CodingBat {
         }
         return (licznikcat == licznikdog);
     }
-    
+
+    public int[] middleWay(int[] a, int[] b) {
+        return new int[]{a[1], b[1]};
+    }
+
+
 
     public static void main(String[] args){
         char mychar = 'a';

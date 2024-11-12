@@ -19,9 +19,16 @@ public class Silnik extends Komponent{
         obroty += 100;
     }
     public void zmniejszObroty(){
-        obroty -= 100;
+        if(obroty < 0){
+            obroty = 0;
+        }else{
+            obroty -= 100;
+        }
     }
     public int getWagaSilnik(){
         return getWaga();
+    }
+    public int getObroty(){
+        return obroty;
     }
 }

@@ -3,7 +3,7 @@ package samochód;
 public class SkrzyniaBiegow extends Komponent {
     private int aktualnyBieg = 1;       //0 - jest na luzie, 1-5 biegi, 6 wsteczny
     private int iloscBiegow;
-    private int aktualnePrzelozenie;
+    private int aktualnePrzelozenie = 0;
 
     Sprzeglo spr;
 
@@ -15,14 +15,14 @@ public class SkrzyniaBiegow extends Komponent {
     }
 
     public void zwiekszBieg(){
-        if(spr.wcisnij() && aktualnyBieg <= iloscBiegow) {
+        if(spr.wcisnij() && aktualnyBieg < iloscBiegow) {
             aktualnyBieg++;
         }else{
             System.out.println("Nie można zwiększyć biegu");
         }
     }
     public void zmniejszBieg(){
-        if(spr.wcisnij() && aktualnyBieg >= 0) {
+        if(spr.wcisnij() && aktualnyBieg > 0) {
             aktualnyBieg--;
         }else{
             System.out.println("Nie można zmniejszyć biegu");
