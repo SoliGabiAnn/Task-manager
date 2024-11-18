@@ -10,9 +10,9 @@ public class Samochód {
     private Silnik silnik;
     private Pozycja aktualnapozycja = new Pozycja(0,0);
 
-    public Samochód(int iloscBiegow, String nrRejest, String model, int maxSpeed, String nazwa, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
-        silnik = new Silnik(nazwa, wagaSilnik, cenaSilnik);
-        skrzynia = new SkrzyniaBiegow(iloscBiegow, nazwa, wagaSkrzynia, wagaSprzeglo, cenaSkrzynia, cenaSprzeglo);
+    public Samochód(int iloscBiegow, String nrRejest, String model, int maxSpeed, String nazwaSilnik, String nazwaSkrzynia, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
+        silnik = new Silnik(nazwaSilnik, wagaSilnik, cenaSilnik);
+        skrzynia = new SkrzyniaBiegow(iloscBiegow, nazwaSkrzynia, wagaSkrzynia, wagaSprzeglo, cenaSkrzynia, cenaSprzeglo);
         stanWlaczenia = false;
         this.nrRej = nrRejest;
         this.model = model;
