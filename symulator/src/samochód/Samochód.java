@@ -25,8 +25,21 @@ public class Samochód {
     public void wylacz(){
         stanWlaczenia = false;
     }
-    public void jedzDo(Pozycja cel) {
+    public void jedzDo(Pozycja cel) throws SkrzyniaException {
         stanWlaczenia = true;
+        skrzynia.zwiekszBieg();
+        skrzynia.zwiekszBieg();
+
+        skrzynia.zwiekszBieg();
+
+        skrzynia.zwiekszBieg();
+
+        skrzynia.zwiekszBieg();
+
+        skrzynia.zwiekszBieg();
+        skrzynia.zwiekszBieg();
+
+
         aktualnapozycja = cel;
         stanWlaczenia = false;
     }

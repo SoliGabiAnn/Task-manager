@@ -18,25 +18,16 @@ public class SkrzyniaBiegow extends Komponent {
 
     public void zwiekszBieg() throws SkrzyniaException{
         if(spr.wcisnij() && aktualnyBieg < iloscBiegow) {
-            try{
-                aktualnyBieg++;
-                spr.zwolnij();
-            }catch(Exception e){
-                throw new SkrzyniaException("Nie można zwiększyć biegu - bieg jest już najniższy!");
-            }
-            finally {
-                spr.zwolnij();
-            }
+            aktualnyBieg++;
+            spr.zwolnij();
+        }else {
+            throw new SkrzyniaException("Nie można zwiększyć biegu - bieg już jest najwyższy!");
         }
     }
     public void zmniejszBieg() throws SkrzyniaException {
         if(spr.wcisnij() && aktualnyBieg > 0) {
-            try{
-                aktualnyBieg--;
-            }catch(Exception e){}
-            finally {
-                spr.zwolnij();
-            }
+            aktualnyBieg--;
+            spr.zwolnij();
         }else{
             throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
         }
