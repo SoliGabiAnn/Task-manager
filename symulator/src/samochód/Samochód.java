@@ -8,7 +8,7 @@ public class Samochód {
 
     private SkrzyniaBiegow skrzynia;
     private Silnik silnik;
-    private Pozycja aktualnapozycja = new Pozycja();
+    private Pozycja aktualnapozycja = new Pozycja(0,0);
 
     public Samochód(int iloscBiegow, String nrRejest, String model, int maxSpeed, String nazwa, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
         silnik = new Silnik(nazwa, wagaSilnik, cenaSilnik);
@@ -26,7 +26,9 @@ public class Samochód {
         stanWlaczenia = false;
     }
     public void jedzDo(Pozycja cel) {
+        stanWlaczenia = true;
         aktualnapozycja = cel;
+        stanWlaczenia = false;
     }
     public int getWagaa(){
         int wagaSuma = skrzynia.getWagaSkrzynia() + silnik.getWagaSilnik();

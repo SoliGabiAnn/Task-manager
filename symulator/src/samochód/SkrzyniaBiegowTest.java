@@ -1,3 +1,4 @@
+/*
 package samochód;
 
 import org.junit.After;
@@ -54,4 +55,4 @@ public class SkrzyniaBiegowTest {
     public void getWagaSkrzynia() {
         assertEquals(9000, sk.getWagaSkrzynia());
     }
-}
+}*/

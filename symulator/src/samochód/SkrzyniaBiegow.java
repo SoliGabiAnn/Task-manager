@@ -1,5 +1,7 @@
 package samochód;
 
+import java.util.concurrent.ExecutionException;
+
 public class SkrzyniaBiegow extends Komponent {
     private int aktualnyBieg = 1;       //0 - jest na luzie, 1-5 biegi, 6 wsteczny
     private int iloscBiegow;
@@ -14,18 +16,29 @@ public class SkrzyniaBiegow extends Komponent {
 
     }
 
-    public void zwiekszBieg(){
+    public void zwiekszBieg() throws SkrzyniaException{
         if(spr.wcisnij() && aktualnyBieg < iloscBiegow) {
-            aktualnyBieg++;
-        }else{
-            System.out.println("Nie można zwiększyć biegu");
+            try{
+                aktualnyBieg++;
+                spr.zwolnij();
+            }catch(Exception e){
+                throw new SkrzyniaException("Nie można zwiększyć biegu - bieg jest już najniższy!");
+            }
+            finally {
+                spr.zwolnij();
+            }
         }
     }
-    public void zmniejszBieg(){
+    public void zmniejszBieg() throws SkrzyniaException {
         if(spr.wcisnij() && aktualnyBieg > 0) {
-            aktualnyBieg--;
+            try{
+                aktualnyBieg--;
+            }catch(Exception e){}
+            finally {
+                spr.zwolnij();
+            }
         }else{
-            System.out.println("Nie można zmniejszyć biegu");
+            throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
         }
     }
     public int getAktBieg(){
