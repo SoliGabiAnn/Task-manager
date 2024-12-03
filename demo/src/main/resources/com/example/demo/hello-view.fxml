@@ -4,34 +4,59 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="com.example.demo.HelloController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0" prefWidth="951.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0" prefWidth="951.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.HelloController">
     <left>
-        <VBox prefHeight="567.0" prefWidth="331.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="694.0" prefWidth="611.0" BorderPane.alignment="CENTER">
             <children>
                 <TitledPane animated="false" prefHeight="244.0" prefWidth="331.0" text="Samochód">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="330.0">
                             <children>
-                                <TextField layoutX="171.0" layoutY="14.0" />
-                                <Label layoutX="14.0" layoutY="13.0" prefHeight="18.0" prefWidth="138.0" text="Marka">
+                                <Label fx:id="marakaTextField" layoutX="171.0" layoutY="14.0" >
                                     <font>
                                         <Font size="14.0" />
                                     </font>
                                 </Label>
-                                <TextField layoutX="171.0" layoutY="44.0" />
+                                <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="138.0" text="Marka">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="modelTextField" layoutX="171.0" layoutY="44.0" >
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
                                 <Label layoutX="14.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0" text="Model">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
                                 </Label>
-                                <TextField layoutX="171.0" layoutY="74.0" />
+                                <Label fx:id="nrRejTextField" layoutX="171.0" layoutY="77.0" >
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label layoutX="14.0" layoutY="77.0" prefHeight="18.0" prefWidth="138.0" text="Numer Rejestracyjny">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
                                 <Label layoutX="14.0" layoutY="96.0" prefHeight="66.0" prefWidth="138.0" text="Aktualna pozycja">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
                                 </Label>
-                                <TextField layoutX="171.0" layoutY="104.0" />
-                                <TextField layoutX="171.0" layoutY="134.0" />
+                                <Label fx:id="pozycjaXTextField" layoutX="171.0" layoutY="107.0" >
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="pozycjaYTextField" layoutX="171.0" layoutY="137.0" >
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                </Label>
                                 <Label layoutX="152.0" layoutY="107.0" prefHeight="18.0" prefWidth="138.0" text="X">
                                     <font>
                                         <Font size="14.0" />
@@ -42,14 +67,10 @@
                                         <Font size="14.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="14.0" layoutY="77.0" prefHeight="18.0" prefWidth="138.0" text="Numer Rejestracyjny">
-                                    <font>
-                                        <Font size="14.0" />
-                                    </font>
-                                </Label>
+
                                 <Pane layoutY="157.0" prefHeight="56.0" prefWidth="232.0">
                                     <children>
-                                        <ToggleButton fx:id="wlaczSamochodButton" onAction="#wlaczSamochod" layoutX="14.0" layoutY="20.0" mnemonicParsing="false"  text="Włącz">
+                                        <ToggleButton fx:id="wlaczSamochodButton" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" onAction="#wlaczSamochod" text="Włącz">
                                             <toggleGroup>
                                                 <ToggleGroup fx:id="stanSamochodu" />
                                             </toggleGroup>
@@ -57,7 +78,7 @@
                                     <Font size="14.0" />
                                  </font>
                                         </ToggleButton>
-                                        <ToggleButton fx:id="wylaczSamochodButton" onAction="#wylaczSamochod" layoutX="119.0" layoutY="20.0" mnemonicParsing="false" text="Wyłącz" toggleGroup="$stanSamochodu">
+                                        <ToggleButton fx:id="wylaczSamochodButton" layoutX="119.0" layoutY="20.0" mnemonicParsing="false" onAction="#wylaczSamochod" text="Wyłącz" toggleGroup="$stanSamochodu">
                                  <font>
                                     <Font size="14.0" />
                                  </font></ToggleButton>
@@ -89,18 +110,25 @@
                                 <TextField layoutX="171.0" layoutY="14.0" />
                                 <TextField layoutX="171.0" layoutY="44.0" />
                                 <TextField layoutX="171.0" layoutY="74.0" />
-                                <Button fx:id="zwiekszBiegButton" onAction="#zwiekszBieg" layoutX="9.0" layoutY="198.0" mnemonicParsing="false" text="Zwiększ bieg">
-                           <font>
-                              <Font size="14.0" />
-                           </font></Button>
-                                <Button fx:id="zmniejszBiegButton" onAction="#zwiekszBieg" layoutX="117.0" layoutY="198.0" mnemonicParsing="false" text="Zmniejsz bieg">
-                           <font>
-                              <Font size="14.0" />
-                           </font></Button>
+                                <Button fx:id="zwiekszBiegButton" layoutX="9.0" layoutY="198.0" mnemonicParsing="false" onAction="#zwiekszBieg" text="Zwiększ bieg">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
+                                <Button fx:id="zmniejszBiegButton" layoutX="117.0" layoutY="198.0" mnemonicParsing="false" onAction="#zmniejszBieg" text="Zmniejsz bieg">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Button>
                                 <Label layoutX="14.0" layoutY="164.0" prefHeight="20.0" prefWidth="125.0" text="Aktulany bieg">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
+                                </Label>
+                                <Label fx:id="aktbiegLabel" layoutX="171.0" layoutY="164.0" prefHeight="20.0" prefWidth="125.0" >
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
                                 </Label>
                                 <TextField layoutX="446.0" layoutY="11.0" />
                                 <Label layoutX="14.0" layoutY="104.0" prefHeight="20.0" prefWidth="148.0" text="Aktulane przełożenie">
@@ -123,7 +151,7 @@
                             <children>
                                 <Pane layoutX="14.0" layoutY="110.0" prefHeight="54.0" prefWidth="238.0">
                                     <children>
-                                        <ToggleButton fx:id="zwolnijSprzegloButton" layoutX="113.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="103.0" text="Zwolnij sprzęgło">
+                                        <ToggleButton fx:id="zwolnijSprzegloButton" onAction="#zwolnijSprzeglo" layoutX="113.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="103.0" text="Zwolnij sprzęgło">
                                  <toggleGroup>
                                                 <ToggleGroup fx:id="stanSprzegla" />
                                  </toggleGroup></ToggleButton>
