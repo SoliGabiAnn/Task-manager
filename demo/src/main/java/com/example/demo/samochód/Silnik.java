@@ -31,4 +31,7 @@ public class Silnik extends Komponent{
     public int getObroty(){
         return obroty;
     }
+    public int getMaxObroty(){
+        return maxObroty;
+    }
 }

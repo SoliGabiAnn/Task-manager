@@ -38,27 +38,87 @@ public class Samochód {
     public int getaktBieg(){
         return skrzynia.getAktBieg();
     }
-    public void skrzyniaZwiekszB() throws SkrzyniaException, SamochódException {
-        if( stanWlaczenia == true) {
-            skrzynia.zwiekszBieg();
+    public void skrzyniaZwiekszB() throws SkrzyniaException, SamochódException, SilnikException {
+        if(stanWlaczenia == true) {
+            if(silnik.getObroty() >= 3000){
+                skrzynia.zwiekszBieg();
+            }else {
+                throw new SilnikException("Za małe obroty - nie można zwiększyć biegu!");
+            }
         }else{
             throw new SamochódException("Samochód wyłączony");
         }
 
     }
+    public boolean stansprzegla(){
+        return skrzynia.spr.getstanSp();
+    }
+    public void sprzegloWcisnij() throws SkrzyniaException, SprzegloException{
+        skrzynia.spr.wcisnij();
+    }
+    public void sprzegloZwolnij() {
+        skrzynia.spr.zwolnij();
+    }
     public void skrzyniaZmniejszB() throws SkrzyniaException, SamochódException {
-        if( stanWlaczenia == true) {
+        if(stanWlaczenia) {
             skrzynia.zmniejszBieg();
         }else{
             throw new SamochódException("Samochód wyłączony");
         }
+    }
+    public void zwiekszObroty() throws SamochódException {
+        if(stanWlaczenia) {
+            silnik.zwiekszObroty();
+        }else{
+            throw new SamochódException("Samochód nie jest włączony - nie można zwiększyć obrotów");
+        }
 
     }
+    public void zmniejszObroty() throws SamochódException, SilnikException {
+        if(stanWlaczenia){
+            if(silnik.getObroty() >800){
+                silnik.zmniejszObroty();
+            }else{
+                throw new SilnikException("Zbyt małe obroty - nie można bardziej zmniejszyć!");
+            }
+        }else{
+            throw new SamochódException("Samochód nie jest włączony - nie można zmniejszyć obrotów!");
+        }
+
+    }
+    public int aktualneObroty(){
+        return silnik.getObroty();
+    }
+    public int maxObroty(){
+        return silnik.getMaxObroty();
+    }
+    public void uruchomSilnik() throws SamochódException, SprzegloException {
+        if(skrzynia.spr.getstanSp()) {
+            if(stanWlaczenia) {
+                silnik.uruchom();
+            }else{
+                throw new SamochódException("Samochód nie jest włączony");
+            }
+        }else{
+            throw new SprzegloException("Sprzegło nie jest wciśnęte");
+        }
+    }
+    public void zatrzymajSilnik(){
+        silnik.zatrzymaj();
+    }
+
     public void wlacz(){
-        stanWlaczenia = true;
+        if(skrzynia.spr.getstanSp()){
+            stanWlaczenia = true;
+        }else{
+            throw new SprzegloException("Sprzeglo nie jest wściśnięte - nie można uruchomić samochodu oraz silnika");
+        }
     }
     public void wylacz(){
         stanWlaczenia = false;
+    }
+    public boolean isStanWlaczenia(){
+        return stanWlaczenia;
     }
     public void jedzDo(Pozycja cel) throws SkrzyniaException {
         stanWlaczenia = true;

@@ -7,7 +7,7 @@ public class SkrzyniaBiegow extends Komponent {
     private int iloscBiegow;
     private int aktualnePrzelozenie = 0;
 
-    Sprzeglo spr;
+    public Sprzeglo spr;
 
     SkrzyniaBiegow(int iloscBiegow, String nazwa, int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
         super(nazwa, wagaSkrzynia, cenaSkrzynia);
@@ -16,19 +16,28 @@ public class SkrzyniaBiegow extends Komponent {
 
     }
 
-    public void zwiekszBieg() throws SkrzyniaException{
-        if(spr.getstanSp() && aktualnyBieg < iloscBiegow) {
-            aktualnyBieg++;
-        }else {
-            throw new SkrzyniaException("Nie można zwiększyć biegu - bieg już jest najwyższy!");
+    public void zwiekszBieg() throws SkrzyniaException, SprzegloException{
+        if(spr.getstanSp()) {
+            if (aktualnyBieg < iloscBiegow) {
+                aktualnyBieg++;
+            } else {
+                throw new SkrzyniaException("Nie można zwiększyć biegu - bieg już jest najwyższy!");
+            }
+        }else{
+            throw new SprzegloException("Sprzęgło nie jest wciśnięte");
         }
     }
     public void zmniejszBieg() throws SkrzyniaException {
-        if(spr.getstanSp() && aktualnyBieg > 0) {
-            aktualnyBieg--;
+        if(spr.getstanSp()) {
+            if (aktualnyBieg > 0) {
+                aktualnyBieg--;
+            }else {
+                throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
+            }
         }else{
-            throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
+            throw new SprzegloException("Sprzegło nie jest wciśnięte");
         }
+
     }
     public int getAktBieg(){
         return aktualnyBieg;

@@ -7,8 +7,9 @@ public class Sprzeglo extends Komponent{
         super(nazwa, wagaSprzeglo, cenaSprzeglo);
     }
 
-    public void wcisnij(){
+    public boolean wcisnij(){
         stanSprzegla = true;
+        return stanSprzegla;
     }
     public void zwolnij(){
         stanSprzegla = false;
