@@ -186,7 +186,7 @@
     <top>
         <AnchorPane prefHeight="34.0" prefWidth="951.0" BorderPane.alignment="CENTER">
             <children>
-                <ComboBox layoutX="103.0" layoutY="1.0" prefWidth="150.0" />
+                <ComboBox fx:id="wybierzSamochdoComboBox" layoutX="103.0" layoutY="1.0" prefWidth="150.0" />
                 <Label layoutX="6.0" layoutY="7.0" prefHeight="18.0" prefWidth="138.0" text="Samochód">
                     <font>
                         <Font size="14.0" />

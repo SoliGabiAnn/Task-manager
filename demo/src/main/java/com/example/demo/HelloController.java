@@ -30,9 +30,9 @@ public class HelloController {
     public Label maksymalneObrotyLabel;
     public Label stanWlaczeniaSilnikaLabel;
 
-
     @FXML
     private Label welcomeText;
+    public ComboBox wybierzSamochdoComboBox;
 
     Samochód samochod;
 
@@ -48,6 +48,7 @@ public class HelloController {
         aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
         maksymalneObrotyLabel.setText(String.valueOf(samochod.maxObroty()));
         stanWlaczeniaSilnikaLabel.setText("Wyłączony");
+        wybierzSamochdoComboBox.getItems().add("Samochód 1");
     }
 
     @FXML
@@ -82,7 +83,7 @@ public class HelloController {
     }
 
     @FXML
-    public void zwiekszBieg() throws SkrzyniaException, SamochódException, SilnikException {
+    public void zwiekszBieg() throws SkrzyniaException, SamochódException, SilnikException, SprzegloException {
         try{
             samochod.skrzyniaZwiekszB();
             System.out.println("Zwiekszam bieg!");
@@ -92,13 +93,23 @@ public class HelloController {
             aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
         }catch (SamochódException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Skrzynia biegów");
+            alert.setTitle("Samochód");
             alert.setHeaderText(e.getMessage());
             alert.showAndWait();
         }catch (SilnikException e1){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Silnik");
             alert.setHeaderText(e1.getMessage());
+            alert.showAndWait();
+        }catch (SkrzyniaException e2){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Skrzynia");
+            alert.setHeaderText(e2.getMessage());
+            alert.showAndWait();
+        }catch (SprzegloException e3){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sprzęgło");
+            alert.setHeaderText(e3.getMessage());
             alert.showAndWait();
         }
         aktbiegLabel.setText(String.valueOf(samochod.getaktBieg()));
@@ -112,6 +123,21 @@ public class HelloController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Samochód");
             alert.setHeaderText(e.getMessage());
+            alert.showAndWait();
+        }catch (SilnikException e1){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Silnik");
+            alert.setHeaderText(e1.getMessage());
+            alert.showAndWait();
+        }catch (SkrzyniaException e2){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Skrzynia");
+            alert.setHeaderText(e2.getMessage());
+            alert.showAndWait();
+        }catch (SprzegloException e3){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sprzęgło");
+            alert.setHeaderText(e3.getMessage());
             alert.showAndWait();
         }
         aktbiegLabel.setText(String.valueOf(samochod.getaktBieg()));

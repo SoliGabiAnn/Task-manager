@@ -59,9 +59,13 @@ public class Samochód {
     public void sprzegloZwolnij() {
         skrzynia.spr.zwolnij();
     }
-    public void skrzyniaZmniejszB() throws SkrzyniaException, SamochódException {
+    public void skrzyniaZmniejszB() throws SkrzyniaException, SamochódException, SilnikException {
         if(stanWlaczenia) {
-            skrzynia.zmniejszBieg();
+            if(silnik.getObroty() <= 1500){
+                skrzynia.zmniejszBieg();
+            }else{
+                throw new SilnikException("Za duże obroty - zmniejsz je, żeby zmniejszyć bieg");
+            }
         }else{
             throw new SamochódException("Samochód wyłączony");
         }

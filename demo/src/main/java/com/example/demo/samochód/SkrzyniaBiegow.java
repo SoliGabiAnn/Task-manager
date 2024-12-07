@@ -24,7 +24,7 @@ public class SkrzyniaBiegow extends Komponent {
                 throw new SkrzyniaException("Nie można zwiększyć biegu - bieg już jest najwyższy!");
             }
         }else{
-            throw new SprzegloException("Sprzęgło nie jest wciśnięte");
+            throw new SprzegloException("Sprzęgło nie jest wciśnięte - nie można zwiększyć biegu");
         }
     }
     public void zmniejszBieg() throws SkrzyniaException {
@@ -35,7 +35,7 @@ public class SkrzyniaBiegow extends Komponent {
                 throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
             }
         }else{
-            throw new SprzegloException("Sprzegło nie jest wciśnięte");
+            throw new SprzegloException("Sprzegło nie jest wciśnięte - nie można zmniejszyć biegu");
         }
 
     }
