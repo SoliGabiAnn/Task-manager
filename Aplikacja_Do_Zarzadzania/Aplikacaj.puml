@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Basic_Info
+class Task
+class user
+class Project
+
+Project o-- Task
+user o-- Project
+Basic_Info <|- Task
+Basic_Info <|- Project
+
+class Basic_Info{
+name;
+state;
+date;
+}
+
+class Task{
+description;
+}
+
+class Project{
+listOfTask;
+
+addTask();
+deleteTask();
+sortTask();
+}
+
+class user{
+name;
+listOfProjects;
+addProject();
+deleteProject();
+sortProject();
+}
+
+
+@enduml
