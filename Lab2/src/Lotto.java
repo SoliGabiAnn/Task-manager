@@ -11,16 +11,10 @@ public class Lotto {
             int x = randomNum + 1;
             if (!arr1.contains(x)) {
                 arr1.add(x);
-
             }else{
                 i -= 1;
             }
         }
         System.out.println(arr1);
-//        System.out.println("Length of your list = "+args.length);
-//
-//        for(int i = 0; i< args.length; i++) {
-//            System.out.println(String.format("Command Line Argument %d is %s", i, args[i]));
-//        }
     }
 }
