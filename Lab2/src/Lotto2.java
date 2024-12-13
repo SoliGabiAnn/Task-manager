@@ -2,6 +2,8 @@ import java.util.*;
 
 public class Lotto2 {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        Random rand = new Random();
 
         ArrayList<Integer> arr2 = new ArrayList<>();
 
@@ -25,29 +27,37 @@ public class Lotto2 {
             System.out.println("Ilość liczb się nie zgadza. Podaj ich 6!");
         }
 
-        int n = 6;
+        int loops = 0;
+        boolean matched = false;
 
-        ArrayList<Integer> arr1 = new ArrayList<>(n);
+        while (!matched) {
+            ArrayList<Integer> drawnNumbers = new ArrayList<>();
+            int result = 0;
 
-        for (int i = 1; i <= n; i++) {
-            int randomNum = (int) (Math.random() * 49);
-            int x = randomNum + 1;
-            if (!arr1.contains(x)) {
-                arr1.add(x);
-            } else {
-                i -= 1;
+            while (drawnNumbers.size() < 6) {
+                int num = rand.nextInt(49) + 1;
+                if (!drawnNumbers.contains(num)) {
+                    drawnNumbers.add(num);
+                }
             }
+
+            for (int i = 0; i < 6; i++) {
+                if (arr2.contains(drawnNumbers.get(i))) {
+                    result++;
+                }
+            }
+
+            if (result == 6) {
+                matched = true;
+            }
+            loops++;
         }
 
-        int counting_numbers = 0;
+        long end = System.currentTimeMillis();
+        long time = end - start;
 
-        System.out.println("Wylosowane liczby: " + arr1);
-        for (int i = 0; i <= n; i++) {
-            if (arr1.contains(arr2.get(i))) {
-                counting_numbers++;
-            }
-        }
-        System.out.printf("Liczba wystąpień: " + counting_numbers);
+        System.out.println("Czas programu: " + time + " ms");
+        System.out.println(loops + " prób");
     }
 }
 
