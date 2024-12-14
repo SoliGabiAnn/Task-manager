@@ -11,10 +11,13 @@ user o-- Project
 Basic_Info <|- Task
 Basic_Info <|- Project
 
-class Basic_Info{
+abstract class Basic_Info{
 name;
 state;
-date;
+date_added;
+date_start;
+date_end;
+deadline;
 }
 
 class Task{
@@ -35,6 +38,7 @@ listOfProjects;
 addProject();
 deleteProject();
 sortProject();
+generateReport();
 }
 
 
