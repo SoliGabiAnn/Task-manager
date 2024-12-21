@@ -3,11 +3,11 @@
 
 class Basic_Info
 class Task
-class user
+class User
 class Project
 
 Project o-- Task
-user o-- Project
+User o-- Project
 Basic_Info <|- Task
 Basic_Info <|- Project
 
@@ -32,8 +32,8 @@ deleteTask();
 sortTask();
 }
 
-class user{
-name;
+class User{
+username;
 listOfProjects;
 addProject();
 deleteProject();
@@ -41,5 +41,7 @@ sortProject();
 generateReport();
 }
 
-
+class CurrentDate{
+It's used to generate date end and date start
+}
 @enduml
