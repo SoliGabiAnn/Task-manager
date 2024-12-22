@@ -41,7 +41,8 @@ sortProject();
 generateReport();
 }
 
-class CurrentDate{
-It's used to generate date end and date start
+class Date_Instances{
+getNow()
+getEnd()
 }
 @enduml
