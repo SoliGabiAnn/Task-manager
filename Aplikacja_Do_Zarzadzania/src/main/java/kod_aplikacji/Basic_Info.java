@@ -10,6 +10,7 @@ public abstract class Basic_Info {
     LocalDateTime date_start;//by user
     LocalDateTime date_end;//for raport
     LocalDateTime deadline;//by user
+
     public Basic_Info(String name, Boolean state, LocalDateTime date_added, LocalDateTime date_start, LocalDateTime date_end, LocalDateTime deadline) {
         this.name = name;
         this.state = state;
@@ -22,4 +23,5 @@ public abstract class Basic_Info {
     public LocalDateTime getDate_added() {
         return date_added;
     }
+    public LocalDateTime getDeadline() {return deadline;}
 }
