@@ -13,8 +13,8 @@ public class Project extends Basic_Info{
     }
     public void addTask(String name, LocalDateTime date_start, LocalDateTime deadline, String description){
         Boolean state = false;
-        LocalDateTime date_added= new Date_Instances().getNow();
-        LocalDateTime date_end= new Date_Instances().getEnd();
+        LocalDateTime date_added= LocalDateTime.now();
+        LocalDateTime date_end= null;
         listOfTask.add(new Task(name, state, date_added, date_start, date_end, deadline, description));
         isTaskSortingUpToDate = false;
     }
@@ -39,5 +39,14 @@ public class Project extends Basic_Info{
         }
         isTaskSortingUpToDate = true;
         return sortedList;
+    }
+    public Boolean checkIfTasksAreFinished(){
+        if(!listOfTask.isEmpty()){
+            for(Task task:listOfTask){
+                if(!task.getState()) return false;
+            }
+            return true;
+        }
+        return true;
     }
 }

@@ -22,6 +22,7 @@ deadline;
 
 class Task{
 description;
+endTask();
 }
 
 class Project{
@@ -34,15 +35,18 @@ sortTask();
 
 class User{
 username;
-listOfProjects;
-addProject();
-deleteProject();
+listOfToDoProjects;
+listOfUnfinishedProjects;
+listOfFinishedProjects;
+addToDoProject();
+addUnfinishedProject();
+addFinishedProject();
+deleteToDoProject();
+deleteUnfinishedProject();
+deleteFinishedProject();
 sortProject();
+ifStarted();
+ifFinished();
 generateReport();
-}
-
-class Date_Instances{
-getNow()
-getEnd()
 }
 @enduml
