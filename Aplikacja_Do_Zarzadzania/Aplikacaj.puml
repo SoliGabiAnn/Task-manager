@@ -10,6 +10,7 @@ Project o-- Task
 User o-- Project
 Basic_Info <|- Task
 Basic_Info <|- Project
+User <|- generateReport
 
 abstract class Basic_Info{
 name;
@@ -47,6 +48,18 @@ deleteFinishedProject();
 sortProject();
 ifStarted();
 ifFinished();
-generateReport();
+}
+
+class generateReport{
+generate();
+averageFreqOfTasks();
+amountOfTasksToDo();
+amountOfProjectsToDo();
+amountOfFinishedTasks();
+amountOfFinishedProjects();
+amountOfUnfinishedTasks();
+amountOfUnfinishedProjects();
+averageTimeOfTask();
+
 }
 @enduml

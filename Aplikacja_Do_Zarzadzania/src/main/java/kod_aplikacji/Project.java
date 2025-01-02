@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Project extends Basic_Info{
-    public ArrayList<Task> listOfTask = new ArrayList<Task>();
+    protected ArrayList<Task> listOfTask = new ArrayList<Task>();
     Boolean isTaskSortingUpToDate = false;
 
     public Project(String name, Boolean state, LocalDateTime date_added, LocalDateTime date_start, LocalDateTime date_end, LocalDateTime deadline) {
@@ -48,5 +48,13 @@ public class Project extends Basic_Info{
             return true;
         }
         return true;
+    }
+
+    public ArrayList<Task> getListOfTask() {
+        return listOfTask;
+    }
+
+    public void setListOfTask(ArrayList<Task> listOfTask) {
+        this.listOfTask = listOfTask;
     }
 }
