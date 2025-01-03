@@ -32,6 +32,7 @@ public class Lotto1 {
         for (int i = 1; i <= n; i++) {
             int randomNum = (int) (Math.random() * 49);
             int x = randomNum + 1;
+            System.err.println(x);
             if (!arr1.contains(x)) {
                 arr1.add(x);
             } else {
@@ -42,7 +43,8 @@ public class Lotto1 {
         int counting_numbers = 0;
 
         System.out.println("Wylosowane liczby: " + arr1);
-        for (int i = 0; i <= n; i++) {
+        System.err.println("arr2 " + arr2);
+        for (int i = 0; i < n; i++) {
             if (arr1.contains(arr2.get(i))) {
                 counting_numbers++;
             }

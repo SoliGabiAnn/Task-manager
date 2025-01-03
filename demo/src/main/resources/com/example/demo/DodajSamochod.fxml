@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:controller="com.example.demo.DodajSamochodController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <bottom>
+      <Pane prefHeight="60.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="onConfirmButton" layoutX="53.0" onAction="#onConfirmButton" layoutY="18.0" mnemonicParsing="false" text="Zatwierdź" />
+            <Button fx:id="onCancelButton" layoutX="359.0" onAction="#onCancelButton" layoutY="18.0" mnemonicParsing="false" text="Anuluj" />
+         </children>
+      </Pane>
+   </bottom>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+          <tabs>
+          <Tab text="Samochód">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <Label layoutX="20.0" layoutY="25.0" text="Marka">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="markaTextField" layoutX="170.0" layoutY="20.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="70.0" text="Model">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="modelTextField" layoutX="170.0" layoutY="65.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="19.0" layoutY="115.0" text="Numer Rejestracyjny">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="numerRejsTextField" layoutX="170.0" layoutY="110.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="160.0" prefHeight="20.0" prefWidth="124.0" text="Max Prędkość">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="maxSpeedTextField" layoutX="170.0" layoutY="155.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="194.0" prefHeight="66.0" prefWidth="138.0" text="Aktualna pozycja">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <Label layoutX="135.0" layoutY="197.0" prefHeight="20.0" prefWidth="19.0" text="X">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField layoutX="170.0" layoutY="192.0" fx:id="xTextField">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="135.0" layoutY="237.0" prefHeight="20.0" prefWidth="17.0" text="Y">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="yTextField" layoutX="170.0" layoutY="232.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="277.0" text="Waga">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="wagaTextField" layoutX="170.0" layoutY="272.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Skrzynia">
+              <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <Label layoutX="20.0" layoutY="25.0" text="Nazwa">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <TextField fx:id="skrzyniaNazwaTextField" layoutX="171.0" layoutY="20.0">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </TextField>
+                      <Label layoutX="20.0" layoutY="70.0" text="Cena">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <TextField fx:id="skrzyniaCenaTextField" layoutX="171.0" layoutY="65.0">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </TextField>
+                      <Label layoutX="20.0" layoutY="115.0" text="Waga">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <TextField fx:id="skrzyniaWagaTextField" layoutX="171.0" layoutY="110.0">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </TextField>
+                      <Label layoutX="20.0" layoutY="160.0" text="Ilość biegów">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <TextField fx:id="iloscBiegowTextField" layoutX="171.0" layoutY="155.0">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </TextField>
+                  </AnchorPane>
+              </content>
+          </Tab>
+            <Tab text="Sprzęgło">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <Label layoutX="20.0" layoutY="25.0" text="Nazwa">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="sprzegloNazwaTextField" layoutX="171.0" layoutY="20.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="70.0" text="Cena">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="sprzegloCenaTextField" layoutX="171.0" layoutY="65.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    <Label layoutX="20.0" layoutY="115.0" text="Waga">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </Label>
+                    <TextField fx:id="sprzegloWagaTextField" layoutX="171.0" layoutY="110.0">
+                        <font>
+                            <Font size="14.0" />
+                        </font>
+                    </TextField>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Silnik">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <Label layoutX="20.0" layoutY="25.0" text="Nazwa">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="silnikNazwaTextField" layoutX="171.0" layoutY="20.0">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Label layoutX="20.0" layoutY="70.0" text="Cena">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="silnikCenaTextField" layoutX="171.0" layoutY="65.0">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Label layoutX="20.0" layoutY="115.0" text="Waga">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="silnikWagaTextField" layoutX="171.0" layoutY="110.0">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                        <Label layoutX="20.0" layoutY="160.0" text="Maksymalne obroty">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="maxObrotyTextField" layoutX="171.0" layoutY="155.0">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </TextField>
+                    </AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

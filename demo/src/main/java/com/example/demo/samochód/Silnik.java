@@ -1,19 +1,23 @@
 package com.example.demo.samochód;
 
 public class Silnik extends Komponent{
-    private final int maxObroty = 7000;
+    private int maxObroty = 0;
     private int obroty = 0;
+    private boolean stanSilnika = false;
 
-    Silnik(String nazwa, int wagaSilnik, int cenaSilnik){
+    Silnik(String nazwa, int wagaSilnik, int cenaSilnik, int maxObroty) {
         super(nazwa, wagaSilnik, cenaSilnik);
+        this.maxObroty = maxObroty;
     }
 
 
     public void uruchom(){
         obroty = 800;
+        stanSilnika = true;
     }
     public void zatrzymaj(){
         obroty = 0;
+        stanSilnika = false;
     }
     public void zwiekszObroty(){
         obroty += 100;
@@ -33,5 +37,8 @@ public class Silnik extends Komponent{
     }
     public int getMaxObroty(){
         return maxObroty;
+    }
+    public boolean getStanSilnika(){
+        return stanSilnika;
     }
 }

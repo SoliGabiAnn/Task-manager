@@ -1,6 +1,8 @@
 package com.example.demo.samochód;
 
-public class Samochód {
+import com.example.demo.HelloController;
+
+public class Samochod extends Thread {
     private boolean stanWlaczenia = false;
     private String nrRej = "";
     private String model = "";
@@ -10,16 +12,34 @@ public class Samochód {
     private SkrzyniaBiegow skrzynia;
     private Silnik silnik;
     private Pozycja aktualnapozycja = new Pozycja(0,0);
+    private HelloController controller;
+    private Pozycja cel;
 
-    public Samochód(int iloscBiegow, String nrRejest, String marka,String model, int maxSpeed, String nazwaSilnik, String nazwaSkrzynia, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
-        silnik = new Silnik(nazwaSilnik, wagaSilnik, cenaSilnik);
+
+    public Samochod(int iloscBiegow, int maxObroty, String nrRejest, String marka, String model, int maxSpeed, String nazwaSilnik, String nazwaSkrzynia, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
+        silnik = new Silnik(nazwaSilnik, wagaSilnik, cenaSilnik, maxObroty);
         skrzynia = new SkrzyniaBiegow(iloscBiegow, nazwaSkrzynia, wagaSkrzynia, wagaSprzeglo, cenaSkrzynia, cenaSprzeglo);
         stanWlaczenia = false;
         this.nrRej = nrRejest;
         this.model = model;
         this.maxSpeed = maxSpeed;
         this.marka = marka;
+
+
     }
+
+    @Override
+    public void run() {
+        double deltat = 0.1;
+        while (true) {
+            if (cel != null) {
+                double odleglosc = Math.sqrt(Math.pow(cel.getX() - aktualnapozycja.getX(), 2) + Math.pow(cel.getX() - aktualnapozycja.getY(), 2));
+                double dx = getPredkosc() * deltat * (cel.getX() - aktualnapozycja.getX()) / odleglosc;
+                double dy = getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) / odleglosc;
+            }
+        }
+    }
+
     public String getMarka(){
         return marka;
     }
@@ -38,7 +58,7 @@ public class Samochód {
     public int getaktBieg(){
         return skrzynia.getAktBieg();
     }
-    public void skrzyniaZwiekszB() throws SkrzyniaException, SamochódException, SilnikException {
+    public void skrzyniaZwiekszB() throws SkrzyniaException, SamochodException, SilnikException {
         if(stanWlaczenia == true) {
             if(silnik.getObroty() >= 3000){
                 skrzynia.zwiekszBieg();
@@ -46,7 +66,7 @@ public class Samochód {
                 throw new SilnikException("Za małe obroty - nie można zwiększyć biegu!");
             }
         }else{
-            throw new SamochódException("Samochód wyłączony");
+            throw new SamochodException("Samochód wyłączony");
         }
 
     }
@@ -59,7 +79,7 @@ public class Samochód {
     public void sprzegloZwolnij() {
         skrzynia.spr.zwolnij();
     }
-    public void skrzyniaZmniejszB() throws SkrzyniaException, SamochódException, SilnikException {
+    public void skrzyniaZmniejszB() throws SkrzyniaException, SamochodException, SilnikException {
         if(stanWlaczenia) {
             if(silnik.getObroty() <= 1500){
                 skrzynia.zmniejszBieg();
@@ -67,18 +87,18 @@ public class Samochód {
                 throw new SilnikException("Za duże obroty - zmniejsz je, żeby zmniejszyć bieg");
             }
         }else{
-            throw new SamochódException("Samochód wyłączony");
+            throw new SamochodException("Samochód wyłączony");
         }
     }
-    public void zwiekszObroty() throws SamochódException {
+    public void zwiekszObroty() throws SamochodException {
         if(stanWlaczenia) {
             silnik.zwiekszObroty();
         }else{
-            throw new SamochódException("Samochód nie jest włączony - nie można zwiększyć obrotów");
+            throw new SamochodException("Samochód nie jest włączony - nie można zwiększyć obrotów");
         }
 
     }
-    public void zmniejszObroty() throws SamochódException, SilnikException {
+    public void zmniejszObroty() throws SamochodException, SilnikException {
         if(stanWlaczenia){
             if(silnik.getObroty() >800){
                 silnik.zmniejszObroty();
@@ -86,7 +106,7 @@ public class Samochód {
                 throw new SilnikException("Zbyt małe obroty - nie można bardziej zmniejszyć!");
             }
         }else{
-            throw new SamochódException("Samochód nie jest włączony - nie można zmniejszyć obrotów!");
+            throw new SamochodException("Samochód nie jest włączony - nie można zmniejszyć obrotów!");
         }
 
     }
@@ -96,12 +116,12 @@ public class Samochód {
     public int maxObroty(){
         return silnik.getMaxObroty();
     }
-    public void uruchomSilnik() throws SamochódException, SprzegloException {
+    public void uruchomSilnik() throws SamochodException, SprzegloException {
         if(skrzynia.spr.getstanSp()) {
             if(stanWlaczenia) {
                 silnik.uruchom();
             }else{
-                throw new SamochódException("Samochód nie jest włączony");
+                throw new SamochodException("Samochód nie jest włączony");
             }
         }else{
             throw new SprzegloException("Sprzegło nie jest wciśnęte");
@@ -109,6 +129,9 @@ public class Samochód {
     }
     public void zatrzymajSilnik(){
         silnik.zatrzymaj();
+    }
+    public boolean stanSilnika(){
+        return silnik.getStanSilnika();
     }
 
     public void wlacz(){
@@ -128,17 +151,11 @@ public class Samochód {
         stanWlaczenia = true;
         skrzynia.zwiekszBieg();
         skrzynia.zwiekszBieg();
-
-        skrzynia.zwiekszBieg();
-
-        skrzynia.zwiekszBieg();
-
-        skrzynia.zwiekszBieg();
-
         skrzynia.zwiekszBieg();
         skrzynia.zwiekszBieg();
-
-
+        skrzynia.zwiekszBieg();
+        skrzynia.zwiekszBieg();
+        skrzynia.zwiekszBieg();
         aktualnapozycja = cel;
         stanWlaczenia = false;
     }
@@ -146,10 +163,11 @@ public class Samochód {
         int wagaSuma = skrzynia.getWagaSkrzynia() + silnik.getWagaSilnik();
         return wagaSuma;
     }
-    public int AktPredkosc(){
+    public int getPredkosc(){
         return  0;
     }
 
+    public void setController(HelloController controller){this.controller = controller;}
 
 
 }

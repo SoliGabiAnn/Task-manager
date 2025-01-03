@@ -16,36 +16,40 @@ public class SkrzyniaBiegow extends Komponent {
 
     }
 
-    public void zwiekszBieg() throws SkrzyniaException, SprzegloException{
-        if(spr.getstanSp()) {
+    public void zwiekszBieg() throws SkrzyniaException, SprzegloException {
+        if (spr.getstanSp()) {
             if (aktualnyBieg < iloscBiegow) {
                 aktualnyBieg++;
             } else {
                 throw new SkrzyniaException("Nie można zwiększyć biegu - bieg już jest najwyższy!");
             }
-        }else{
+        } else {
             throw new SprzegloException("Sprzęgło nie jest wciśnięte - nie można zwiększyć biegu");
         }
     }
+
     public void zmniejszBieg() throws SkrzyniaException {
-        if(spr.getstanSp()) {
+        if (spr.getstanSp()) {
             if (aktualnyBieg > 0) {
                 aktualnyBieg--;
-            }else {
+            } else {
                 throw new SkrzyniaException("Nie można zmniejszyć biegu - bieg jest już neutralny!");
             }
-        }else{
+        } else {
             throw new SprzegloException("Sprzegło nie jest wciśnięte - nie można zmniejszyć biegu");
         }
 
     }
-    public int getAktBieg(){
+
+    public int getAktBieg() {
         return aktualnyBieg;
     }
-    public int getAktPrzelozenie(){
+
+    public int getAktPrzelozenie() {
         return aktualnePrzelozenie;
     }
-    public int getWagaSkrzynia(){
+
+    public int getWagaSkrzynia() {
         return getWaga() + spr.getWaga();
     }
 
