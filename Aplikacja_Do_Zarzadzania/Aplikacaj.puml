@@ -3,13 +3,14 @@
 
 class Basic_Info
 class Task
-class user
+class User
 class Project
 
 Project o-- Task
-user o-- Project
+User o-- Project
 Basic_Info <|- Task
 Basic_Info <|- Project
+User <|- generateReport
 
 abstract class Basic_Info{
 name;
@@ -22,6 +23,7 @@ deadline;
 
 class Task{
 description;
+endTask();
 }
 
 class Project{
@@ -32,14 +34,32 @@ deleteTask();
 sortTask();
 }
 
-class user{
-name;
-listOfProjects;
-addProject();
-deleteProject();
+class User{
+username;
+listOfToDoProjects;
+listOfUnfinishedProjects;
+listOfFinishedProjects;
+addToDoProject();
+addUnfinishedProject();
+addFinishedProject();
+deleteToDoProject();
+deleteUnfinishedProject();
+deleteFinishedProject();
 sortProject();
-generateReport();
+ifStarted();
+ifFinished();
 }
 
+class generateReport{
+generate();
+averageFreqOfTasks();
+amountOfTasksToDo();
+amountOfProjectsToDo();
+amountOfFinishedTasks();
+amountOfFinishedProjects();
+amountOfUnfinishedTasks();
+amountOfUnfinishedProjects();
+averageTimeOfTask();
 
+}
 @enduml
