@@ -20,18 +20,18 @@
                                             </font>
                                         </Label>
                                         <TextField fx:id="projectNameTextField" layoutX="14.0" layoutY="34.0" />
-                                        <Label layoutX="14.0" layoutY="84.0" text="Due Date">
+                                        <Label layoutX="14.0" layoutY="84.0" text="Start Date">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
                                         </Label>
-                                        <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="104.0" />
-                                        <Label layoutX="14.0" layoutY="154.0" text="Start Date">
+                                        <DatePicker fx:id="projectStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
+                                        <Label layoutX="14.0" layoutY="154.0" text="Due Date">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
                                         </Label>
-                                        <DatePicker fx:id="projectStartDateDatePicker" layoutX="14.0" layoutY="174.0" />
+                                        <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -46,18 +46,24 @@
                                             </font>
                                         </Label>
                                         <TextField fx:id="taskNameTextField" layoutX="14.0" layoutY="34.0" />
-                                        <Label layoutX="14.0" layoutY="84.0" text="Due Date">
+                                        <Label layoutX="14.0" layoutY="84.0" text="Start Date">
                                             <font>
                                                 <Font size="14.0" />
                                             </font>
                                         </Label>
-                                        <DatePicker layoutX="14.0" layoutY="104.0" />
-                              <Label layoutX="14.0" layoutY="150.0" text="Description">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <TextArea layoutX="14.0" layoutY="170.0" prefHeight="114.0" prefWidth="151.0" />
+                                        <DatePicker fx:id="taskStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
+                                        <Label layoutX="14.0" layoutY="154.0" text="Due Date">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <DatePicker fx:id="taskDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
+                                        <Label layoutX="14.0" layoutY="224.0" text="Description">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <TextArea layoutX="14.0" layoutY="244.0" prefHeight="114.0" prefWidth="151.0" />
                                     </children>
                                 </AnchorPane>
                             </content>
