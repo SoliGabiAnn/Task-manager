@@ -84,14 +84,15 @@ public class HelloController {
             //dodanie projektu do Vbox'a
             toDoProjectContainer.getChildren().add(new_Project);
 
+            LocalDateTime date_added = LocalDateTime.now();
             //dodanie projektu do listy użytkownika
-            var project_to_add = new Project(projectName, false, LocalDateTime.now(), getLocalDateTime(projectStartDateDatePicker), null, getLocalDateTime(projectDueDateDatePicker));
+            var project_to_add = new Project(projectName, false, date_added, getLocalDateTime(projectStartDateDatePicker), null, getLocalDateTime(projectDueDateDatePicker));
 
             listOfToDoProjects.add(project_to_add);
 
             indexOfProject.put(new_Project, project_to_add);
 
-            user.addToDoProject(projectName, getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
+            user.addToDoProject(projectName, date_added,getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
 
         }else{
             warning_Sign("Start Date cannot be after Due Date.");
@@ -164,7 +165,9 @@ public class HelloController {
                 var newTask = new TitledPane();
                 var contentOfTask = new AnchorPane();
 
-                indexOfTask.put(newTask, LocalDateTime.now());
+                LocalDateTime date_added = LocalDateTime.now();
+
+                indexOfTask.put(newTask, date_added);
 
                 newTask.setContent(contentOfTask);
 
@@ -198,7 +201,7 @@ public class HelloController {
 
                 System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
 
-                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
+                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, date_added,getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
 
             } else {
                 System.out.println("Błąd: Brak Accordion w wybranym projekcie!");
@@ -225,32 +228,22 @@ public class HelloController {
             projectAccordion.getPanes().remove(selectedTask);
 
             //Usuń zadanie z modelu danych
-
-
             user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
 
-            System.out.printf(""+indexOfTask.get(selectedTask));
-
-            System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
-
-            System.out.printf(""+user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
+            //System.out.printf(""+user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
 
             indexOfTask.remove(selectedTask);
 
-            // Zaktualizuj wskaźnik postęp
             updateProgressBar(selectedTitlePane);
 
         } else {
-            // Projekt do usunięcia
-            toDoProjectContainer.getChildren().remove(selectedTitlePane);
-
             // Usuń projekt z listy i mapy
             Project projectToRemove = indexOfProject.remove(selectedTitlePane);
+            user.deleteToDoProject(projectToRemove.getDate_added());
             listOfToDoProjects.remove(projectToRemove);
 
-            // Usuń projekt z modelu danych użytkownika
-            user.getListOfToDoProject().remove(projectToRemove);
-
+            // Projekt do usunięcia
+            toDoProjectContainer.getChildren().remove(selectedTitlePane);
 
             System.out.printf(""+user.getListOfToDoProject());
 
