@@ -11,9 +11,8 @@ public class Project extends Basic_Info{
     public Project(String name, Boolean state, LocalDateTime date_added, LocalDateTime date_start, LocalDateTime date_end, LocalDateTime deadline) {
         super(name, state, date_added, date_start, date_end, deadline);
     }
-    public void addTask(String name, LocalDateTime date_start, LocalDateTime deadline, String description){
+    public void addTask(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline, String description){
         Boolean state = false;
-        LocalDateTime date_added= LocalDateTime.now();
         LocalDateTime date_end= null;
         listOfTask.add(new Task(name, state, date_added, date_start, date_end, deadline, description));
         isTaskSortingUpToDate = false;
