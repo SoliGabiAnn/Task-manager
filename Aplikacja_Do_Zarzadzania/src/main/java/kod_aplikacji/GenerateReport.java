@@ -4,15 +4,14 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class generateReport extends User{
+public class GenerateReport extends User{
     public ArrayList<Float> generate(){
         ArrayList<Float> report = new ArrayList<>();
         report.add((float) listOfToDoProject.size());
-        report.add(counterTasks(listOfToDoProject));
         report.add((float)listOfUnfinishedProject.size());
-        report.add(counterTasks(listOfUnfinishedProject));
         report.add((float)listOfFinishedProject.size());
-        report.add(counterTasks(listOfFinishedProject));
+        report.add(counterUnfinishedTasks(listOfToDoProject)+counterUnfinishedTasks(listOfUnfinishedProject));
+        report.add(counterDoneTasks(listOfFinishedProject)+counterDoneTasks(listOfUnfinishedProject));
         report.add(averageFreqOfTasks());
         report.add(averageTimeOfCompletingTasks());
         return report;
@@ -63,10 +62,32 @@ public class generateReport extends User{
         }
         return last;
     }
-    private float counterTasks(ArrayList<Project> listOfProject){
-        int count=0;
+    private float counterTasks(ArrayList<Project> listOfProject) {
+        int count = 0;
         for (Project project : listOfProject) {
             count += project.getListOfTask().size();
+        }
+        return count;
+    }
+    private float counterDoneTasks(ArrayList<Project> listOfProject){
+        int count=0;
+        for (Project project : listOfProject) {
+            for(int i=0;i<project.getListOfTask().size();i++){
+                if(project.getListOfTask().get(i).getState()){
+                    count += 1;
+                }
+            }
+        }
+        return count;
+    }
+    private float counterUnfinishedTasks(ArrayList<Project> listOfProject){
+        int count=0;
+        for (Project project : listOfProject) {
+            for(int i=0;i<project.getListOfTask().size();i++){
+                if(!project.getListOfTask().get(i).getState()){
+                    count += 1;
+                }
+            }
         }
         return count;
     }

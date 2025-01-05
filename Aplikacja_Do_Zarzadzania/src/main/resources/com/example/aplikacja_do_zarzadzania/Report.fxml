@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aplikacja_do_zarzadzania.reportController">
+   <HBox alignment="CENTER" prefHeight="300.0" prefWidth="450.0">
+      <VBox prefHeight="300.0" prefWidth="450.0">
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Projekty do zrobienia :" />
+            <Label fx:id="projectToDoLabel" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Projekty w trakcie :" />
+            <Label fx:id="projectDoingLabel" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="110.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Projekty zakończone :" />
+            <Label fx:id="projectDoneLabel" />
+         </HBox>
+      </VBox>
+      <VBox layoutX="10.0" layoutY="10.0" prefHeight="300.0" prefWidth="450.0">
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Zadania do zrobienia :" />
+            <Label fx:id="tasksToDoLabel" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Zadania zrobione :" />
+            <Label fx:id="tasksDoneLabel" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="110.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Częstość dodania zadań :" />
+            <Label fx:id="freqOfAddingTasksLabel" />
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="210.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <padding>
+               <Insets top="5.0" />
+            </padding>
+            <Label text="Średni czas wykonania zadań :" />
+            <Label fx:id="averageTimeOfDoingTasksLabel" />
+         </HBox>
+      </VBox>
+   </HBox>
+</Pane>
