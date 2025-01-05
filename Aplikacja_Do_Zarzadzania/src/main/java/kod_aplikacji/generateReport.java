@@ -18,7 +18,7 @@ public class generateReport extends User{
         return report;
     }
 
-    public Float averageFreqOfTasks(){
+    private Float averageFreqOfTasks(){
         LocalDateTime first;
         LocalDateTime last;
         if(earliestDate(listOfToDoProject).isBefore(earliestDate(listOfUnfinishedProject))){
@@ -41,7 +41,7 @@ public class generateReport extends User{
         float totalCount=counterTasks(listOfUnfinishedProject)+counterTasks(listOfFinishedProject)+counterTasks(listOfToDoProject);
         return (totalCount / timeframe);
     }
-    public LocalDateTime earliestDate(ArrayList<Project> listOfProject){
+    private LocalDateTime earliestDate(ArrayList<Project> listOfProject){
         LocalDateTime first = LocalDateTime.now();
         for (Project project : listOfProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
@@ -52,7 +52,7 @@ public class generateReport extends User{
         }
         return first;
     }
-    public LocalDateTime latestDate(ArrayList<Project> listOfProject){
+    private LocalDateTime latestDate(ArrayList<Project> listOfProject){
         LocalDateTime last = listOfProject.getFirst().getListOfTask().getFirst().getDate_added();
         for (Project project : listOfProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
@@ -63,14 +63,14 @@ public class generateReport extends User{
         }
         return last;
     }
-    public float counterTasks(ArrayList<Project> listOfProject){
+    private float counterTasks(ArrayList<Project> listOfProject){
         int count=0;
         for (Project project : listOfProject) {
             count += project.getListOfTask().size();
         }
         return count;
     }
-    public Float averageTimeOfCompletingTasks(){
+    private Float averageTimeOfCompletingTasks(){
         long sum=0;
         for (Project project : listOfFinishedProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
