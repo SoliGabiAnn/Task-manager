@@ -13,11 +13,16 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-    public void addToDoProject(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline) {
-        Boolean state = false;
-        LocalDateTime date_end= null;
-        listOfToDoProject.add(new Project(name, state, date_added, date_start, date_end, deadline));
-        isProjectSortingUptoDate=false;
+    public void addToDoProject(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline) throws ProjectException {
+        if(date_start.isBefore(deadline)) {
+            Boolean state = false;
+            LocalDateTime date_end= null;
+            listOfToDoProject.add(new Project(name, state, date_added, date_start, date_end, deadline));
+            isProjectSortingUptoDate=false;
+        }else{
+            throw new ProjectException("Start date cannot be after due date");
+        }
+
     }
     public void addUnfinishedProject(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline) {
         Boolean state = false;

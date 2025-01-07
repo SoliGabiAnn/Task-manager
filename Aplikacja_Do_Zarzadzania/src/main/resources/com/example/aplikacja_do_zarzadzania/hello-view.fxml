@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:controller="com.example.aplikacja_do_zarzadzania.HelloController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aplikacja_do_zarzadzania.HelloController">
     <right>
         <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="728.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <center>
@@ -74,7 +74,7 @@
             <bottom>
                 <AnchorPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button fx:id="AddButton" onAction="#onAddButton" layoutX="134.0" layoutY="13.0" mnemonicParsing="false" text="Add" />
+                        <Button fx:id="AddButton" layoutX="134.0" layoutY="13.0" mnemonicParsing="false" onAction="#onAddButton" text="Add" />
                     </children>
                 </AnchorPane>
             </bottom>
@@ -108,7 +108,7 @@
                     <children>
                         <Button layoutX="548.0" layoutY="39.0" mnemonicParsing="false" text="Raport" />
                         <Button layoutX="14.0" layoutY="39.0" mnemonicParsing="false" text="Edit" />
-                        <Button fx:id="DeleteButton" onAction="#onDeleteButton" layoutX="82.0" layoutY="39.0" mnemonicParsing="false" text="Delete" />
+                        <Button fx:id="DeleteButton" layoutX="82.0" layoutY="39.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
                         <Button layoutX="382.0" layoutY="39.0" mnemonicParsing="false" text="Creation Date" />
                         <Button layoutX="300.0" layoutY="39.0" mnemonicParsing="false" text="Due Date" />
                         <Label layoutX="300.0" layoutY="14.0" text="Sort projects by: " />

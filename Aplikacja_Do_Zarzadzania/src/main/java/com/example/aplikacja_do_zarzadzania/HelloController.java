@@ -5,12 +5,14 @@ import kod_aplikacji.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.function.DoubleFunction;
 
 
 public class HelloController {
@@ -33,7 +35,7 @@ public class HelloController {
     User user = new User();
 
     //potrzebne do dodawania zadań do projektów
-    private ArrayList <Project> listOfToDoProjects = new ArrayList<Project>();
+    private ArrayList<Project> listOfToDoProjects = new ArrayList<Project>();
     private Map<TitledPane, Project> indexOfProject = new HashMap<>();
 
     //potrzebne do usuwania zdań
@@ -61,61 +63,66 @@ public class HelloController {
     }
 
     private void addig_Project(String projectName) {
-        //tworzymy nowy projekt
-        var new_Project = new TitledPane();
+        try {
+            LocalDateTime date_added = LocalDateTime.now();
+            user.addToDoProject(projectName, date_added, getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
 
-        //dodanie nazwy z checkbox'em
-        CheckBox projectCheckBox = new CheckBox(projectNameTextField.getText());
-        new_Project.setGraphic(projectCheckBox);
+            //tworzymy nowy projekt
+            var new_Project = new TitledPane();
 
-        var project_Accordion = new Accordion();
-        new_Project.setContent(project_Accordion);
+            //dodanie nazwy z checkbox'em
+            CheckBox projectCheckBox = new CheckBox(projectNameTextField.getText());
+            new_Project.setGraphic(projectCheckBox);
+            //projectCheckBox.setDisable(true); -> jak zrobić tak, aby checkboxa nie można było zaznaczyć w to do
 
-        //dodanie opisu do projektu
-        var contentOfProject = new AnchorPane();
 
-        if(projectStartDateDatePicker.getValue().isBefore(projectDueDateDatePicker.getValue())) {
+            var project_Accordion = new Accordion();
+            new_Project.setContent(project_Accordion);
 
-            ResulDates result = getResultDates(projectStartDateDatePicker,projectDueDateDatePicker);
+            //dodanie opisu do projektu
+            var contentOfProject = new AnchorPane();
+
+            ResulDates result = getResultDates(projectStartDateDatePicker, projectDueDateDatePicker);
+            var dueDate = new TextField();
+            dueDate.setLayoutX(90);
+            dueDate.setLayoutY(45);
+            dueDate.setText(handleDateAction(projectStartDateDatePicker));
 
             //dodanie dat
-            contentOfProject.getChildren().addAll(result.start_Date(), result.startDate(), result.due_Date(), result.dueDate());
+            contentOfProject.getChildren().addAll(result.start_Date(), result.startDate(), result.due_Date(), result.dueDate(), dueDate);
 
             //dodanie projektu do Vbox'a
             toDoProjectContainer.getChildren().add(new_Project);
 
-            LocalDateTime date_added = LocalDateTime.now();
             //dodanie projektu do listy użytkownika
             var project_to_add = new Project(projectName, false, date_added, getLocalDateTime(projectStartDateDatePicker), null, getLocalDateTime(projectDueDateDatePicker));
 
             listOfToDoProjects.add(project_to_add);
-
             indexOfProject.put(new_Project, project_to_add);
 
-            user.addToDoProject(projectName, date_added,getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
+            //dodanie progressBar'u do About Project
+            var progressBar = new ProgressBar();
+            progressBar.setLayoutX(70);
+            progressBar.setLayoutY(85);
 
-        }else{
-            warning_Sign("Start Date cannot be after Due Date.");
+            contentOfProject.getChildren().addAll(progressBar);
+
+            TitledPane about_Project = new TitledPane();
+            about_Project.setText("About Project");
+            project_Accordion.getPanes().add(about_Project);
+            about_Project.setContent(contentOfProject);
+
+            //żeby można było wybierać ten projekt
+            new_Project.setOnMouseClicked(event -> handleSelectProject(new_Project));
+
+        } catch (ProjectException e) {
+            alert_sign(e, "Project Error");
+        } finally {
+            //wyczyszczenie kalendarza
+            projectDueDateDatePicker.setValue(null);
+            projectStartDateDatePicker.setValue(null);
         }
 
-        //dodanie progressBar'u do About Project
-        var progressBar = new ProgressBar();
-        progressBar.setLayoutX(70);
-        progressBar.setLayoutY(85);
-
-        contentOfProject.getChildren().addAll(progressBar);
-
-        TitledPane about_Project = new TitledPane();
-        about_Project.setText("About Project");
-        project_Accordion.getPanes().add(about_Project);
-        about_Project.setContent(contentOfProject);
-
-        //żeby można było wybierać ten projekt
-        new_Project.setOnMouseClicked(event -> handleSelectProject(new_Project));
-
-        //wyczyszczenie kalendarza
-        projectDueDateDatePicker.setValue(null);
-        projectStartDateDatePicker.setValue(null);
     }
 
     private void updateProgressBar(TitledPane projectPane) {
@@ -157,15 +164,16 @@ public class HelloController {
     }
 
     private void adding_Task(String taskName) {
-        if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
-
-            Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
-
-            if (projectAccordion != null) {
-                var newTask = new TitledPane();
-                var contentOfTask = new AnchorPane();
+        try {
+            if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
+                Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
 
                 LocalDateTime date_added = LocalDateTime.now();
+
+                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, date_added, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
+
+                var newTask = new TitledPane();
+                var contentOfTask = new AnchorPane();
 
                 indexOfTask.put(newTask, date_added);
 
@@ -177,7 +185,7 @@ public class HelloController {
                 projectAccordion.getPanes().add(newTask);
 
                 //dodanie nazw
-                ResulDates result = getResultDates(taskStartDateDatePicker,taskDueDateDatePicker);
+                ResulDates result = getResultDates(taskStartDateDatePicker, taskDueDateDatePicker);
 
                 contentOfTask.getChildren().addAll(result.start_Date(), result.startDate(), result.due_Date(), result.dueDate());
 
@@ -199,18 +207,21 @@ public class HelloController {
                 // Aktualizuj wskaźnik postępu po dodaniu nowego zadania
                 updateProgressBar(selectedTitlePane);
 
-                System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
-
-                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, date_added,getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
-
+//                    System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
+//                    System.out.println(user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
             } else {
-                System.out.println("Błąd: Brak Accordion w wybranym projekcie!");
+                warning_Sign("Najpierw wybierz projekt!");
             }
-        } else {
-            warning_Sign("Najpierw wybierz projekt!");
+        } catch (Exception e) {
+            alert_sign(e, "Task Error");
+        } finally {
+            //wyczyszczenie kalendarza
+            projectDueDateDatePicker.setValue(null);
+            projectStartDateDatePicker.setValue(null);
+            taskDescriptionTextArea.clear();
         }
-    }
 
+    }
 
     @FXML
     private void onDeleteButton() {
@@ -230,8 +241,6 @@ public class HelloController {
             //Usuń zadanie z modelu danych
             user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
 
-            //System.out.printf(""+user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
-
             indexOfTask.remove(selectedTask);
 
             updateProgressBar(selectedTitlePane);
@@ -245,8 +254,6 @@ public class HelloController {
             // Projekt do usunięcia
             toDoProjectContainer.getChildren().remove(selectedTitlePane);
 
-            System.out.printf(""+user.getListOfToDoProject());
-
             // Wyzeruj zaznaczenie
             selectedTitlePane = null;
         }
@@ -258,27 +265,29 @@ public class HelloController {
         start_Date.setLayoutX(10);
         start_Date.setLayoutY(10);
 
-        var startDate = new TextField();
+        var startDate = new DatePicker();
         startDate.setLayoutX(90);
         startDate.setLayoutY(5);
-        startDate.setText(handleDateAction(startDatePicker));
+        startDate.setValue(startDatePicker.getValue());
         startDate.setEditable(false);
 
         var due_Date = new Label("Due Date");
         due_Date.setLayoutX(10);
         due_Date.setLayoutY(50);
 
-        var dueDate = new TextField();
+        var dueDate = new DatePicker();
         dueDate.setLayoutX(90);
         dueDate.setLayoutY(45);
-        dueDate.setText(handleDateAction(dueDatePicker));
+        dueDate.setValue(dueDatePicker.getValue());
+
         dueDate.setEditable(false);
+        dueDate.setDisable(true);
 
         ResulDates resulDates = new ResulDates(start_Date, startDate, due_Date, dueDate);
         return resulDates;
     }
 
-    private record ResulDates(Label start_Date, TextField startDate, Label due_Date, TextField dueDate) {
+    private record ResulDates(Label start_Date, DatePicker startDate, Label due_Date, DatePicker dueDate) {
     }
 
     private void warning_Sign(String s) {
@@ -303,7 +312,15 @@ public class HelloController {
         } else {
             warning_Sign("No date was selected!");
             return null;
+
         }
+    }
+
+    private void alert_sign(Exception e, String title) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(e.getMessage());
+        alert.showAndWait();
     }
 
     private void handleSelectProject(TitledPane titlePane) {
