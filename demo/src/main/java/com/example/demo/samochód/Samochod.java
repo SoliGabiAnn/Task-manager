@@ -68,7 +68,6 @@ public class Samochod extends Thread {
         }else{
             throw new SamochodException("Samochód wyłączony");
         }
-
     }
     public boolean stansprzegla(){
         return skrzynia.spr.getstanSp();

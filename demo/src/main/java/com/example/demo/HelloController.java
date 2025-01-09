@@ -49,28 +49,24 @@ public class HelloController {
     private ComboBox<String> wybierzSamochodComboBox;
     @FXML
     Samochod tmpCar;
-    List<Samochod> createdCars= new ArrayList<>();
-    List<String> carModels= new ArrayList<>();
+    List<Samochod> createdCars = new ArrayList<>();
+    List<String> carModels = new ArrayList<>();
 
     static Samochod samochod;
 
 
-    public void addCarToList(String sprzegloNazwa, int sprzegloWaga, int sprzegloCena, int iloscBiegow, int skrzyniaCena, int skrzyniaWaga,
-                                    String skrzyniaNazwa, int maxObroty, String silnikNazwa, int silnikWaga, int silnikCena, String numerRejs,
-                                    String model, String marka, int waga, int x, int y, int maxspeed) {
+    public void addCarToList(String sprzegloNazwa, int sprzegloWaga, int sprzegloCena, int iloscBiegow, int skrzyniaCena, int skrzyniaWaga, String skrzyniaNazwa, int maxObroty, String silnikNazwa, int silnikWaga, int silnikCena, String numerRejs, String model, String marka, int waga, int x, int y, int maxspeed) {
         System.out.println("Naciśnięto");
-        createdCars.add(newCar(sprzegloNazwa, sprzegloWaga,sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa,maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga,x,y,maxspeed ));
+        createdCars.add(newCar(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga, x, y, maxspeed));
         carModels.add(samochod.getModel());
         wybierzSamochodComboBox.getItems().addAll(carModels);
         samochod.setController(this);
         aktbiegLabel.setText(String.valueOf(samochod.getaktBieg()));
 
     }
-    public Samochod newCar(String nazwaSprzeglo, int wagaSprzeglo, int cenaSprzeglo, int iloscBiegow, int cenaSkrzynia, int wagaSkrzynia,
-                           String nazwaSkrzynia, int maxObroty, String nazwaSilnik, int wagaSilnik, int cenaSilnik, String nrRejestracyjny,
-                           String model, String marka, int waga, int x, int y, int maxpredkosc) {
-        samochod = new Samochod(iloscBiegow, maxObroty, nrRejestracyjny, marka, model,maxpredkosc, nazwaSilnik, nazwaSkrzynia, wagaSilnik,
-                wagaSkrzynia, wagaSprzeglo, cenaSilnik, cenaSkrzynia, cenaSprzeglo);
+
+    public Samochod newCar(String nazwaSprzeglo, int wagaSprzeglo, int cenaSprzeglo, int iloscBiegow, int cenaSkrzynia, int wagaSkrzynia, String nazwaSkrzynia, int maxObroty, String nazwaSilnik, int wagaSilnik, int cenaSilnik, String nrRejestracyjny, String model, String marka, int waga, int x, int y, int maxpredkosc) {
+        samochod = new Samochod(iloscBiegow, maxObroty, nrRejestracyjny, marka, model, maxpredkosc, nazwaSilnik, nazwaSkrzynia, wagaSilnik, wagaSkrzynia, wagaSprzeglo, cenaSilnik, cenaSkrzynia, cenaSprzeglo);
         samochod.setController(this);
         markaLabel.setText(marka);
         modelTextField.setText(model);
@@ -87,13 +83,13 @@ public class HelloController {
         System.out.println("HelloController initialized");      // Load and set the car image
         Image mapa = new Image(getClass().getResource("/mapa.jpg").toExternalForm());
         Image carImage = new Image(getClass().getResource("/car.jpg").toExternalForm());
-        System.out.println("Image width: " +  carImage.getWidth() + ", height: " + carImage.getHeight());
+        System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
         mapaImageView.setImage(mapa);
-        carImageView.setImage(carImage);
-        carImageView.setFitWidth(50);                           // Set appropriate dimensions for your image
-        carImageView.setFitHeight(50);
-        carImageView.setTranslateX(0);
-        carImageView.setTranslateY(0);
+//        carImageView.setImage(carImage);
+//        carImageView.setFitWidth(50);                           // Set appropriate dimensions for your image
+//        carImageView.setFitHeight(50);
+//        carImageView.setTranslateX(0);
+//        carImageView.setTranslateY(0);
 
 //        mapa.setOnMouseClicked(event -> { double x = event.getX();
 //            double y = event.getY();
@@ -113,7 +109,7 @@ public class HelloController {
         dodajSamochodController.setParentController(this);
     }
 
-    void refresh(){
+    void refresh() {
         markaLabel.setText(samochod.getMarka());
         modelTextField.setText(samochod.getModel());
         nrRejTextField.setText(samochod.getnrRej());
@@ -127,16 +123,16 @@ public class HelloController {
 
     @FXML
     private void wlaczSamochod() throws SamochodException, SprzegloException {
-        try{
+        try {
             samochod.wlacz();
             System.out.println("Samochód włączony!");
-        }catch (SprzegloException e){
+        } catch (SprzegloException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Sprzegło");
             alert.setHeaderText(e.getMessage());
             alert.showAndWait();
         }
-        if(samochod.stansprzegla()){
+        if (samochod.stansprzegla()) {
             samochod.uruchomSilnik();
             refresh();
         }
@@ -144,11 +140,11 @@ public class HelloController {
 
     @FXML
     public void wylaczSamochod() throws SprzegloException {
-        try{
+        try {
             samochod.wylacz();
             refresh();
             System.out.println("Samochód wyłączony!");
-        }catch (SprzegloException e){
+        } catch (SprzegloException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Sprzegło");
             alert.setHeaderText(e.getMessage());
@@ -158,9 +154,9 @@ public class HelloController {
 
     public String stanSilnika() {
         String stanSilnika;
-        if(samochod.stanSilnika()){
-           stanSilnika = "Włączony";
-        }else{
+        if (samochod.stanSilnika()) {
+            stanSilnika = "Włączony";
+        } else {
             stanSilnika = "Wyłączony";
         }
         return stanSilnika;
@@ -168,48 +164,36 @@ public class HelloController {
 
     @FXML
     public void zwiekszBieg() throws SkrzyniaException, SamochodException, SilnikException, SprzegloException {
-        try{
+        try {
             samochod.skrzyniaZwiekszB();
             System.out.println("Zwiekszam bieg!");
-            while (samochod.aktualneObroty() > 2000){
+            while (samochod.aktualneObroty() > 2000) {
                 samochod.zmniejszObroty();
             }
             refresh();
-        }catch (SamochodException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Samochód");
-            alert.setHeaderText(e.getMessage());
-            alert.showAndWait();
-        }catch (SilnikException e1){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Silnik");
-            alert.setHeaderText(e1.getMessage());
-            alert.showAndWait();
-        }catch (SkrzyniaException e2){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Skrzynia");
-            alert.setHeaderText(e2.getMessage());
-            alert.showAndWait();
-        }catch (SprzegloException e3){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Sprzęgło");
-            alert.setHeaderText(e3.getMessage());
-            alert.showAndWait();
+        } catch (SamochodException e) {
+            alertDialog("Samochód", e);
+        } catch (SilnikException e1) {
+            alertDialog("Silnike", e1);
+        } catch (SkrzyniaException e2) {
+            alertDialog("Skrzynia", e2);
+        } catch (SprzegloException e3) {
+            alertDialog("Sprzeglo", e3);
         }
         refresh();
     }
 
     public void zmniejszBieg() throws SkrzyniaException, SamochodException {
-        try{
+        try {
             samochod.skrzyniaZmniejszB();
             System.out.println("Zmniejszam bieg!");
-        }catch (SamochodException e) {
+        } catch (SamochodException e) {
             alertDialog("Samochód", e);
-        }catch (SilnikException e1){
+        } catch (SilnikException e1) {
             alertDialog("Silnik", e1);
-        }catch (SkrzyniaException e2){
+        } catch (SkrzyniaException e2) {
             alertDialog("Skrzynia", e2);
-        }catch (SprzegloException e3){
+        } catch (SprzegloException e3) {
             alertDialog("Sprzęgło", e3);
         }
         refresh();
@@ -221,7 +205,7 @@ public class HelloController {
 
     public void wcisnijSprzeglo() throws SkrzyniaException, SprzegloException {
         samochod.sprzegloWcisnij();
-        if(samochod.isStanWlaczenia()){
+        if (samochod.isStanWlaczenia()) {
             stanWlaczeniaSilnikaLabel.setText("Włączony");
         }
     }
@@ -240,7 +224,7 @@ public class HelloController {
             samochod.zmniejszObroty();
         } catch (SamochodException e) {
             alertDialog("Samochód", e);
-        }catch (SilnikException e1){
+        } catch (SilnikException e1) {
             alertDialog("Silnik", e1);
         }
         refresh();
