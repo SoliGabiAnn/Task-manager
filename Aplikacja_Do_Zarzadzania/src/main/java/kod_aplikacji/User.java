@@ -66,6 +66,16 @@ public class User {
         return sortedList;
     }
 
+    //lista indeksów projektów, które będą zmieniały stan
+    ArrayList <Integer> listOfIndex=new ArrayList<>();
+
+    public ArrayList<Integer> getListOfIndex(){
+        return listOfIndex;
+    }
+    public void setListOfToDoProject(){
+        listOfIndex.clear();
+    }
+
     public void ifStarted() {
         if(!listOfToDoProject.isEmpty()){
             for(int i=0;i<listOfToDoProject.size();i++){
@@ -73,10 +83,12 @@ public class User {
                     this.addUnfinishedProject(listOfToDoProject.get(i).getName(),listOfToDoProject.get(i).getDate_added(),listOfToDoProject.get(i).getDate_start(),listOfToDoProject.get(i).getDeadline());
                     this.listOfUnfinishedProject.getLast().setListOfTask(this.listOfToDoProject.get(i).getListOfTask());
                     this.deleteToDoProject(listOfToDoProject.get(i).getDate_added());
+                    listOfIndex.add(i);
                 }
             }
         }
     }
+
     public void ifFinished(){
         if(!listOfUnfinishedProject.isEmpty()){
             for(int i=0;i<listOfUnfinishedProject.size();i++){//in controlls it is necessary ot change state
