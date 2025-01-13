@@ -72,7 +72,7 @@ public class User {
     public ArrayList<Integer> getListOfIndex(){
         return listOfIndex;
     }
-    public void setListOfToDoProject(){
+    public void clearListOfToDoProject(){
         listOfIndex.clear();
     }
 
