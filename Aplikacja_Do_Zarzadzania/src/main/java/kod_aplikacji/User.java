@@ -13,11 +13,21 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
     public void addToDoProject(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline) throws ProjectException {
         if(date_start.isBefore(deadline)) {
             Boolean state = false;
             LocalDateTime date_end= null;
             listOfToDoProject.add(new Project(name, state, date_added, date_start, date_end, deadline));
+            isProjectSortingUptoDate=false;
+        }else{
+            throw new ProjectException("Start date cannot be after due date");
+        }
+
+    }
+    public void addToDoProject(Project project) throws ProjectException {
+        if(project.getDate_start().isBefore(project.getDeadline())) {
+            listOfToDoProject.add(project);
             isProjectSortingUptoDate=false;
         }else{
             throw new ProjectException("Start date cannot be after due date");
@@ -30,9 +40,13 @@ public class User {
         listOfUnfinishedProject.add(new Project(name, state, date_added, date_start, date_end, deadline));
         isProjectSortingUptoDate=false;
     }
-    public void addFinishedProject(String name,LocalDateTime date_added, LocalDateTime date_start, LocalDateTime deadline,Boolean state) {
-        LocalDateTime date_end= LocalDateTime.now();
-        listOfFinishedProject.add(new Project(name, state, date_added, date_start, date_end, deadline));
+    public void addUnfinishedProject(Project project) {
+        listOfUnfinishedProject.add(project);
+        isProjectSortingUptoDate=false;
+    }
+
+    public void addFinishedProject(Project project) {
+        listOfFinishedProject.add(project);
         isProjectSortingUptoDate=false;
     }
     public void deleteToDoProject(LocalDateTime date_added_to_del) {
@@ -80,8 +94,7 @@ public class User {
         if(!listOfToDoProject.isEmpty()){
             for(int i=0;i<listOfToDoProject.size();i++){
                 if(listOfToDoProject.get(i).getDate_start().isBefore(LocalDateTime.now())){
-                    this.addUnfinishedProject(listOfToDoProject.get(i).getName(),listOfToDoProject.get(i).getDate_added(),listOfToDoProject.get(i).getDate_start(),listOfToDoProject.get(i).getDeadline());
-                    this.listOfUnfinishedProject.getLast().setListOfTask(this.listOfToDoProject.get(i).getListOfTask());
+                    this.addUnfinishedProject(listOfToDoProject.get(i));
                     this.deleteToDoProject(listOfToDoProject.get(i).getDate_added());
                     listOfIndex.add(i);
                 }
@@ -93,10 +106,7 @@ public class User {
         if(!listOfUnfinishedProject.isEmpty()){
             for(int i=0;i<listOfUnfinishedProject.size();i++){//in controlls it is necessary ot change state
                 if(listOfUnfinishedProject.get(i).getState() && listOfUnfinishedProject.get(i).checkIfTasksAreFinished()){
-                    this.addFinishedProject(listOfUnfinishedProject.get(i).getName(),listOfUnfinishedProject.get(i).getDate_added(),
-                            listOfUnfinishedProject.get(i).getDate_start(),listOfUnfinishedProject.get(i).getDeadline(),
-                            listOfUnfinishedProject.get(i).getState());
-                    this.listOfFinishedProject.getLast().setListOfTask(this.listOfUnfinishedProject.get(i).getListOfTask());
+                    this.addFinishedProject(listOfUnfinishedProject.get(i));
                     this.deleteUnfinishedProject(listOfUnfinishedProject.get(i).getDate_added());
                 }
             }
