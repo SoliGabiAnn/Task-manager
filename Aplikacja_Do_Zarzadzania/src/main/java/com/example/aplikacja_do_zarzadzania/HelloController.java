@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
@@ -33,6 +34,8 @@ public class HelloController {
     public DatePicker taskStartDateDatePicker;
     public DatePicker taskDueDateDatePicker;
     public TextArea taskDescriptionTextArea;
+    public Button sortByDueDateButton;
+    public Button sortByStartDateButton;
 
     private TitledPane selectedTitlePane;
     User user = new User();
@@ -47,107 +50,57 @@ public class HelloController {
     private final ArrayList<Project> listOfDoingProjects = new ArrayList<Project>();
     private final ArrayList<Project> listOfDoneProjects = new ArrayList<Project>();
 
+    @FXML
+    public void initialize() {
+        timeline1.setCycleCount(Animation.INDEFINITE);
+        timeline1.play();
+    }
 
     @FXML
     private void onAddButton() {
         String name = "";
-
-        if (!projectNameTextField.getText().isEmpty()) {                                           // Jeśli użytkownik wprowadza nazwę projektu
+        if (!projectNameTextField.getText().isEmpty()) {                                            // Jeśli użytkownik wprowadza nazwę projektu
             name = projectNameTextField.getText();
-            addProject(name);
-            projectNameTextField.clear();
-
+            if (projectStartDateDatePicker.getValue() == null && projectDueDateDatePicker.getValue() == null) {
+                createWarningSign("Proszę wybrać daty");
+            } else {
+                addProject(name);
+                projectNameTextField.clear();
+            }
         } else if (!taskNameTextField.getText().isEmpty() && selectedTitlePane != null) {           // Jeśli wprowadzono nazwę zadania i wybrano projekt
             name = taskNameTextField.getText();
-            addTask(name);
-            taskNameTextField.clear();
+            if (taskStartDateDatePicker.getValue() == null && taskDueDateDatePicker.getValue() == null) {
+                createWarningSign("Proszę wybrać daty");
+            } else {
+                addTask(name);
+                taskNameTextField.clear();
+            }
         }
 
         if (name.isEmpty()) {
             createWarningSign("Proszę podać nazwę projektu lub zadania.");
         }
     }
-    
-    
-
-    private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, DatePicker projectStartDateDatePicker) {
-        //tworzymy nowy projekt
-        var newProject = new TitledPane();
-
-        addCheckBoxWithName(projectNameTextField, newProject, true);
-
-        //żeby można było dodawać i rozwijać zadania w projekcie
-        var projectAccordion = new Accordion();
-        newProject.setContent(projectAccordion);
-
-        //dodanie opisu do projektu
-        var contentOfProject = new AnchorPane();
-
-        ResulDates result = getResultDates(projectStartDateDatePicker, projectDueDateDatePicker);
-
-        //dodanie dat
-        contentOfProject.getChildren().addAll(result.startDate(), result.newStartDatePicker(), result.dueDate(), result.newDueDatePicker());
-
-        //dodanie progressBar'u do About Project
-        var progressBar = new ProgressBar();
-        progressBar.setLayoutX(70);
-        progressBar.setLayoutY(85);
-
-        contentOfProject.getChildren().addAll(progressBar);
-
-        TitledPane aboutProject = new TitledPane();
-        aboutProject.setText("About Project");
-        projectAccordion.getPanes().add(aboutProject);
-        aboutProject.setContent(contentOfProject);
-
-        return newProject;
-    }
-
-    private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject) {
-        CheckBox checkBox = new CheckBox(nameTextField.getText());
-        newTitledPane.setGraphic(checkBox);
-        checkBox.setMouseTransparent(true);
-
-
-        if (isProject) {
-            checkBox.setOnAction(event -> {
-                if (checkBox.isSelected()) {
-                    user.ifFinished();
-                    if (checkIfTaskAreFinished(newTitledPane)) {
-                        moveProjectToDone(newTitledPane);
-                    }
-                }
-            });
-        }
-//        }else{
-//            Accordion parentAccordion = (Accordion) newTitledPane.getParent();
-//            TitledPane parentTitlePane = (TitledPane) parentAccordion.getPanes().get(0);
-//
-//            if(parenetAccordion)
-//        }
-    }
-
-
 
     private void addProject(String projectName) {
         try {
             LocalDateTime dateAdded = LocalDateTime.now();
 
             //dodanie do listy usera
-            if(getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
+            if (getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
                 user.addUnfinishedProject(projectName, dateAdded, getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
-            }else{
+            } else {
                 user.addToDoProject(projectName, dateAdded, getLocalDateTime(projectStartDateDatePicker), getLocalDateTime(projectDueDateDatePicker));
             }
 
             var projectTitlePane = addProjectTitlePane(projectNameTextField, projectDueDateDatePicker, projectStartDateDatePicker);
             var projectToAdd = new Project(projectName, false, dateAdded, getLocalDateTime(projectStartDateDatePicker), null, getLocalDateTime(projectDueDateDatePicker));
 
-            if(getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
+            if (getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
                 doingProjectContainer.getChildren().add(projectTitlePane);
                 listOfDoingProjects.add(projectToAdd);
                 projectTitlePane.getGraphic().setMouseTransparent(false);
-            }else{
+            } else {
                 toDoProjectContainer.getChildren().add(projectTitlePane);
                 listOfToDoProjects.add(projectToAdd);
             }
@@ -155,7 +108,7 @@ public class HelloController {
             indexOfProject.put(projectTitlePane, projectToAdd);
 
             //żeby można było wybierać ten projekt
-            projectTitlePane.setOnMouseClicked(event -> handleSelectProject(projectTitlePane));
+            projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
         } catch (ProjectException e) {
             createAlertSign(e, "Project Error");
         } finally {
@@ -164,6 +117,137 @@ public class HelloController {
             projectStartDateDatePicker.setValue(null);
         }
     }
+
+    private void addTask(String taskName) {
+        try {
+            if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
+                Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
+                LocalDateTime dateAdded = LocalDateTime.now();
+
+                if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
+                    user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, dateAdded, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
+                } else {
+                    user.getListOfUnfinishedProject().get(listOfDoingProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, dateAdded, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
+                }
+
+                var newTask = new TitledPane();
+                var contentOfTask = new AnchorPane();
+
+                indexOfTask.put(newTask, dateAdded);
+
+                newTask.setContent(contentOfTask);
+
+                var datePickers = getDatePicker(selectedTitlePane);
+
+                if (datePickers != null) {
+                    addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
+                }
+
+                contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
+
+                contentOfTask.getChildren().addAll(addTaskDescription().description(), addTaskDescription().descriptionText());
+
+                CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+                if (taskCheckBox != null) {
+                    taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
+                }
+
+                // Aktualizuj wskaźnik postępu po dodaniu nowego zadania
+                updateProgressBar(selectedTitlePane);
+
+                projectAccordion.getPanes().add(newTask);
+//                    System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
+//                    System.out.println(user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
+            } else {
+                createWarningSign("Najpierw wybierz projekt!");
+            }
+        } catch (Exception e) {
+            createAlertSign(e, "Task Error");
+        } finally {
+            //wyczyszczenie kalendarza
+            taskDueDateDatePicker.setValue(null);
+            taskStartDateDatePicker.setValue(null);
+            taskDescriptionTextArea.clear();
+        }
+    }
+
+    @FXML
+    private void onDeleteButton() {
+        if (selectedTitlePane == null) {
+            createWarningSign("Nie wybrano żadnego projektu ani zadania do usunięcia.");
+            return;
+        }
+
+        // Sprawdź, czy kliknięto projekt
+        Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
+        if (projectAccordion.getExpandedPane() != null) {
+
+            // Zadanie do usunięcia
+            TitledPane selectedTask = projectAccordion.getExpandedPane();
+            projectAccordion.getPanes().remove(selectedTask);
+
+            //Usuń zadanie z modelu danych
+            if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
+                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
+            } else if (listOfDoingProjects.contains(indexOfProject.get(selectedTitlePane))) {
+                user.getListOfUnfinishedProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
+            } else {
+                user.getListOfFinishedProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
+            }
+
+            indexOfTask.remove(selectedTask);
+
+            updateProgressBar(selectedTitlePane);
+
+        } else {
+            // Usuń projekt z listy i mapy
+            Project projectToRemove = indexOfProject.remove(selectedTitlePane);
+
+            if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
+                user.deleteToDoProject(projectToRemove.getDate_added());
+                listOfToDoProjects.remove(projectToRemove);
+                // Projekt do usunięcia
+                toDoProjectContainer.getChildren().remove(selectedTitlePane);
+            } else if (listOfDoingProjects.contains(indexOfProject.get(selectedTitlePane))) {
+                user.deleteUnfinishedProject(projectToRemove.getDate_added());
+                listOfDoingProjects.remove(projectToRemove);
+                doingProjectContainer.getChildren().remove(selectedTitlePane);
+            } else {
+                user.deleteFinishedProject(projectToRemove.getDate_added());
+            }
+
+            // Wyzeruj zaznaczenie
+            selectedTitlePane = null;
+        }
+    }
+
+    public void onSortByStartDate() {
+        //listOfToDoProjects.sort(Comparator.comparing(Project::getDate_added));
+
+        toDoProjectContainer.getChildren().clear(); // Wyczyszczenie VBox przed ponownym dodaniem elementów
+        ArrayList<Project> projects = user.getListOfToDoProject();
+        for (Project project : projects) {
+            toDoProjectContainer.getChildren().add(reversedMap(project));
+        }
+    }
+
+    private TitledPane reversedMap(Project project) {
+        HashMap<Project, TitledPane> reversedMap = new HashMap<>();
+        for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
+            reversedMap.put(entry.getValue(), entry.getKey());
+        }
+        return reversedMap.get(project);
+    }
+
+    public void onSortByDueDate() {
+        //listOfToDoProjects.sort(Comparator.comparing(Project::getDeadline));
+        toDoProjectContainer.getChildren().clear(); // Wyczyszczenie VBox przed ponownym dodaniem elementów
+        ArrayList<Project> projects = user.sortProject(user.getListOfToDoProject());
+        for (Project project : projects) {
+            toDoProjectContainer.getChildren().add(reversedMap(project));
+        }
+    }
+
 
     private void moveProjectToDoing() {
         //numery indeksów projektów, które będą przenoszone
@@ -212,6 +296,14 @@ public class HelloController {
 
         // Ustaw, aby checkbox projektu nie był już klikalny
         CheckBox projectCheckBox = (CheckBox) projectTitlePane.getGraphic();
+        var projectContent = (Accordion) projectTitlePane.getContent();
+
+        for (int i = 1; i < projectContent.getPanes().size(); i++) {
+            TitledPane taskPane = projectContent.getPanes().get(i);
+            CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
+            taskCheckBox.setMouseTransparent(true);
+        }
+
         if (projectCheckBox != null) {
             projectCheckBox.setMouseTransparent(true);
         }
@@ -236,6 +328,89 @@ public class HelloController {
             }
         }
         return allTasksCompleted;
+    }
+
+    private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, DatePicker projectStartDateDatePicker) {
+        var newProject = new TitledPane();
+
+        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker);
+
+        var projectAccordion = new Accordion();
+        newProject.setContent(projectAccordion);
+
+        var contentOfProject = new AnchorPane();
+
+        ResulDates addedDates = addDates(projectStartDateDatePicker, projectDueDateDatePicker);
+        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.dueDate(), addedDates.newDueDatePicker());
+
+        contentOfProject.getChildren().addAll(addProgressBar());
+
+        TitledPane aboutProject = new TitledPane();
+        aboutProject.setText("About Project");
+        projectAccordion.getPanes().add(aboutProject);
+        aboutProject.setContent(contentOfProject);
+
+        return newProject;
+    }
+
+    private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject, DatePicker starDatePicker) {
+        CheckBox checkBox = new CheckBox(nameTextField.getText());
+        newTitledPane.setGraphic(checkBox);
+        checkBox.setMouseTransparent(!starDatePicker.getValue().isBefore(LocalDate.now()));
+        if (isProject) {
+            checkBox.setOnAction(event -> {
+                if (checkBox.isSelected()) {
+                    user.ifFinished();
+                    if (checkIfTaskAreFinished(newTitledPane)) {
+                        moveProjectToDone(newTitledPane);
+                    }
+                }
+            });
+        }
+    }
+
+    private ResulDates addDates(DatePicker startDatePicker, DatePicker dueDatePicker) {
+        var startDate = new Label("Start Date");
+        startDate.setLayoutX(10);
+        startDate.setLayoutY(10);
+
+        var newStartDatePicker = new DatePicker();
+        newStartDatePicker.setLayoutX(90);
+        newStartDatePicker.setLayoutY(5);
+        newStartDatePicker.setValue(startDatePicker.getValue());
+        newStartDatePicker.setMouseTransparent(true);
+
+        var due_Date = new Label("Due Date");
+        due_Date.setLayoutX(10);
+        due_Date.setLayoutY(50);
+
+        var dueDate = new DatePicker();
+        dueDate.setLayoutX(90);
+        dueDate.setLayoutY(45);
+        dueDate.setValue(dueDatePicker.getValue());
+        dueDate.setMouseTransparent(true);
+
+        return new ResulDates(startDate, newStartDatePicker, due_Date, dueDate);
+    }
+
+    private record ResulDates(Label startDate, DatePicker newStartDatePicker, Label dueDate,
+                              DatePicker newDueDatePicker) {
+    }
+
+    private taskDescription addTaskDescription() {
+        var description = new Label("Description");
+        description.setLayoutX(10);
+        description.setLayoutY(90);
+
+        var descriptionText = new TextArea();
+        descriptionText.setText(taskDescriptionTextArea.getText());
+        descriptionText.setLayoutX(90);
+        descriptionText.setLayoutY(90);
+        descriptionText.setEditable(false);
+        return new taskDescription(description, descriptionText);
+    }
+
+    private record taskDescription(Label description, TextArea descriptionText) {
     }
 
     private void updateProgressBar(TitledPane projectPane) {
@@ -267,7 +442,7 @@ public class HelloController {
 
     private ProgressBar getProgressBar(TitledPane projectPane) {
         AnchorPane projectDetailsPane = (AnchorPane) ((Accordion) projectPane.getContent())
-                .getPanes().get(0).getContent();
+                .getPanes().getFirst().getContent();
         for (var node : projectDetailsPane.getChildren()) {
             if (node instanceof ProgressBar) {
                 return (ProgressBar) node;
@@ -276,19 +451,26 @@ public class HelloController {
         return null;
     }
 
+    private ProgressBar addProgressBar() {
+        var progressBar = new ProgressBar();
+        progressBar.setLayoutX(70);
+        progressBar.setLayoutY(85);
+        return progressBar;
+    }
+
     //dostanie się do DatePickers w Projekcie -> może się sprzydać do edycji
     private ArrayList<DatePicker> getDatePicker(TitledPane projectPane) {
         AnchorPane projectDetailsPane = (AnchorPane) ((Accordion) projectPane.getContent())
-                .getPanes().get(0).getContent();
+                .getPanes().getFirst().getContent();
         ArrayList<DatePicker> datePickers = new ArrayList<>();
         for (var node : projectDetailsPane.getChildren()) {
             if (node instanceof DatePicker) {
                 datePickers.add((DatePicker) node);
             }
         }
-        if (datePickers.size() == 0) {
+        if (datePickers.isEmpty()) {
             return null;
-        }else{
+        } else {
             return datePickers;
         }
 
@@ -302,162 +484,16 @@ public class HelloController {
 //        }
     }
 
-    private void addTask(String taskName) {
-        try {
-            if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
-                // selectedTitlePane.getGraphic().setMouseTransparent(false); -> do odblokowania żeby kliknąć w checkbox'a
+    private void getSelectProject(TitledPane titlePane) {
+        // Ustawiamy wybrany TitlePane (do którego będziemy dodawać zadania)
+        selectedTitlePane = titlePane;
+        System.out.println("Wybrano projekt: " + titlePane.getText());
 
-                Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
-
-                LocalDateTime dateAdded = LocalDateTime.now();
-
-                if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
-                    user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, dateAdded, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
-                } else {
-                    user.getListOfUnfinishedProject().get(listOfDoingProjects.indexOf(indexOfProject.get(selectedTitlePane))).addTask(taskName, dateAdded, getLocalDateTime(taskStartDateDatePicker), getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
-                }
-
-                var newTask = new TitledPane();
-                var contentOfTask = new AnchorPane();
-
-                indexOfTask.put(newTask, dateAdded);
-
-                newTask.setContent(contentOfTask);
-
-                addCheckBoxWithName(taskNameTextField, newTask, false);
-
-                //dodanie nazw
-                ResulDates result = getResultDates(taskStartDateDatePicker, taskDueDateDatePicker);
-
-                contentOfTask.getChildren().addAll(result.startDate(), result.newStartDatePicker(), result.dueDate(), result.newDueDatePicker());
-
-                //dodanie opisu
-                var description = new Label("Description");
-                description.setLayoutX(10);
-                description.setLayoutY(90);
-
-                var descriptionText = new TextArea();
-                descriptionText.setText(taskDescriptionTextArea.getText());
-                descriptionText.setLayoutX(90);
-                descriptionText.setLayoutY(90);
-                descriptionText.setEditable(false);
-
-                contentOfTask.getChildren().addAll(description, descriptionText);
-
-
-                CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
-                if (taskCheckBox != null) {
-                    taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
-                }
-
-                // Aktualizuj wskaźnik postępu po dodaniu nowego zadania
-                updateProgressBar(selectedTitlePane);
-
-                projectAccordion.getPanes().add(newTask);
-//                    System.out.printf(""+listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane)));
-//                    System.out.println(user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).getListOfTask());
-            } else {
-                createWarningSign("Najpierw wybierz projekt!");
-            }
-        } catch (Exception e) {
-            createAlertSign(e, "Task Error");
-        } finally {
-            //wyczyszczenie kalendarza
-            projectDueDateDatePicker.setValue(null);
-            projectStartDateDatePicker.setValue(null);
-            taskDescriptionTextArea.clear();
-        }
-
-    }
-
-    @FXML
-    private void onDeleteButton() {
-        if (selectedTitlePane == null) {
-            createWarningSign("Nie wybrano żadnego projektu ani zadania do usunięcia.");
-            return;
-        }
-
-        // Sprawdź, czy kliknięto projekt
-        Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
-        if (projectAccordion.getExpandedPane() != null) {
-
-            // Zadanie do usunięcia
-            TitledPane selectedTask = projectAccordion.getExpandedPane();
-            projectAccordion.getPanes().remove(selectedTask);
-
-            //Usuń zadanie z modelu danych
-            if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
-                user.getListOfToDoProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
-            }else if (listOfDoingProjects.contains(indexOfProject.get(selectedTitlePane))){
-                user.getListOfUnfinishedProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
-            }else {
-                user.getListOfFinishedProject().get(listOfToDoProjects.indexOf(indexOfProject.get(selectedTitlePane))).deleteTask(indexOfTask.get(selectedTask));
-            }
-
-            indexOfTask.remove(selectedTask);
-
-            updateProgressBar(selectedTitlePane);
-
-        } else {
-            // Usuń projekt z listy i mapy
-            Project projectToRemove = indexOfProject.remove(selectedTitlePane);
-
-            if (listOfToDoProjects.contains(indexOfProject.get(selectedTitlePane))) {
-                user.deleteToDoProject(projectToRemove.getDate_added());
-                listOfToDoProjects.remove(projectToRemove);
-                // Projekt do usunięcia
-                toDoProjectContainer.getChildren().remove(selectedTitlePane);
-            }else if (listOfDoingProjects.contains(indexOfProject.get(selectedTitlePane))){
-                user.deleteUnfinishedProject(projectToRemove.getDate_added());
-                listOfDoingProjects.remove(projectToRemove);
-                doingProjectContainer.getChildren().remove(selectedTitlePane);
-            }else {
-                user.deleteFinishedProject(projectToRemove.getDate_added());
-            }
-
-            // Wyzeruj zaznaczenie
-            selectedTitlePane = null;
-        }
-    }
-
-
-    private ResulDates getResultDates(DatePicker startDatePicker, DatePicker dueDatePicker) {
-        var startDate = new Label("Start Date");
-        startDate.setLayoutX(10);
-        startDate.setLayoutY(10);
-
-        var newStartDatePicker = new DatePicker();
-        newStartDatePicker.setLayoutX(90);
-        newStartDatePicker.setLayoutY(5);
-        newStartDatePicker.setValue(startDatePicker.getValue());
-        newStartDatePicker.setMouseTransparent(true);
-
-        var due_Date = new Label("Due Date");
-        due_Date.setLayoutX(10);
-        due_Date.setLayoutY(50);
-
-        var dueDate = new DatePicker();
-        dueDate.setLayoutX(90);
-        dueDate.setLayoutY(45);
-        dueDate.setValue(dueDatePicker.getValue());
-        dueDate.setMouseTransparent(true);
-
-        ResulDates resulDates = new ResulDates(startDate, newStartDatePicker, due_Date, dueDate);
-        return resulDates;
-    }
-
-    private record ResulDates(Label startDate, DatePicker newStartDatePicker, Label dueDate, DatePicker newDueDatePicker) {
-    }
-
-    private void createWarningSign(String s) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, s, ButtonType.OK);
-        alert.show();
     }
 
     private LocalDateTime getLocalDateTime(DatePicker datePicker) {
         LocalDate datePickerValue = datePicker.getValue();
-        LocalDateTime dateTime = datePickerValue.atTime(LocalTime.of(0, 0));
-        return dateTime;
+        return datePickerValue.atTime(LocalTime.of(0, 0));
     }
 
 
@@ -484,13 +520,10 @@ public class HelloController {
         alert.showAndWait();
     }
 
-    private void handleSelectProject(TitledPane titlePane) {
-        // Ustawiamy wybrany TitlePane (do którego będziemy dodawać zadania)
-        selectedTitlePane = titlePane;
-        System.out.println("Wybrano projekt: " + titlePane.getText());
-
+    private void createWarningSign(String s) {
+        Alert alert = new Alert(Alert.AlertType.WARNING, s, ButtonType.OK);
+        alert.show();
     }
-
 
     final Timeline timeline1 = new Timeline(
             new KeyFrame(
@@ -503,10 +536,4 @@ public class HelloController {
                     }
             )
     );
-
-    @FXML
-    public void initialize() {
-        timeline1.setCycleCount(Animation.INDEFINITE);
-        timeline1.play();
-    }
 }

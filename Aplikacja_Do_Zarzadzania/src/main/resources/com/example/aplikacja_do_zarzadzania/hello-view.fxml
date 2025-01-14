@@ -109,8 +109,8 @@
                         <Button layoutX="548.0" layoutY="39.0" mnemonicParsing="false" text="Raport" />
                         <Button layoutX="14.0" layoutY="39.0" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="deleteButton" layoutX="82.0" layoutY="39.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
-                        <Button layoutX="382.0" layoutY="39.0" mnemonicParsing="false" text="Creation Date" />
-                        <Button layoutX="300.0" layoutY="39.0" mnemonicParsing="false" text="Due Date" />
+                        <Button fx:id="sortByStartDateButton" layoutX="382.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByStartDate" text="Creation Date" />
+                        <Button fx:id="sortByDueDateButton" layoutX="300.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByDueDate" text="Due Date" />
                         <Label layoutX="300.0" layoutY="14.0" text="Sort projects by: " />
                     </children>
                 </AnchorPane>
