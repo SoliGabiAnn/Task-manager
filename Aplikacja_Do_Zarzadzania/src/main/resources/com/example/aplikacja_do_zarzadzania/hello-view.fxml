@@ -106,7 +106,7 @@
             <bottom>
                 <AnchorPane prefHeight="70.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button layoutX="548.0" layoutY="39.0" mnemonicParsing="false" text="Raport" />
+                        <Button fx:id="GenerateReportButton" layoutX="548.0" layoutY="39.0" mnemonicParsing="false" onAction="#onGenerateReportButton" text="Raport" />
                         <Button layoutX="14.0" layoutY="39.0" mnemonicParsing="false" text="Edit" />
                         <Button fx:id="deleteButton" layoutX="82.0" layoutY="39.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
                         <Button fx:id="sortByStartDateButton" layoutX="382.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByStartDate" text="Creation Date" />

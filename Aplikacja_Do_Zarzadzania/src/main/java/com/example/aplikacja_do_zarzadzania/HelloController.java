@@ -3,13 +3,18 @@ package com.example.aplikacja_do_zarzadzania;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import kod_aplikacji.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -36,6 +41,7 @@ public class HelloController {
     public TextArea taskDescriptionTextArea;
     public Button sortByDueDateButton;
     public Button sortByStartDateButton;
+    public Button GenerateReportButton;
 
     private TitledPane selectedTitlePane;
     User user = new User();
@@ -391,6 +397,14 @@ public class HelloController {
         dueDate.setMouseTransparent(true);
 
         return new ResulDates(startDate, newStartDatePicker, due_Date, dueDate);
+    }
+
+    public void onGenerateReportButton(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Report.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.setTitle("Raport postępów");
+        stage.show();
     }
 
     private record ResulDates(Label startDate, DatePicker newStartDatePicker, Label dueDate,

@@ -22,7 +22,7 @@ public class reportController {
     private Label freqOfAddingTasksLabel;
     @FXML
     private Label averageTimeOfDoingTasksLabel;
-    private GenerateReport generateReport;
+    private GenerateReport generateReport=new GenerateReport();
 
     @FXML
     private void initialize() {
@@ -36,4 +36,6 @@ public class reportController {
         averageTimeOfDoingTasksLabel.setText(String.valueOf(report.get(6)));
 
     }
+
+
 }

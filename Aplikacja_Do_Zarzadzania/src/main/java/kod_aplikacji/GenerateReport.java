@@ -18,29 +18,16 @@ public class GenerateReport extends User{
     }
 
     private Float averageFreqOfTasks(){
-        LocalDateTime first;
-        LocalDateTime last;
-        if(earliestDate(listOfToDoProject).isBefore(earliestDate(listOfUnfinishedProject))){
-            first=earliestDate(listOfToDoProject);
-        } else {
-            first=earliestDate(listOfUnfinishedProject);
+        var first=earliestOfAll();
+        var last=lastOfAll();
+        if(first!=null && last!=null){
+            long timeframe=ChronoUnit.DAYS.between(first, last);
+            float totalCount=counterTasks(listOfUnfinishedProject)+counterTasks(listOfFinishedProject)+counterTasks(listOfToDoProject);
+            return (totalCount / timeframe);
         }
-        if(first.isAfter(earliestDate(listOfFinishedProject))){
-            first=earliestDate(listOfFinishedProject);
-        }
-        if(latestDate(listOfToDoProject).isAfter(latestDate(listOfUnfinishedProject))){
-            last=latestDate(listOfToDoProject);
-        } else {
-            last=earliestDate(listOfUnfinishedProject);
-        }
-        if(last.isBefore(earliestDate(listOfFinishedProject))){
-            last=earliestDate(listOfFinishedProject);
-        }
-        long timeframe=ChronoUnit.DAYS.between(first, last);
-        float totalCount=counterTasks(listOfUnfinishedProject)+counterTasks(listOfFinishedProject)+counterTasks(listOfToDoProject);
-        return (totalCount / timeframe);
+        return (float) 0;
     }
-    private LocalDateTime earliestDate(ArrayList<Project> listOfProject){
+    private LocalDateTime earliestDateOfList(ArrayList<Project> listOfProject){
         LocalDateTime first = LocalDateTime.now();
         for (Project project : listOfProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
@@ -50,14 +37,66 @@ public class GenerateReport extends User{
             }
         }
         return first;
+
     }
-    private LocalDateTime latestDate(ArrayList<Project> listOfProject){
-        LocalDateTime last = listOfProject.getFirst().getListOfTask().getFirst().getDate_added();
-        for (Project project : listOfProject) {
-            for (int j = 0; j < project.getListOfTask().size(); j++) {
-                if (project.getListOfTask().get(j).getDate_added().isAfter(last)) {
-                    last = project.getListOfTask().get(j).getDate_added();
+    private LocalDateTime latestDateOfList(ArrayList<Project> listOfProject){
+        if(!listOfProject.isEmpty()){
+            LocalDateTime last = listOfProject.getFirst().getListOfTask().getFirst().getDate_added();
+            for (Project project : listOfProject) {
+                for (int j = 0; j < project.getListOfTask().size(); j++) {
+                    if (project.getListOfTask().get(j).getDate_added().isAfter(last)) {
+                        last = project.getListOfTask().get(j).getDate_added();
+                    }
                 }
+            }
+            return last;
+        }
+        return null;
+    }
+    private LocalDateTime earliestOfAll(){//if all lists are empty null is returned
+        LocalDateTime first=LocalDateTime.now();
+        if(!listOfToDoProject.isEmpty() && !listOfUnfinishedProject.isEmpty()){
+            if(earliestDateOfList(listOfToDoProject).isBefore(earliestDateOfList(listOfUnfinishedProject))){
+                first= earliestDateOfList(listOfToDoProject);
+            } else {
+                first= earliestDateOfList(listOfUnfinishedProject);
+            }
+        } else if (!listOfToDoProject.isEmpty() ) {
+            first= earliestDateOfList(listOfToDoProject);
+        } else if (!listOfUnfinishedProject.isEmpty()) {
+            first=earliestDateOfList(listOfUnfinishedProject);
+        }
+        if(first!=null && !listOfFinishedProject.isEmpty()){
+            if(first.isAfter(earliestDateOfList(listOfFinishedProject))){
+                first= earliestDateOfList(listOfFinishedProject);
+            }
+            } else if (!listOfFinishedProject.isEmpty()) {
+                first=earliestDateOfList(listOfFinishedProject);
+            }
+        return first;
+    }
+
+
+
+
+    private LocalDateTime lastOfAll(){//if all lists are empty null is returned
+        LocalDateTime last=null;
+        if(!listOfToDoProject.isEmpty() && !listOfUnfinishedProject.isEmpty()){
+            if(latestDateOfList(listOfToDoProject).isAfter(latestDateOfList(listOfUnfinishedProject))){
+                last= latestDateOfList(listOfToDoProject);
+            } else {
+                last = earliestDateOfList(listOfUnfinishedProject);
+            }
+        } else if (!listOfToDoProject.isEmpty() ) {
+            last= latestDateOfList(listOfToDoProject);
+        } else if (!listOfUnfinishedProject.isEmpty()) {
+            last=latestDateOfList(listOfUnfinishedProject);
+        }
+        if(last!=null && !listOfFinishedProject.isEmpty()){
+            if(last.isBefore(earliestDateOfList(listOfFinishedProject))){
+                last= latestDateOfList(listOfFinishedProject);
+        } else if (!listOfFinishedProject.isEmpty()) {
+                last=latestDateOfList(listOfFinishedProject);
             }
         }
         return last;
