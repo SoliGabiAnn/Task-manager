@@ -4,15 +4,15 @@ import java.util.concurrent.ExecutionException;
 
 public class SkrzyniaBiegow extends Komponent {
     private int aktualnyBieg = 1;       //0 - jest na luzie, 1-5 biegi, 6 wsteczny
-    private int iloscBiegow;
+    private final int iloscBiegow;
     private int aktualnePrzelozenie = 0;
 
-    public Sprzeglo spr;
+    private Sprzeglo spr;
 
-    SkrzyniaBiegow(int iloscBiegow, String nazwa, int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
+    public SkrzyniaBiegow(int iloscBiegow, String nazwa, String nazwaSprzeglo,int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
         super(nazwa, wagaSkrzynia, cenaSkrzynia);
         this.iloscBiegow = iloscBiegow;
-        this.spr = new Sprzeglo(nazwa, wagaSprzeglo, cenaSprzeglo);
+        this.spr = new Sprzeglo(nazwaSprzeglo, wagaSprzeglo, cenaSprzeglo);
 
     }
 
@@ -51,6 +51,12 @@ public class SkrzyniaBiegow extends Komponent {
 
     public int getWagaSkrzynia() {
         return getWaga() + spr.getWaga();
+    }
+    public int getIloscBiegow(){
+        return iloscBiegow;
+    }
+    public Sprzeglo getSprzeglo(){
+        return spr;
     }
 
 }

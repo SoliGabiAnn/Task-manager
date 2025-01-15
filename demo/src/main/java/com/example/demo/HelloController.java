@@ -1,6 +1,9 @@
 package com.example.demo;
 
 import com.example.demo.samochód.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,19 +11,21 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
+import javafx.util.Callback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class HelloController {
     public Label markaLabel;
     public Label modelTextField;
     public Label nrRejTextField;
-    public Label pozycjaXTextField;
-    public Label pozycjaYTextField;
-    public Button dodajSamochdoButton;
+    public Label pozycjaXLabel;
+    public Label pozycjaYLabel;
+    public Button dodajSamochodButton;
+    public Button usunSamochodButton;
 
     public ToggleGroup stanSamochodu;
     public ToggleButton wlaczSamochodButton;
@@ -29,24 +34,33 @@ public class HelloController {
     public Button zmniejszBiegButton;
     public Button zwiekszBiegButton;
     public Label aktbiegLabel;
+    public Label nazwaSkrzyniaLabel;
+    public Label cenaSkrzyniaLabel;
+    public Label wagaSkrzyniaLabel;
+    public Label iloscBiegowLabel;
 
     public ToggleGroup stanSprzegla;
     public ToggleButton zwolnijSprzegloButton;
     public ToggleButton wscisnijSprzegloButton;
+    public Label nazwaSprzegloLabel;
+    public Label wagaSprzegloLabel;
+    public Label cenaSprzegloLabel;
 
     public Button zwiekszObrotyButton;
     public Button zmniejszObrotyButton;
     public Label aktualneObrotyLabel;
     public Label maksymalneObrotyLabel;
     public Label stanWlaczeniaSilnikaLabel;
+    public Label nazwaSilnikLabel;
+    public Label cenaSilnikLabel;
+    public Label wagaSilnikLabel;
 
     public ImageView carImageView;
     public ImageView mapaImageView;
 
     @FXML
-    private Label welcomeText;
-    @FXML
-    private ComboBox<String> wybierzSamochodComboBox;
+    private ComboBox<Samochod> wybierzSamochodComboBox;
+    private ObservableList<Samochod> samochody = FXCollections.observableArrayList();
     @FXML
     Samochod tmpCar;
     List<Samochod> createdCars = new ArrayList<>();
@@ -54,25 +68,37 @@ public class HelloController {
 
     static Samochod samochod;
 
-
     public void addCarToList(String sprzegloNazwa, int sprzegloWaga, int sprzegloCena, int iloscBiegow, int skrzyniaCena, int skrzyniaWaga, String skrzyniaNazwa, int maxObroty, String silnikNazwa, int silnikWaga, int silnikCena, String numerRejs, String model, String marka, int waga, int x, int y, int maxspeed) {
         System.out.println("Naciśnięto");
         createdCars.add(newCar(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga, x, y, maxspeed));
         carModels.add(samochod.getModel());
-        wybierzSamochodComboBox.getItems().addAll(carModels);
+        samochody.add(samochod);
+
         samochod.setController(this);
         aktbiegLabel.setText(String.valueOf(samochod.getaktBieg()));
-
+        nazwaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getNazwa()));
+        cenaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getCena()));
+        wagaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getWagaSkrzynia()));
+        iloscBiegowLabel.setText(String.valueOf(iloscBiegow));
+        nazwaSprzegloLabel.setText(String.valueOf(sprzegloNazwa));
+        cenaSprzegloLabel.setText(String.valueOf(sprzegloCena));
+        wagaSprzegloLabel.setText(String.valueOf(sprzegloWaga));
+        nazwaSilnikLabel.setText(String.valueOf(silnikNazwa));
+        cenaSilnikLabel.setText(String.valueOf(silnikCena));
+        wagaSilnikLabel.setText(String.valueOf(silnikWaga));
+        aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
+        maksymalneObrotyLabel.setText(String.valueOf(samochod.maxObroty()));
+        stanWlaczeniaSilnikaLabel.setText(stanSilnika());
     }
 
     public Samochod newCar(String nazwaSprzeglo, int wagaSprzeglo, int cenaSprzeglo, int iloscBiegow, int cenaSkrzynia, int wagaSkrzynia, String nazwaSkrzynia, int maxObroty, String nazwaSilnik, int wagaSilnik, int cenaSilnik, String nrRejestracyjny, String model, String marka, int waga, int x, int y, int maxpredkosc) {
-        samochod = new Samochod(iloscBiegow, maxObroty, nrRejestracyjny, marka, model, maxpredkosc, nazwaSilnik, nazwaSkrzynia, wagaSilnik, wagaSkrzynia, wagaSprzeglo, cenaSilnik, cenaSkrzynia, cenaSprzeglo);
+        samochod = new Samochod(iloscBiegow, maxObroty, nrRejestracyjny, marka, model, maxpredkosc, nazwaSilnik, nazwaSkrzynia, nazwaSprzeglo, wagaSilnik, wagaSkrzynia, wagaSprzeglo, cenaSilnik, cenaSkrzynia, cenaSprzeglo);
         samochod.setController(this);
         markaLabel.setText(marka);
         modelTextField.setText(model);
         nrRejTextField.setText(nrRejestracyjny);
-        pozycjaXTextField.setText(String.valueOf(x));
-        pozycjaYTextField.setText(String.valueOf(y));
+        pozycjaXLabel.setText(String.valueOf(x));
+        pozycjaYLabel.setText(String.valueOf(y));
 
         return samochod;
     }
@@ -81,8 +107,8 @@ public class HelloController {
     @FXML
     public void initialize() {
         System.out.println("HelloController initialized");      // Load and set the car image
-        Image mapa = new Image(getClass().getResource("/mapa.jpg").toExternalForm());
-        Image carImage = new Image(getClass().getResource("/car.jpg").toExternalForm());
+        Image mapa = new Image(Objects.requireNonNull(getClass().getResource("/mapa.jpg")).toExternalForm());
+        Image carImage = new Image(Objects.requireNonNull(getClass().getResource("/car.jpg")).toExternalForm());
         System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
         mapaImageView.setImage(mapa);
 //        carImageView.setImage(carImage);
@@ -97,6 +123,38 @@ public class HelloController {
 //            samochod.jedzDo(nowaPozycja);
 //        });
 
+        wybierzSamochodComboBox.setItems(samochody);
+        wybierzSamochodComboBox.setCellFactory(new Callback<ListView<Samochod>, ListCell<Samochod>>() {
+            @Override
+            public ListCell<Samochod> call(ListView<Samochod> param) {
+                return new ListCell<Samochod>() {
+                    @Override
+                    protected void updateItem(Samochod item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.getMarka() + " " + item.getModel());
+                        }
+                    }
+                };
+            }
+        });
+        wybierzSamochodComboBox.setButtonCell(new ListCell<Samochod>() {
+            @Override
+            protected void updateItem(Samochod item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getMarka() + " " + item.getModel());
+                }
+            }
+        });
+        wybierzSamochodComboBox.setOnAction(event -> {
+            samochod = wybierzSamochodComboBox.getSelectionModel().getSelectedItem();
+            refresh();
+        });
     }
 
     public void openAddCarWindow() throws IOException {
@@ -113,9 +171,19 @@ public class HelloController {
         markaLabel.setText(samochod.getMarka());
         modelTextField.setText(samochod.getModel());
         nrRejTextField.setText(samochod.getnrRej());
-        pozycjaXTextField.setText(String.valueOf(samochod.getpozX()));
-        pozycjaYTextField.setText(String.valueOf(samochod.getpozY()));
+        pozycjaXLabel.setText(String.valueOf(samochod.getpozX()));
+        pozycjaYLabel.setText(String.valueOf(samochod.getpozY()));
+        nazwaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getNazwa()));
+        cenaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getCena()));
+        wagaSkrzyniaLabel.setText(String.valueOf(samochod.getSkrzynia().getWaga()));
+        iloscBiegowLabel.setText(String.valueOf(samochod.getSkrzynia().getIloscBiegow()));
         aktbiegLabel.setText(String.valueOf(samochod.getaktBieg()));
+        nazwaSprzegloLabel.setText(String.valueOf(samochod.getSkrzynia().getSprzeglo().getNazwa()));
+        cenaSprzegloLabel.setText(String.valueOf(samochod.getSkrzynia().getCena()));
+        wagaSprzegloLabel.setText(String.valueOf(samochod.getSkrzynia().getWaga()));
+        nazwaSilnikLabel.setText(String.valueOf(samochod.getSilnik().getNazwa()));
+        cenaSilnikLabel.setText(String.valueOf(samochod.getSilnik().getCena()));
+        wagaSilnikLabel.setText(String.valueOf(samochod.getSilnik().getWaga()));
         aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
         maksymalneObrotyLabel.setText(String.valueOf(samochod.maxObroty()));
         stanWlaczeniaSilnikaLabel.setText(stanSilnika());
@@ -127,28 +195,26 @@ public class HelloController {
             samochod.wlacz();
             System.out.println("Samochód włączony!");
         } catch (SprzegloException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Sprzegło");
-            alert.setHeaderText(e.getMessage());
-            alert.showAndWait();
+            alertDialog("Sprzęgło", e);
         }
-        if (samochod.stansprzegla()) {
+        if (samochod.getSkrzynia().getSprzeglo().getstanSp()) {
             samochod.uruchomSilnik();
             refresh();
         }
     }
 
     @FXML
-    public void wylaczSamochod() throws SprzegloException {
+    public void wylaczSamochod() throws SprzegloException, SamochodException {
         try {
             samochod.wylacz();
             refresh();
             System.out.println("Samochód wyłączony!");
         } catch (SprzegloException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Sprzegło");
-            alert.setHeaderText(e.getMessage());
-            alert.showAndWait();
+            alertDialog("Sprzegło", e);
+        }
+        if (samochod.getSkrzynia().getSprzeglo().getstanSp()) {
+            samochod.zatrzymajSilnik();
+            refresh();
         }
     }
 
@@ -163,7 +229,7 @@ public class HelloController {
     }
 
     @FXML
-    public void zwiekszBieg() throws SkrzyniaException, SamochodException, SilnikException, SprzegloException {
+    public void zwiekszBieg() throws SamochodException, SprzegloException, SkrzyniaException, SilnikException  {
         try {
             samochod.skrzyniaZwiekszB();
             System.out.println("Zwiekszam bieg!");
@@ -183,7 +249,7 @@ public class HelloController {
         refresh();
     }
 
-    public void zmniejszBieg() throws SkrzyniaException, SamochodException {
+    public void zmniejszBieg() throws SilnikException, SprzegloException, SkrzyniaException, SamochodException {
         try {
             samochod.skrzyniaZmniejszB();
             System.out.println("Zmniejszam bieg!");
@@ -210,7 +276,7 @@ public class HelloController {
         }
     }
 
-    public void zwiekszObroty() throws SamochodException {
+    public void zwiekszObroty() throws SilnikException, SprzegloException, SkrzyniaException {
         try {
             samochod.zwiekszObroty();
         } catch (SamochodException e) {
@@ -219,7 +285,7 @@ public class HelloController {
         refresh();
     }
 
-    public void zmniejszObroty() throws SamochodException {
+    public void zmniejszObroty() throws SamochodException, SilnikException{
         try {
             samochod.zmniejszObroty();
         } catch (SamochodException e) {
@@ -237,5 +303,10 @@ public class HelloController {
         alert.setHeaderText(e.toString());
         alert.showAndWait();
     }
-}
 
+
+    public void onUsunSamochod(ActionEvent actionEvent) {
+        samochody.remove(samochod);
+        wybierzSamochodComboBox.getSelectionModel().selectFirst();
+    }
+}
