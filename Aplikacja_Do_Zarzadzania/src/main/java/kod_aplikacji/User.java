@@ -81,13 +81,13 @@ public class User {
     }
 
     //lista indeksów projektów, które będą zmieniały stan
-    ArrayList <Integer> listOfIndex=new ArrayList<>();
+    ArrayList <Integer> listOfIndexOfProjectToMove =new ArrayList<>();
 
-    public ArrayList<Integer> getListOfIndex(){
-        return listOfIndex;
+    public ArrayList<Integer> getListOfIndexOfProjectToMove(){
+        return listOfIndexOfProjectToMove;
     }
-    public void clearListOfToDoProject(){
-        listOfIndex.clear();
+    public void clearListOfIndexOfProjectToMove(){
+        listOfIndexOfProjectToMove.clear();
     }
 
     public void ifStarted() {
@@ -96,7 +96,7 @@ public class User {
                 if(listOfToDoProject.get(i).getDate_start().isBefore(LocalDateTime.now())){
                     this.addUnfinishedProject(listOfToDoProject.get(i));
                     this.deleteToDoProject(listOfToDoProject.get(i).getDate_added());
-                    listOfIndex.add(i);
+                    listOfIndexOfProjectToMove.add(i);
                 }
             }
         }
