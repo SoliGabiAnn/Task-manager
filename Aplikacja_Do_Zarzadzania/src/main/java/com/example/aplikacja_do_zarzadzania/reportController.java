@@ -22,10 +22,11 @@ public class reportController {
     private Label freqOfAddingTasksLabel;
     @FXML
     private Label averageTimeOfDoingTasksLabel;
-    private GenerateReport generateReport=new GenerateReport();
+    private GenerateReport generateReport;
+    private HelloController helloController;
 
     @FXML
-    private void initialize() {
+    public void fillReport() {
         ArrayList<Float> report = generateReport.generate();
         projectToDoLabel.setText(String.valueOf( report.get(0)));
         projectDoingLabel.setText(String.valueOf(report.get(1)));
@@ -37,5 +38,8 @@ public class reportController {
 
     }
 
+    public void setGenerateReport(User user) {
+        generateReport = new GenerateReport(user);
+    }
 
 }

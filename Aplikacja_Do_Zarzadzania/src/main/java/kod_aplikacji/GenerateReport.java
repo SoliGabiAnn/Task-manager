@@ -4,14 +4,20 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class GenerateReport extends User{
+public class GenerateReport{
+    private User user;
+
+    public GenerateReport(User user){
+        this.user = user;
+    }
+    
     public ArrayList<Float> generate(){
         ArrayList<Float> report = new ArrayList<>();
-        report.add((float) listOfToDoProject.size());
-        report.add((float)listOfUnfinishedProject.size());
-        report.add((float)listOfFinishedProject.size());
-        report.add(counterUnfinishedTasks(listOfToDoProject)+counterUnfinishedTasks(listOfUnfinishedProject));
-        report.add(counterDoneTasks(listOfFinishedProject)+counterDoneTasks(listOfUnfinishedProject));
+        report.add((float) user.listOfToDoProject.size());
+        report.add((float)user.listOfUnfinishedProject.size());
+        report.add((float)user.listOfFinishedProject.size());
+        report.add(counterUnfinishedTasks(user.listOfToDoProject)+counterUnfinishedTasks(user.listOfUnfinishedProject));
+        report.add(counterDoneTasks(user.listOfFinishedProject)+counterDoneTasks(user.listOfUnfinishedProject));
         report.add(averageFreqOfTasks());
         report.add(averageTimeOfCompletingTasks());
         return report;
@@ -21,8 +27,8 @@ public class GenerateReport extends User{
         var first=earliestOfAll();
         var last=lastOfAll();
         if(first!=null && last!=null){
-            long timeframe=ChronoUnit.DAYS.between(first, last);
-            float totalCount=counterTasks(listOfUnfinishedProject)+counterTasks(listOfFinishedProject)+counterTasks(listOfToDoProject);
+            long timeframe=ChronoUnit.SECONDS.between(first, last);
+            float totalCount=counterTasks(user.listOfUnfinishedProject)+counterTasks(user.listOfFinishedProject)+counterTasks(user.listOfToDoProject);
             return (totalCount / timeframe);
         }
         return (float) 0;
@@ -41,7 +47,7 @@ public class GenerateReport extends User{
     }
     private LocalDateTime latestDateOfList(ArrayList<Project> listOfProject){
         if(!listOfProject.isEmpty()){
-            LocalDateTime last = listOfProject.getFirst().getListOfTask().getFirst().getDate_added();
+            LocalDateTime last =listOfProject.getFirst().getDate_added();
             for (Project project : listOfProject) {
                 for (int j = 0; j < project.getListOfTask().size(); j++) {
                     if (project.getListOfTask().get(j).getDate_added().isAfter(last)) {
@@ -55,23 +61,23 @@ public class GenerateReport extends User{
     }
     private LocalDateTime earliestOfAll(){//if all lists are empty null is returned
         LocalDateTime first=LocalDateTime.now();
-        if(!listOfToDoProject.isEmpty() && !listOfUnfinishedProject.isEmpty()){
-            if(earliestDateOfList(listOfToDoProject).isBefore(earliestDateOfList(listOfUnfinishedProject))){
-                first= earliestDateOfList(listOfToDoProject);
+        if(!user.listOfToDoProject.isEmpty() && !user.listOfUnfinishedProject.isEmpty()){
+            if(earliestDateOfList(user.listOfToDoProject).isBefore(earliestDateOfList(user.listOfUnfinishedProject))){
+                first= earliestDateOfList(user.listOfToDoProject);
             } else {
-                first= earliestDateOfList(listOfUnfinishedProject);
+                first= earliestDateOfList(user.listOfUnfinishedProject);
             }
-        } else if (!listOfToDoProject.isEmpty() ) {
-            first= earliestDateOfList(listOfToDoProject);
-        } else if (!listOfUnfinishedProject.isEmpty()) {
-            first=earliestDateOfList(listOfUnfinishedProject);
+        } else if (!user.listOfToDoProject.isEmpty() ) {
+            first= earliestDateOfList(user.listOfToDoProject);
+        } else if (!user.listOfUnfinishedProject.isEmpty()) {
+            first=earliestDateOfList(user.listOfUnfinishedProject);
         }
-        if(first!=null && !listOfFinishedProject.isEmpty()){
-            if(first.isAfter(earliestDateOfList(listOfFinishedProject))){
-                first= earliestDateOfList(listOfFinishedProject);
+        if(first!=null && !user.listOfFinishedProject.isEmpty()){
+            if(first.isAfter(earliestDateOfList(user.listOfFinishedProject))){
+                first= earliestDateOfList(user.listOfFinishedProject);
             }
-            } else if (!listOfFinishedProject.isEmpty()) {
-                first=earliestDateOfList(listOfFinishedProject);
+            } else if (!user.listOfFinishedProject.isEmpty()) {
+                first=earliestDateOfList(user.listOfFinishedProject);
             }
         return first;
     }
@@ -81,22 +87,22 @@ public class GenerateReport extends User{
 
     private LocalDateTime lastOfAll(){//if all lists are empty null is returned
         LocalDateTime last=null;
-        if(!listOfToDoProject.isEmpty() && !listOfUnfinishedProject.isEmpty()){
-            if(latestDateOfList(listOfToDoProject).isAfter(latestDateOfList(listOfUnfinishedProject))){
-                last= latestDateOfList(listOfToDoProject);
+        if(!user.listOfToDoProject.isEmpty() && !user.listOfUnfinishedProject.isEmpty()){
+            if(latestDateOfList(user.listOfToDoProject).isAfter(latestDateOfList(user.listOfUnfinishedProject))){
+                last= latestDateOfList(user.listOfToDoProject);
             } else {
-                last = earliestDateOfList(listOfUnfinishedProject);
+                last = latestDateOfList(user.listOfUnfinishedProject);
             }
-        } else if (!listOfToDoProject.isEmpty() ) {
-            last= latestDateOfList(listOfToDoProject);
-        } else if (!listOfUnfinishedProject.isEmpty()) {
-            last=latestDateOfList(listOfUnfinishedProject);
+        } else if (!user.listOfToDoProject.isEmpty() ) {
+            last= latestDateOfList(user.listOfToDoProject);
+        } else if (!user.listOfUnfinishedProject.isEmpty()) {
+            last=latestDateOfList(user.listOfUnfinishedProject);
         }
-        if(last!=null && !listOfFinishedProject.isEmpty()){
-            if(last.isBefore(earliestDateOfList(listOfFinishedProject))){
-                last= latestDateOfList(listOfFinishedProject);
-        } else if (!listOfFinishedProject.isEmpty()) {
-                last=latestDateOfList(listOfFinishedProject);
+        if(last!=null && !user.listOfFinishedProject.isEmpty()){
+            if(last.isBefore(earliestDateOfList(user.listOfFinishedProject))){
+                last= latestDateOfList(user.listOfFinishedProject);
+        } else if (!user.listOfFinishedProject.isEmpty()) {
+                last=latestDateOfList(user.listOfFinishedProject);
             }
         }
         return last;
@@ -132,12 +138,12 @@ public class GenerateReport extends User{
     }
     private Float averageTimeOfCompletingTasks(){
         long sum=0;
-        for (Project project : listOfFinishedProject) {
+        for (Project project : user.listOfFinishedProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
-                sum += ChronoUnit.DAYS.between(project.getListOfTask().get(j).getDate_start(), project.getListOfTask().get(j).getDate_end());
+                sum += ChronoUnit.SECONDS.between(project.getListOfTask().get(j).getDate_start(), project.getListOfTask().get(j).getDate_end());
             }
         }
-        return (float) sum/counterTasks(listOfFinishedProject);
+        return (float) sum/counterTasks(user.listOfFinishedProject);
     }
 
 }

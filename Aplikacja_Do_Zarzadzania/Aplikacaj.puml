@@ -10,7 +10,7 @@ Project o-- Task
 User o-- Project
 Basic_Info <|- Task
 Basic_Info <|- Project
-User <|- generateReport
+ GenerateReport o-- User
 
 abstract class Basic_Info{
 name;
@@ -50,7 +50,7 @@ ifStarted();
 ifFinished();
 }
 
-class generateReport{
+class GenerateReport{
 generate();
 averageFreqOfTasks();
 amountOfTasksToDo();
