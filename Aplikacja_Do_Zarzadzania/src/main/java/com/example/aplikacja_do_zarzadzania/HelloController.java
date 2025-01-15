@@ -404,6 +404,9 @@ public class HelloController {
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
         stage.setTitle("Raport postępów");
+        reportController newReportController=loader.getController();
+        newReportController.setGenerateReport(user);
+        newReportController.fillReport();
         stage.show();
     }
 

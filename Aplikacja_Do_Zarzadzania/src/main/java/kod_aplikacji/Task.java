@@ -10,9 +10,9 @@ public class Task extends Basic_Info{
         super(name, state, date_added, date_start, date_end, deadline);
         this.description = description;
     }
-    public void endTask(){
+    public void endTask(LocalDateTime end){
         this.setState(true);
-        this.setDate_end(LocalDateTime.now());
+        this.setDate_end(end);
     }
 
 }
