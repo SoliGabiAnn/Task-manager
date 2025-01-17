@@ -17,7 +17,7 @@ public class FileHandler {
     public void writeToJsonFile( User user) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        mapper.writeValue(this.file, user);
+        mapper.writerWithDefaultPrettyPrinter().writeValue(this.file, user);
     }
 
     // Generic method to read an object from a JSON file
