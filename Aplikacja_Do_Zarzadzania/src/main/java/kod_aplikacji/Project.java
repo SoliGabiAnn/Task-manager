@@ -1,14 +1,21 @@
 package kod_aplikacji;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Project extends Basic_Info {
+    @JsonProperty("listOfTask")
     protected ArrayList<Task> listOfTask = new ArrayList<Task>();
+    @JsonProperty("isTaskSortingUpToDate")
     Boolean isTaskSortingUpToDate = false;
 
-    public Project(String name, Boolean state, LocalDateTime date_added, LocalDateTime date_start, LocalDateTime date_end, LocalDateTime deadline) {
+    @JsonCreator
+    public Project(@JsonProperty("name") String name,@JsonProperty("state") Boolean state,@JsonProperty("date_added") LocalDateTime date_added,
+                   @JsonProperty("date_start")LocalDateTime date_start,@JsonProperty("date_end") LocalDateTime date_end,@JsonProperty("deadline") LocalDateTime deadline) {
         super(name, state, date_added, date_start, date_end, deadline);
     }
 

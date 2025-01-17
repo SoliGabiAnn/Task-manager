@@ -1,5 +1,7 @@
 package kod_aplikacji;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -20,13 +22,19 @@ public abstract class Basic_Info {
         this.deadline = deadline;
     }
 
+    @JsonProperty("date_added")
     public LocalDateTime getDate_added() {
         return date_added;
     }
+    @JsonProperty("deadline")
     public LocalDateTime getDeadline() {return deadline;}
+    @JsonProperty("date_start")
     public LocalDateTime getDate_start() {return date_start;}
+    @JsonProperty("name")
     public String getName() {return name;}
+    @JsonProperty("state")
     public Boolean getState() {return state;}
+    @JsonProperty("date_end")
     public LocalDateTime getDate_end() {return date_end;}
 
     public void setState(Boolean state) {this.state = state;}

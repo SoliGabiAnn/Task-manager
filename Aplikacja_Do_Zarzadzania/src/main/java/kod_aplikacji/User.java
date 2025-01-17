@@ -1,14 +1,21 @@
 package kod_aplikacji;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class User {
-    String username;
+    @JsonProperty("username")
+    private String username;
+    @JsonProperty("listOfToDoProject")
     protected ArrayList<Project> listOfToDoProject=new ArrayList<Project>();
+    @JsonProperty("listOfUnfinishedProject")
     protected ArrayList<Project> listOfUnfinishedProject=new ArrayList<Project>();
+    @JsonProperty("listOfFinishedProject")
     protected ArrayList<Project> listOfFinishedProject=new ArrayList<Project>();
-    Boolean isProjectSortingUptoDate=false;
+    @JsonProperty("isProjectSortingUptoDate")
+    private Boolean isProjectSortingUptoDate=false;
 
     public void setUsername(String username) {
         this.username = username;
@@ -81,6 +88,7 @@ public class User {
     }
 
     //lista indeksów projektów, które będą zmieniały stan
+    @JsonProperty("listOfIndexOfProjectToMove")
     ArrayList <Integer> listOfIndexOfProjectToMove =new ArrayList<>();
 
     public ArrayList<Integer> getListOfIndexOfProjectToMove(){
@@ -113,20 +121,50 @@ public class User {
         }
     }
     //gettery i settery
+
     public ArrayList<Project> getListOfToDoProject() {
         return listOfToDoProject;
     }
+
 
     public ArrayList<Project> getListOfUnfinishedProject() {
         return listOfUnfinishedProject;
     }
 
+
     public ArrayList<Project> getListOfFinishedProject() {
         return listOfFinishedProject;
     }
 
+    public void setListOfToDoProject(ArrayList<Project> listOfToDoProject) {
+        this.listOfToDoProject = listOfToDoProject;
+    }
+
+    public void setListOfUnfinishedProject(ArrayList<Project> listOfUnfinishedProject) {
+        this.listOfUnfinishedProject = listOfUnfinishedProject;
+    }
+
+    public void setListOfFinishedProject(ArrayList<Project> listOfFinishedProject) {
+        this.listOfFinishedProject = listOfFinishedProject;
+    }
 
 
+    public Boolean getProjectSortingUptoDate() {
+        return isProjectSortingUptoDate;
+    }
+
+    public void setProjectSortingUptoDate(Boolean projectSortingUptoDate) {
+        isProjectSortingUptoDate = projectSortingUptoDate;
+    }
+
+
+    public void setListOfIndexOfProjectToMove(ArrayList<Integer> listOfIndexOfProjectToMove) {
+        this.listOfIndexOfProjectToMove = listOfIndexOfProjectToMove;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 //    public static void main(String args[]){
 //        User u = new User();
 //        u.setUsername("admin");

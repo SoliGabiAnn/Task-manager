@@ -3,6 +3,7 @@ package com.example.aplikacja_do_zarzadzania;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,15 +45,61 @@ public class HelloController {
 
     private TitledPane selectedTitlePane;
     User user = new User();
+    FileHandler handler=new FileHandler();;
+
+
 
     private final Map<TitledPane, Project> indexOfProject = new HashMap<>();
     private final Map<TitledPane, LocalDateTime> indexOfTaskDateAdded = new HashMap<>();
     private final Map<Task, TitledPane> indexOfTask = new HashMap<>();
 
+    public HelloController() throws IOException {
+    }
+
     @FXML
     public void initialize() {
         timeline1.setCycleCount(Animation.INDEFINITE);
         timeline1.play();
+        if(handler.getFile().length()>0){
+            try {
+                user= handler.readFromJsonFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for(Project project:user.getListOfToDoProject()){
+            addProject(project);
+
+            for(Task task:project.getListOfTask()){
+                addTask(task,project);
+            }
+        }
+        for(Project project:user.getListOfUnfinishedProject()){
+            addProject(project);
+
+            for(Task task:project.getListOfTask()){
+                addTask(task,project);
+            }
+        }
+        for(Project project:user.getListOfFinishedProject()){
+            addProject(project);
+
+            for(Task task:project.getListOfTask()){
+                addTask(task,project);
+            }
+        }
+    }
+    public void setStage(Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            try {
+                handler.writeToJsonFile( user);
+                System.out.println("User data saved successfully.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Platform.exit();
+        });
     }
 
     @FXML
@@ -80,6 +127,7 @@ public class HelloController {
             createWarningSign("Proszę podać nazwę projektu lub zadania.");
         }
     }
+
 
     private void addProject(String projectName) {
         try {
@@ -112,6 +160,61 @@ public class HelloController {
         } finally {
             projectDueDateDatePicker.setValue(null);
             projectStartDateDatePicker.setValue(null);
+        }
+    }
+
+    private void addProject(Project project) {
+        var projectTitlePane = addProjectTitlePane(project);
+                indexOfProject.put(projectTitlePane, project);
+
+                if (project.getDate_start().isBefore(project.getDate_added())){
+                    doingProjectContainer.getChildren().add(projectTitlePane);
+                    projectTitlePane.getGraphic().setMouseTransparent(false);
+                }else if(project.getDate_end()!=null) {
+                    doneProjectContainer.getChildren().add(projectTitlePane);
+                }else{
+                    toDoProjectContainer.getChildren().add(projectTitlePane);
+                }
+                projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
+            ;
+    }
+
+    private void addTask(Task task,Project project) {
+        try {
+                TitledPane selectedPane=reversedMap(project);
+                Accordion projectAccordion = (Accordion) selectedPane.getContent();
+                var newTask = new TitledPane();
+                var contentOfTask = new AnchorPane();
+                indexOfTask.put(task, newTask);
+                indexOfTaskDateAdded.put(newTask, task.getDate_added());
+
+                newTask.setContent(contentOfTask);
+                var datePickers = getDatePicker(selectedPane);
+                if (datePickers != null) {
+                    TextField taskNameTextField=new TextField();
+                    taskNameTextField.setText(task.getName());
+                    addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
+                }
+                DatePicker taskStartDateDatePicker=new DatePicker();
+                taskStartDateDatePicker.setValue(LocalDate.from(task.getDate_start()));
+                DatePicker taskDueDateDatePicker=new DatePicker();
+                taskDueDateDatePicker.setValue(LocalDate.from(task.getDeadline()));
+                contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
+                contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
+
+                CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+                if (taskCheckBox != null) {
+                    taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedPane));
+                }
+                updateProgressBar(selectedPane);
+                projectAccordion.getPanes().add(newTask);
+
+        } catch (Exception e) {
+            createAlertSign(e, "Task Error");
+        } finally {
+            taskDueDateDatePicker.setValue(null);
+            taskStartDateDatePicker.setValue(null);
+            taskDescriptionTextArea.clear();
         }
     }
 
@@ -295,6 +398,27 @@ public class HelloController {
         aboutProject.setContent(contentOfProject);
         return newProject;
     }
+    private TitledPane addProjectTitlePane(Project project) {
+        var newProject = new TitledPane();
+        var projectNameTextField = new TextField();
+        projectNameTextField.setText(project.getName());
+        var projectStartDateDatePicker = new DatePicker();
+        projectStartDateDatePicker.setValue(LocalDate.from(project.getDate_start()));
+        var projectDueDateDatePicker = new DatePicker();
+        projectDueDateDatePicker.setValue(LocalDate.from(project.getDeadline()));
+        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker);
+        var projectAccordion = new Accordion();
+        newProject.setContent(projectAccordion);
+        var contentOfProject = new AnchorPane();
+        ResulDates addedDates = addDates(projectStartDateDatePicker, projectDueDateDatePicker);
+        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.dueDate(), addedDates.newDueDatePicker());
+        contentOfProject.getChildren().addAll(addProgressBar());
+        TitledPane aboutProject = new TitledPane();
+        aboutProject.setText("About Project");
+        projectAccordion.getPanes().add(aboutProject);
+        aboutProject.setContent(contentOfProject);
+        return newProject;
+    }
 
     private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject, DatePicker starDatePicker) {
         CheckBox checkBox = new CheckBox(nameTextField.getText());
@@ -356,6 +480,19 @@ public class HelloController {
 
         var descriptionText = new TextArea();
         descriptionText.setText(taskDescriptionTextArea.getText());
+        descriptionText.setLayoutX(90);
+        descriptionText.setLayoutY(90);
+        descriptionText.setEditable(false);
+
+        return new taskDescription(description, descriptionText);
+    }
+    private taskDescription addTaskDescription(Task task) {
+        var description = new Label("Description");
+        description.setLayoutX(10);
+        description.setLayoutY(90);
+
+        var descriptionText = new TextArea();
+        descriptionText.setText(task.getDescription());
         descriptionText.setLayoutX(90);
         descriptionText.setLayoutY(90);
         descriptionText.setEditable(false);
