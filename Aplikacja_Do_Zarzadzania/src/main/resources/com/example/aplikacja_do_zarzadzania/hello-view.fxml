@@ -9,73 +9,61 @@
         <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="728.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <center>
                 <TabPane prefHeight="384.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                    <tabs>
-                        <Tab text="Project">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="52.0" text="Name">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="projectNameTextField" layoutX="14.0" layoutY="34.0" />
-                                        <Label layoutX="14.0" layoutY="84.0" text="Start Date">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <DatePicker fx:id="projectStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
-                                        <Label layoutX="14.0" layoutY="154.0" text="Due Date">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Task">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="52.0" text="Name">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextField fx:id="taskNameTextField" layoutX="14.0" layoutY="34.0" />
-                                        <Label layoutX="14.0" layoutY="84.0" text="Start Date">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <DatePicker fx:id="taskStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
-                                        <Label layoutX="14.0" layoutY="154.0" text="Due Date">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <DatePicker fx:id="taskDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
-                                        <Label layoutX="14.0" layoutY="224.0" text="Description">
-                                            <font>
-                                                <Font size="14.0" />
-                                            </font>
-                                        </Label>
-                                        <TextArea fx:id="taskDescriptionTextArea" layoutX="14.0" layoutY="244.0" prefHeight="114.0" prefWidth="151.0" />
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                    </tabs>
+                    <Tab text="Project">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="52.0" text="Name">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="projectNameTextField" layoutX="14.0" layoutY="34.0" />
+                            <Label layoutX="14.0" layoutY="84.0" text="Start Date">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <DatePicker fx:id="projectStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
+                            <Label layoutX="14.0" layoutY="154.0" text="Due Date">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
+                        </AnchorPane>
+                    </Tab>
+                    <Tab text="Task">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="52.0" text="Name">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="taskNameTextField" layoutX="14.0" layoutY="34.0" />
+                            <Label layoutX="14.0" layoutY="84.0" text="Start Date">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <DatePicker fx:id="taskStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
+                            <Label layoutX="14.0" layoutY="154.0" text="Due Date">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <DatePicker fx:id="taskDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
+                            <Label layoutX="14.0" layoutY="224.0" text="Description">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextArea fx:id="taskDescriptionTextArea" layoutX="14.0" layoutY="244.0" prefHeight="114.0" prefWidth="151.0" />
+                        </AnchorPane>
+                    </Tab>
                 </TabPane>
             </center>
             <bottom>
                 <AnchorPane prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Button fx:id="addButton" layoutX="134.0" layoutY="13.0" mnemonicParsing="false" onAction="#onAddButton" text="Add" />
-                    </children>
+                    <Button fx:id="addButton" layoutX="134.0" layoutY="13.0" mnemonicParsing="false" onAction="#onAddButton" text="Add" />
                 </AnchorPane>
             </bottom>
         </BorderPane>
@@ -84,35 +72,31 @@
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <center>
                 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                    <tabs>
-                        <Tab text="To Do">
-                            <content>
-                                <VBox fx:id="toDoProjectContainer" prefHeight="200.0" prefWidth="100.0" />
-                            </content>
-                        </Tab>
-                        <Tab text="Doing">
-                            <content>
-                                <VBox fx:id="doingProjectContainer" prefHeight="200.0" prefWidth="100.0" />
-                            </content>
-                        </Tab>
-                        <Tab text="Done">
-                            <content>
-                                <VBox fx:id="doneProjectContainer" prefHeight="200.0" prefWidth="100.0" />
-                            </content>
-                        </Tab>
-                    </tabs>
+                    <Tab text="To Do">
+                        <VBox fx:id="toDoProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                    </Tab>
+                    <Tab text="Doing">
+                        <VBox fx:id="doingProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                    </Tab>
+                    <Tab text="Done">
+                        <VBox fx:id="doneProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                    </Tab>
                 </TabPane>
             </center>
             <bottom>
                 <AnchorPane prefHeight="70.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Button fx:id="GenerateReportButton" layoutX="548.0" layoutY="39.0" mnemonicParsing="false" onAction="#onGenerateReportButton" text="Raport" />
-                        <Button layoutX="14.0" layoutY="39.0" mnemonicParsing="false" text="Edit" />
-                        <Button fx:id="deleteButton" layoutX="82.0" layoutY="39.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
-                        <Button fx:id="sortByStartDateButton" layoutX="382.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByStartDate" text="Creation Date" />
-                        <Button fx:id="sortByDueDateButton" layoutX="300.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByDueDate" text="Due Date" />
-                        <Label layoutX="300.0" layoutY="14.0" text="Sort projects by: " />
-                    </children>
+                    <Button fx:id="GenerateReportButton" layoutX="548.0" layoutY="39.0" mnemonicParsing="false" onAction="#onGenerateReportButton" text="Raport" />
+                    <ToggleButton fx:id="editToggleButton" layoutX="14.0" layoutY="39.0" mnemonicParsing="false" onAction="#onEditButton" text="Edit">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="editToggleGroup" />
+                        </toggleGroup>
+                    </ToggleButton>
+                    <ToggleButton fx:id="okButton" layoutX="58.0" layoutY="39.0" mnemonicParsing="false" onAction="#onOkToggleButton" text="Ok" toggleGroup="$editToggleGroup" />
+                    <Button fx:id="deleteButton" layoutX="136.0" layoutY="39.0" mnemonicParsing="false" onAction="#onDeleteButton" text="Delete" />
+                    <Button fx:id="sortByStartDateButton" layoutX="382.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByStartDate" text="Creation Date" />
+                    <Button fx:id="sortByDueDateButton" layoutX="300.0" layoutY="39.0" mnemonicParsing="false" onAction="#onSortByDueDate" text="Due Date" />
+                    <Label layoutX="300.0" layoutY="14.0" text="Sort projects by: " />
+
                 </AnchorPane>
             </bottom>
         </BorderPane>

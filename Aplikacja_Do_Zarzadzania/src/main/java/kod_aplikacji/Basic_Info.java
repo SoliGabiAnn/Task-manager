@@ -3,7 +3,6 @@ package kod_aplikacji;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public abstract class Basic_Info {
     protected String name;
@@ -39,4 +38,5 @@ public abstract class Basic_Info {
 
     public void setState(Boolean state) {this.state = state;}
     public void setDate_end(LocalDateTime date_end) {this.date_end = date_end;}
+    public void setDateStart(LocalDateTime date_start) {this.date_start = date_start;}
 }

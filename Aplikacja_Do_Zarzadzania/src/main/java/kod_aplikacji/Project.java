@@ -35,8 +35,8 @@ public class Project extends Basic_Info {
 //    }
 
     public void addTask(Task task) throws TaskException {
-        if (getDate_start().isBefore(task.getDate_start())) {
-            if (getDeadline().isAfter(task.getDeadline())) {
+        if (!getDate_start().isAfter(task.getDate_start())) {
+            if (!getDeadline().isBefore(task.getDeadline())) {
                 listOfTask.add(task);
                 isTaskSortingUpToDate = false;
             } else {

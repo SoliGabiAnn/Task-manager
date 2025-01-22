@@ -8,14 +8,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 import kod_aplikacji.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,11 +50,15 @@ public class HelloController {
     public Button sortByDueDateButton;
     public Button sortByStartDateButton;
     public Button GenerateReportButton;
+    public ToggleButton editToggleButton;
+    public ToggleButton okButton;
+    @FXML
+    private ToggleGroup editToggleGroup;
 
     private TitledPane selectedTitlePane;
     User user = new User();
-    FileHandler handler=new FileHandler();;
-
+    FileHandler handler = new FileHandler();
+    ;
 
 
     private final Map<TitledPane, Project> indexOfProject = new HashMap<>();
@@ -60,39 +72,77 @@ public class HelloController {
     public void initialize() {
         timeline1.setCycleCount(Animation.INDEFINITE);
         timeline1.play();
-        if(handler.getFile().length()>0){
+        if (handler.getFile().length() > 0) {
             try {
-                user= handler.readFromJsonFile();
+                user = handler.readFromJsonFile();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        for(Project project:user.getListOfToDoProject()){
+        for (Project project : user.getListOfToDoProject()) {
             addProject(project);
 
-            for(Task task:project.getListOfTask()){
-                addTask(task,project);
+            for (Task task : project.getListOfTask()) {
+                addTask(task, project);
             }
         }
-        for(Project project:user.getListOfUnfinishedProject()){
+        for (Project project : user.getListOfUnfinishedProject()) {
             addProject(project);
 
-            for(Task task:project.getListOfTask()){
-                addTask(task,project);
+            for (Task task : project.getListOfTask()) {
+                addTask(task, project);
             }
         }
-        for(Project project:user.getListOfFinishedProject()){
+        for (Project project : user.getListOfFinishedProject()) {
             addProject(project);
+            CheckBox graphicCheckBox = (CheckBox) reversedMap(project).getGraphic();
+            graphicCheckBox.setSelected(true);
 
-            for(Task task:project.getListOfTask()){
-                addTask(task,project);
+            for (Task task : project.getListOfTask()) {
+                addTask(task, project);
             }
         }
+
+        projectStartDateDatePicker.setConverter(new StringConverter<LocalDate>() {
+            String pattern = "yyyy-MM-dd";
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            {
+                projectStartDateDatePicker.setPromptText(pattern.toLowerCase());
+            }
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+//        projectStartDateDatePicker.setOnAction(event -> {
+//            try{
+//                LocalDate selectedDate = projectStartDateDatePicker.getValue();
+//
+//            }catch (DateTimeParseException e){
+//                createWarningSign("Valid date");
+//            }
+//        });
     }
+
     public void setStage(Stage stage) {
         stage.setOnCloseRequest(event -> {
             try {
-                handler.writeToJsonFile( user);
+                handler.writeToJsonFile(user);
                 System.out.println("User data saved successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,7 +158,7 @@ public class HelloController {
         if (!projectNameTextField.getText().isEmpty()) {
             name = projectNameTextField.getText();
             if (projectStartDateDatePicker.getValue() == null && projectDueDateDatePicker.getValue() == null) {
-                createWarningSign("Proszę wybrać daty");
+                createWarningSign("Please select dates");
             } else {
                 addProject(name);
                 projectNameTextField.clear();
@@ -128,6 +178,17 @@ public class HelloController {
         }
     }
 
+    private void checkIfValidDates() {
+//        try{
+//            projectStartDateDatePicker.isValid
+//            tera.prase(projectStartDateDatePicker);
+//            projectDueDateDatePicker.getValue();
+//            taskStartDateDatePicker.getValue();
+//            taskDueDateDatePicker.getValue();
+//        }catch (DateTimeParseException e){
+//            createWarningSign("Please select correct dates ");
+//        }
+    }
 
     private void addProject(String projectName) {
         try {
@@ -165,49 +226,48 @@ public class HelloController {
 
     private void addProject(Project project) {
         var projectTitlePane = addProjectTitlePane(project);
-                indexOfProject.put(projectTitlePane, project);
+        indexOfProject.put(projectTitlePane, project);
 
-                if (project.getDate_start().isBefore(project.getDate_added())){
-                    doingProjectContainer.getChildren().add(projectTitlePane);
-                    projectTitlePane.getGraphic().setMouseTransparent(false);
-                }else if(project.getDate_end()!=null) {
-                    doneProjectContainer.getChildren().add(projectTitlePane);
-                }else{
-                    toDoProjectContainer.getChildren().add(projectTitlePane);
-                }
-                projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
-            ;
+        if (project.getDate_end() != null) {
+            doneProjectContainer.getChildren().add(projectTitlePane);
+        } else if (project.getDate_start().isBefore(project.getDate_added())) {
+            doingProjectContainer.getChildren().add(projectTitlePane);
+            projectTitlePane.getGraphic().setMouseTransparent(false);
+        } else {
+            toDoProjectContainer.getChildren().add(projectTitlePane);
+        }
+        projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
     }
 
-    private void addTask(Task task,Project project) {
+    private void addTask(Task task, Project project) {
         try {
-                TitledPane selectedPane=reversedMap(project);
-                Accordion projectAccordion = (Accordion) selectedPane.getContent();
-                var newTask = new TitledPane();
-                var contentOfTask = new AnchorPane();
-                indexOfTask.put(task, newTask);
-                indexOfTaskDateAdded.put(newTask, task.getDate_added());
+            TitledPane selectedPane = reversedMap(project);
+            Accordion projectAccordion = (Accordion) selectedPane.getContent();
+            var newTask = new TitledPane();
+            var contentOfTask = new AnchorPane();
+            indexOfTask.put(task, newTask);
+            indexOfTaskDateAdded.put(newTask, task.getDate_added());
 
-                newTask.setContent(contentOfTask);
-                var datePickers = getDatePicker(selectedPane);
-                if (datePickers != null) {
-                    TextField taskNameTextField=new TextField();
-                    taskNameTextField.setText(task.getName());
-                    addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
-                }
-                DatePicker taskStartDateDatePicker=new DatePicker();
-                taskStartDateDatePicker.setValue(LocalDate.from(task.getDate_start()));
-                DatePicker taskDueDateDatePicker=new DatePicker();
-                taskDueDateDatePicker.setValue(LocalDate.from(task.getDeadline()));
-                contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
-                contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
+            newTask.setContent(contentOfTask);
+            var datePickers = getDatePicker(selectedPane);
+            if (datePickers != null) {
+                TextField taskNameTextField = new TextField();
+                taskNameTextField.setText(task.getName());
+                addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
+            }
+            DatePicker taskStartDateDatePicker = new DatePicker();
+            taskStartDateDatePicker.setValue(LocalDate.from(task.getDate_start()));
+            DatePicker taskDueDateDatePicker = new DatePicker();
+            taskDueDateDatePicker.setValue(LocalDate.from(task.getDeadline()));
+            contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
+            contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
 
-                CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
-                if (taskCheckBox != null) {
-                    taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedPane));
-                }
-                updateProgressBar(selectedPane);
-                projectAccordion.getPanes().add(newTask);
+            CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+            if (taskCheckBox != null) {
+                taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedPane));
+            }
+            updateProgressBar(selectedPane);
+            projectAccordion.getPanes().add(newTask);
 
         } catch (Exception e) {
             createAlertSign(e, "Task Error");
@@ -223,29 +283,34 @@ public class HelloController {
             if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
                 Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
                 LocalDateTime dateAdded = LocalDateTime.now();
-                var taskToAdd = new Task(taskName, false, dateAdded, getLocalDateTime(taskStartDateDatePicker), null, getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
-                var newTask = new TitledPane();
-                var contentOfTask = new AnchorPane();
-                indexOfProject.get(selectedTitlePane).addTask(taskToAdd);
-                indexOfTask.put(taskToAdd, newTask);
-                indexOfTaskDateAdded.put(newTask, dateAdded);
+                if (!taskStartDateDatePicker.getValue().isAfter(taskDueDateDatePicker.getValue())) {
+                    var taskToAdd = new Task(taskName, false, dateAdded, getLocalDateTime(taskStartDateDatePicker), null, getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
+                    var newTask = new TitledPane();
 
-                newTask.setContent(contentOfTask);
-                var datePickers = getDatePicker(selectedTitlePane);
-                if (datePickers != null) {
-                    addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
-                }
-                contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
-                contentOfTask.getChildren().addAll(addTaskDescription().description(), addTaskDescription().descriptionText());
+                    var contentOfTask = new AnchorPane();
+                    indexOfProject.get(selectedTitlePane).addTask(taskToAdd);
+                    indexOfTask.put(taskToAdd, newTask);
+                    indexOfTaskDateAdded.put(newTask, dateAdded);
 
-                CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
-                if (taskCheckBox != null) {
-                    taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
+                    newTask.setContent(contentOfTask);
+                    var datePickers = getDatePicker(selectedTitlePane);
+                    if (datePickers != null) {
+                        addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
+                    }
+                    contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
+                    contentOfTask.getChildren().addAll(addTaskDescription().description(), addTaskDescription().descriptionText());
+
+                    CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+                    if (taskCheckBox != null) {
+                        taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
+                    }
+                    updateProgressBar(selectedTitlePane);
+                    projectAccordion.getPanes().add(newTask);
+                } else {
+                    createWarningSign("Start date cannot be after due date.");
                 }
-                updateProgressBar(selectedTitlePane);
-                projectAccordion.getPanes().add(newTask);
             } else {
-                createWarningSign("Najpierw wybierz projekt!");
+                createWarningSign("No project selected");
             }
         } catch (Exception e) {
             createAlertSign(e, "Task Error");
@@ -259,18 +324,22 @@ public class HelloController {
     @FXML
     private void onDeleteButton() {
         if (selectedTitlePane == null) {
-            createWarningSign("Nie wybrano żadnego projektu ani zadania do usunięcia.");
+            createWarningSign("No project or task selected to delete");
             return;
         }
         Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
         if (projectAccordion.getExpandedPane() != null) {
-            TitledPane selectedTask = projectAccordion.getExpandedPane();
-            projectAccordion.getPanes().remove(selectedTask);
-            indexOfProject.get(selectedTitlePane).deleteTask(indexOfTaskDateAdded.get(selectedTask));
-            indexOfTaskDateAdded.remove(selectedTask);
+            if (projectAccordion.getExpandedPane() != projectAccordion.getPanes().getFirst()) {
+                TitledPane selectedTask = projectAccordion.getExpandedPane();
+                projectAccordion.getPanes().remove(selectedTask);
+                indexOfProject.get(selectedTitlePane).deleteTask(indexOfTaskDateAdded.get(selectedTask));
+                indexOfTaskDateAdded.remove(selectedTask);
+            } else {
+                createWarningSign("Cannot delete information about project");
+            }
+
         } else {
             Project projectToRemove = indexOfProject.get(selectedTitlePane);
-            indexOfProject.remove(selectedTitlePane);
             if (user.getListOfToDoProject().contains(projectToRemove)) {
                 user.deleteToDoProject(projectToRemove.getDate_added());
                 toDoProjectContainer.getChildren().remove(selectedTitlePane);
@@ -279,7 +348,9 @@ public class HelloController {
                 doingProjectContainer.getChildren().remove(selectedTitlePane);
             } else {
                 user.deleteFinishedProject(projectToRemove.getDate_added());
+                doneProjectContainer.getChildren().remove(selectedTitlePane);
             }
+            indexOfProject.remove(selectedTitlePane);
             selectedTitlePane = null;
         }
     }
@@ -287,19 +358,22 @@ public class HelloController {
     public void onSortByStartDate() {
         if (!(selectedTitlePane == null) && selectedTitlePane.isExpanded()) {
             sortTaskInProject(indexOfProject.get(selectedTitlePane).getListOfTask());
+        } else {
+            sortProjectInVbox(user.getListOfToDoProject(), toDoProjectContainer);
+            sortProjectInVbox(user.getListOfUnfinishedProject(), doingProjectContainer);
+            sortProjectInVbox(user.getListOfFinishedProject(), doneProjectContainer);
         }
-        sortProjectInVbox(user.getListOfToDoProject(), toDoProjectContainer);
-        sortProjectInVbox(user.getListOfUnfinishedProject(), doingProjectContainer);
-        sortProjectInVbox(user.getListOfFinishedProject(), doneProjectContainer);
     }
 
-    public void onSortByDueDate(){
+    public void onSortByDueDate() {
         if (!(selectedTitlePane == null) && selectedTitlePane.isExpanded()) {
-            sortTaskInProject(indexOfProject.get(selectedTitlePane).sortTask());sortTaskInProject(indexOfProject.get(selectedTitlePane).sortTask());
+            sortTaskInProject(indexOfProject.get(selectedTitlePane).sortTask());
+            sortTaskInProject(indexOfProject.get(selectedTitlePane).sortTask());
+        } else {
+            sortProjectInVbox(user.sortProject(user.getListOfToDoProject()), toDoProjectContainer);
+            sortProjectInVbox(user.sortProject(user.getListOfFinishedProject()), doingProjectContainer);
+            sortProjectInVbox(user.sortProject(user.getListOfFinishedProject()), doneProjectContainer);
         }
-        sortProjectInVbox(user.sortProject(user.getListOfToDoProject()), toDoProjectContainer);
-        sortProjectInVbox(user.sortProject(user.getListOfFinishedProject()), doingProjectContainer);
-        sortProjectInVbox(user.sortProject(user.getListOfFinishedProject()), doneProjectContainer);
     }
 
 
@@ -344,27 +418,83 @@ public class HelloController {
             }
             for (int i = 0; i < index; i++) {
                 var projectToMove = user.getListOfToDoProject().get(listOfProjectsToMove.get(i));
+                user.deleteToDoProject(user.getListOfToDoProject().get(i).getDate_added());
                 var titlePaneToMove = reversedMap.get(projectToMove);
                 toDoProjectContainer.getChildren().remove(titlePaneToMove);
                 doingProjectContainer.getChildren().add(titlePaneToMove);
                 titlePaneToMove.getGraphic().setMouseTransparent(false);
+
             }
+            user.clearListOfIndexOfProjectToMove();
         }
-        user.clearListOfIndexOfProjectToMove();
+
     }
+
+    private void moveProjectFromDoingToToDo() {
+        var listOfProjectsToMove = user.getListOfIndexOfProjectToMove();
+        var index = listOfProjectsToMove.size();
+        if (index > 0) {
+            HashMap<Project, TitledPane> reversedMap = new HashMap<>();
+            for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
+                reversedMap.put(entry.getValue(), entry.getKey());
+            }
+            for (int i = 0; i < index; i++) {
+                var projectToMove = user.getListOfUnfinishedProject().get(listOfProjectsToMove.get(i));
+                user.deleteUnfinishedProject(user.getListOfUnfinishedProject().get(i).getDate_added());
+                var titlePaneToMove = reversedMap.get(projectToMove);
+                doingProjectContainer.getChildren().remove(titlePaneToMove);
+                toDoProjectContainer.getChildren().add(titlePaneToMove);
+                titlePaneToMove.getGraphic().setMouseTransparent(true);
+            }
+            user.clearListOfIndexOfProjectToMove();
+        }
+
+    }
+
+//    private void checkIfAfterDeadline(){
+//        var listOfProjectToMarkRed = user.getListOfUnfinishedProject();
+//        HashMap<Project, TitledPane> reversedMap = new HashMap<>();
+//        for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
+//            reversedMap.put(entry.getValue(), entry.getKey());
+//        }
+//
+//        for (Project project : listOfProjectToMarkRed) {
+//            if(project.getDeadline().isBefore(LocalDateTime.now())){
+//                var projectTitlePane = reversedMap.get(project);
+//                Node titleNode = projectTitlePane.lookup(".title");
+//                if (titleNode != null) {
+////                    var resource = getClass().getResource("/style.css");
+////
+////                    projectTitlePane.setStyle(String.valueOf(resource));
+//                }
+////                selectedTitlePane.setStyle("-fx-background-color: #CD8079; -fx-text-fill: white;");
+////                projectTitlePane.lookup(".title").setStyle("-fx-background-color: #D98782;");
+//            }
+//        }
+//    }
 
     private void moveProjectToDone(TitledPane projectTitlePane) {
         doingProjectContainer.getChildren().remove(projectTitlePane);
         doneProjectContainer.getChildren().add(projectTitlePane);
+
+        setCheckBoxes(projectTitlePane, true);
+    }
+    private void moveProjectFromDoneToDoing(TitledPane projectTitledPane){
+        doneProjectContainer.getChildren().remove(projectTitledPane);
+        doingProjectContainer.getChildren().add(projectTitledPane);
+    }
+
+    private void setCheckBoxes(TitledPane projectTitlePane, boolean b) {
         CheckBox projectCheckBox = (CheckBox) projectTitlePane.getGraphic();
+
         var projectContent = (Accordion) projectTitlePane.getContent();
         for (int i = 1; i < projectContent.getPanes().size(); i++) {
             TitledPane taskPane = projectContent.getPanes().get(i);
             CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
-            taskCheckBox.setMouseTransparent(true);
+            taskCheckBox.setMouseTransparent(b);
         }
         if (projectCheckBox != null) {
-            projectCheckBox.setMouseTransparent(true);
+            projectCheckBox.setMouseTransparent(b);
         }
     }
 
@@ -398,6 +528,7 @@ public class HelloController {
         aboutProject.setContent(contentOfProject);
         return newProject;
     }
+
     private TitledPane addProjectTitlePane(Project project) {
         var newProject = new TitledPane();
         var projectNameTextField = new TextField();
@@ -413,26 +544,36 @@ public class HelloController {
         ResulDates addedDates = addDates(projectStartDateDatePicker, projectDueDateDatePicker);
         contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.dueDate(), addedDates.newDueDatePicker());
         contentOfProject.getChildren().addAll(addProgressBar());
-        TitledPane aboutProject = new TitledPane();
+        var aboutProject = new TitledPane();
         aboutProject.setText("About Project");
         projectAccordion.getPanes().add(aboutProject);
         aboutProject.setContent(contentOfProject);
         return newProject;
     }
 
+
     private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject, DatePicker starDatePicker) {
         CheckBox checkBox = new CheckBox(nameTextField.getText());
         newTitledPane.setGraphic(checkBox);
         checkBox.setMouseTransparent(!starDatePicker.getValue().isBefore(LocalDate.now()));
+
         if (isProject) {
             checkBox.setOnAction(event -> {
                 if (checkBox.isSelected()) {
+                    indexOfProject.get(newTitledPane).endProject(LocalDateTime.now());
                     user.ifFinished();
                     if (checkIfTaskAreFinished(newTitledPane)) {
                         moveProjectToDone(newTitledPane);
                     }
+                    checkBox.setMouseTransparent(false);
+                }
+                if(!checkBox.isSelected()){
+                    moveProjectFromDoneToDoing(newTitledPane);
+                    checkBox.setMouseTransparent(false);
                 }
             });
+        } else {
+            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
         }
     }
 
@@ -469,6 +610,42 @@ public class HelloController {
         return reversedMap.get(project);
     }
 
+    public void onEditButton() {
+        setTransparentToChangeDate(false);
+        refresh();
+    }
+
+    public void onOkToggleButton() {
+        setTransparentToChangeDate(true);
+        refresh();
+    }
+
+    public void setTransparentToChangeDate(boolean transparent) {
+        var projectTitlePane = selectedTitlePane;
+        if (projectTitlePane != null) {
+            ArrayList<DatePicker> datePickers;
+            datePickers = getDatePicker(projectTitlePane);
+            assert datePickers != null;
+            if (!datePickers.isEmpty()) {
+                for (DatePicker datePicker : datePickers) {
+                    datePicker.setMouseTransparent(transparent);
+                }
+            }
+        } else {
+            createWarningSign("No project selected");
+        }
+    }
+
+    public void refresh() {
+        if (selectedTitlePane != null) {
+            ArrayList<DatePicker> datePickers;
+            datePickers = getDatePicker(selectedTitlePane);
+            indexOfProject.get(selectedTitlePane).setDateStart(getLocalDateTime(datePickers.get(0)));
+            indexOfProject.get(selectedTitlePane).setDate_end(getLocalDateTime(datePickers.get(1)));
+        }
+    }
+
+
     private record ResulDates(Label startDate, DatePicker newStartDatePicker, Label dueDate,
                               DatePicker newDueDatePicker) {
     }
@@ -486,6 +663,7 @@ public class HelloController {
 
         return new taskDescription(description, descriptionText);
     }
+
     private taskDescription addTaskDescription(Task task) {
         var description = new Label("Description");
         description.setLayoutX(10);
@@ -499,6 +677,7 @@ public class HelloController {
 
         return new taskDescription(description, descriptionText);
     }
+
 
     private record taskDescription(Label description, TextArea descriptionText) {
     }
@@ -548,7 +727,6 @@ public class HelloController {
         return progressBar;
     }
 
-    //dostanie się do DatePickers w Projekcie -> może się sprzydać do edycji
     private ArrayList<DatePicker> getDatePicker(TitledPane projectPane) {
         AnchorPane projectDetailsPane = (AnchorPane) ((Accordion) projectPane.getContent())
                 .getPanes().getFirst().getContent();
@@ -563,19 +741,9 @@ public class HelloController {
         } else {
             return datePickers;
         }
-
-        //Przykład użycia
-//        ArrayList<DatePicker> datePickers;
-//        datePickers = getDatePicker(projectTitlePane);
-//        if(datePickers.size() > 0) {
-//            for(int j = 0; j < datePickers.size(); j++){
-//                datePickers.get(j).setMouseTransparent(false);
-//            }
-//        }
     }
 
     private void getSelectProject(TitledPane titlePane) {
-        // Ustawiamy wybrany TitlePane (do którego będziemy dodawać zadania)
         selectedTitlePane = titlePane;
         System.out.println("Wybrano projekt: " + titlePane.getText());
 
@@ -600,11 +768,19 @@ public class HelloController {
 
     final Timeline timeline1 = new Timeline(
             new KeyFrame(
-                    Duration.seconds(1),
+                    Duration.seconds(0.01),
                     event -> {
                         //long start = System.currentTimeMillis();
                         user.ifStarted();
                         moveProjectToDoing();
+                        try {
+                            user.ifStartedReverse();
+                        } catch (ProjectException e) {
+
+                            throw new RuntimeException(e);
+                        }
+                        checkIfValidDates();
+                        moveProjectFromDoingToToDo();
                         //System.err.println("Finished after " + (System.currentTimeMillis() - start) + "ms");
                     }
             )
