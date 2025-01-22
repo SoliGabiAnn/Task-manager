@@ -158,7 +158,7 @@ public class HelloController {
         if (!projectNameTextField.getText().isEmpty()) {
             name = projectNameTextField.getText();
             if (projectStartDateDatePicker.getValue() == null && projectDueDateDatePicker.getValue() == null) {
-                createWarningSign("Please select dates");
+                createWarningSign("Please select project dates");
             } else {
                 addProject(name);
                 projectNameTextField.clear();
@@ -166,7 +166,7 @@ public class HelloController {
         } else if (!taskNameTextField.getText().isEmpty() && selectedTitlePane != null) {
             name = taskNameTextField.getText();
             if (taskStartDateDatePicker.getValue() == null && taskDueDateDatePicker.getValue() == null) {
-                createWarningSign("Proszę wybrać daty");
+                createWarningSign("Please select task dates");
             } else {
                 addTask(name);
                 taskNameTextField.clear();
@@ -174,7 +174,7 @@ public class HelloController {
         }
 
         if (name.isEmpty()) {
-            createWarningSign("Proszę podać nazwę projektu lub zadania.");
+            createWarningSign("Please enter the name of the project or task.");
         }
     }
 
@@ -482,6 +482,7 @@ public class HelloController {
     private void moveProjectFromDoneToDoing(TitledPane projectTitledPane){
         doneProjectContainer.getChildren().remove(projectTitledPane);
         doingProjectContainer.getChildren().add(projectTitledPane);
+        indexOfProject.get(projectTitledPane).setDate_end(null);
     }
 
     private void setCheckBoxes(TitledPane projectTitlePane, boolean b) {
@@ -641,7 +642,7 @@ public class HelloController {
             ArrayList<DatePicker> datePickers;
             datePickers = getDatePicker(selectedTitlePane);
             indexOfProject.get(selectedTitlePane).setDateStart(getLocalDateTime(datePickers.get(0)));
-            indexOfProject.get(selectedTitlePane).setDate_end(getLocalDateTime(datePickers.get(1)));
+            indexOfProject.get(selectedTitlePane).setDeadline(getLocalDateTime(datePickers.get(1)));
         }
     }
 

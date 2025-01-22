@@ -39,4 +39,5 @@ public abstract class Basic_Info {
     public void setState(Boolean state) {this.state = state;}
     public void setDate_end(LocalDateTime date_end) {this.date_end = date_end;}
     public void setDateStart(LocalDateTime date_start) {this.date_start = date_start;}
+    public void setDeadline(LocalDateTime deadline) {this.deadline = deadline;}
 }
