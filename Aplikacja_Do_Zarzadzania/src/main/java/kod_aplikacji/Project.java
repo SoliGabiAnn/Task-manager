@@ -81,6 +81,10 @@ public class Project extends Basic_Info {
         }
         return true;
     }
+    public void endProject(LocalDateTime end){
+        this.setState(true);
+        this.setDate_end(end);
+    }
 
     public ArrayList<Task> getListOfTask() {
         return listOfTask;
