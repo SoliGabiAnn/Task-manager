@@ -23,10 +23,9 @@ import javafx.fxml.FXML;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -45,6 +44,7 @@ public class HelloController {
     public DatePicker projectStartDateDatePicker;
     public TextField taskNameTextField;
     public DatePicker taskStartDateDatePicker;
+    public TextField taskStartTimeTextField;
     public DatePicker taskDueDateDatePicker;
     public TextArea taskDescriptionTextArea;
     public Button sortByDueDateButton;
@@ -52,21 +52,30 @@ public class HelloController {
     public Button GenerateReportButton;
     public ToggleButton editToggleButton;
     public ToggleButton okButton;
+    public TextField taskDueTimeTextField;
+    public TextField projectDueTimeTextField;
+    public TextField projectStartTimeTextField;
     @FXML
     private ToggleGroup editToggleGroup;
 
     private TitledPane selectedTitlePane;
     User user = new User();
-    FileHandler handler = new FileHandler();
-    ;
+    DateTimeFormat dateTimeFormat=new DateTimeFormat();
+    FileHandler handler;
+
+    {
+        try {
+            handler = new FileHandler();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private final Map<TitledPane, Project> indexOfProject = new HashMap<>();
     private final Map<TitledPane, LocalDateTime> indexOfTaskDateAdded = new HashMap<>();
     private final Map<Task, TitledPane> indexOfTask = new HashMap<>();
 
-    public HelloController() throws IOException {
-    }
 
     @FXML
     public void initialize() {
@@ -81,16 +90,20 @@ public class HelloController {
         }
         for (Project project : user.getListOfToDoProject()) {
             addProject(project);
-
-            for (Task task : project.getListOfTask()) {
-                addTask(task, project);
+            if(!project.getListOfTask().isEmpty()){
+                for (Task task : project.getListOfTask()) {
+                    addTask(task, project);
+                }
             }
+
         }
         for (Project project : user.getListOfUnfinishedProject()) {
             addProject(project);
 
-            for (Task task : project.getListOfTask()) {
-                addTask(task, project);
+            if(!project.getListOfTask().isEmpty()){
+                for (Task task : project.getListOfTask()) {
+                    addTask(task, project);
+                }
             }
         }
         for (Project project : user.getListOfFinishedProject()) {
@@ -98,8 +111,10 @@ public class HelloController {
             CheckBox graphicCheckBox = (CheckBox) reversedMap(project).getGraphic();
             graphicCheckBox.setSelected(true);
 
-            for (Task task : project.getListOfTask()) {
-                addTask(task, project);
+            if(!project.getListOfTask().isEmpty()){
+                for (Task task : project.getListOfTask()) {
+                    addTask(task, project);
+                }
             }
         }
 
@@ -159,17 +174,19 @@ public class HelloController {
             name = projectNameTextField.getText();
             if (projectStartDateDatePicker.getValue() == null && projectDueDateDatePicker.getValue() == null) {
                 createWarningSign("Please select project dates");
-            } else {
+            } else if (projectStartTimeTextField.getText().isEmpty() || projectDueTimeTextField.getText().isEmpty()) {
+                createWarningSign("Please select project time");
+            }else {
                 addProject(name);
-                projectNameTextField.clear();
             }
         } else if (!taskNameTextField.getText().isEmpty() && selectedTitlePane != null) {
             name = taskNameTextField.getText();
             if (taskStartDateDatePicker.getValue() == null && taskDueDateDatePicker.getValue() == null) {
                 createWarningSign("Please select task dates");
-            } else {
+            } else if (taskStartTimeTextField.getText().isEmpty() || taskDueTimeTextField.getText().isEmpty()) {
+                createWarningSign("Please select task time");
+            } else{
                 addTask(name);
-                taskNameTextField.clear();
             }
         }
 
@@ -191,36 +208,45 @@ public class HelloController {
     }
 
     private void addProject(String projectName) {
+        boolean hasWarningOccurred = false;
         try {
             LocalDateTime dateAdded = LocalDateTime.now();
-            if (!getLocalDateTime(projectStartDateDatePicker).isAfter(getLocalDateTime(projectDueDateDatePicker))) {
-                var projectToAdd = new Project(projectName, false, dateAdded, getLocalDateTime(projectStartDateDatePicker), null, getLocalDateTime(projectDueDateDatePicker));
-                var projectTitlePane = addProjectTitlePane(projectNameTextField, projectDueDateDatePicker, projectStartDateDatePicker);
+            LocalDateTime dateStart = dateTimeFormat.toLocalDateTime(projectStartDateDatePicker,projectStartTimeTextField);
+            LocalDateTime deadline = dateTimeFormat.toLocalDateTime(projectDueDateDatePicker,projectDueTimeTextField);
+            if(deadline==null || dateStart==null){
+                createWarningSign("Time has wrong format. Right is (hh : mm)");
+                hasWarningOccurred = true;
+            }else if (!dateStart.isAfter(deadline)) {
+                var projectToAdd = new Project(projectName, false, dateAdded, dateStart, null, deadline);
+                var projectTitlePane = addProjectTitlePane(projectNameTextField, projectDueDateDatePicker,
+                        projectDueTimeTextField, projectStartDateDatePicker,projectStartTimeTextField);
                 indexOfProject.put(projectTitlePane, projectToAdd);
 
-                if (getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
+                if (dateStart.isBefore(dateAdded)) {
                     user.addUnfinishedProject(projectToAdd);
-                } else {
-                    user.addToDoProject(projectToAdd);
-                }
-
-                if (getLocalDateTime(projectStartDateDatePicker).isBefore(dateAdded)) {
                     doingProjectContainer.getChildren().add(projectTitlePane);
                     projectTitlePane.getGraphic().setMouseTransparent(false);
                 } else {
+                    user.addToDoProject(projectToAdd);
                     toDoProjectContainer.getChildren().add(projectTitlePane);
                 }
                 projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
             } else {
                 createWarningSign("Start date cannot be after due date.");
+                hasWarningOccurred = true;
             }
-
-
         } catch (ProjectException e) {
             createAlertSign(e, "Project Error");
+            hasWarningOccurred = true;
         } finally {
-            projectDueDateDatePicker.setValue(null);
-            projectStartDateDatePicker.setValue(null);
+            if(!hasWarningOccurred){
+                projectDueDateDatePicker.setValue(null);
+                projectStartDateDatePicker.setValue(null);
+                projectStartTimeTextField.clear();
+                projectDueTimeTextField.clear();
+                projectNameTextField.clear();
+            }
+
         }
     }
 
@@ -239,6 +265,67 @@ public class HelloController {
         projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
     }
 
+    private void addTask(String taskName) {
+        boolean hasWarningOccurred = false;
+        try {
+            if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
+                Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
+                LocalDateTime dateAdded = LocalDateTime.now();
+                LocalDateTime dateStart = dateTimeFormat.toLocalDateTime(taskStartDateDatePicker,taskStartTimeTextField);
+                LocalDateTime deadline = dateTimeFormat.toLocalDateTime(taskDueDateDatePicker,taskDueTimeTextField);
+
+                if(deadline==null || dateStart==null){
+                    createWarningSign("Time was chosen wrongly");
+                    hasWarningOccurred = true;
+                } else if (!dateStart.isAfter(deadline)) {
+                    var taskToAdd = new Task(taskName, false, dateAdded, dateStart, null, deadline, taskDescriptionTextArea.getText());
+                    var newTask = new TitledPane();
+
+                    var contentOfTask = new AnchorPane();
+                    indexOfProject.get(selectedTitlePane).addTask(taskToAdd);
+                    indexOfTask.put(taskToAdd, newTask);
+                    indexOfTaskDateAdded.put(newTask, dateAdded);
+
+                    newTask.setContent(contentOfTask);
+                    var datePickers = getDatePicker(selectedTitlePane);
+                    var timeTextField= getTextField(selectedTitlePane);
+                    if (datePickers != null) {
+                        addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst(),timeTextField.getFirst());
+                    }
+                    ResulDates addedDates = addDates(taskStartDateDatePicker,taskStartTimeTextField,taskDueDateDatePicker,taskDueTimeTextField);
+                    contentOfTask.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.newStartTimeTextField(), addedDates.dueDate(),
+                            addedDates.newDueDatePicker(),addedDates.newDueTimeTextFiled());
+                    contentOfTask.getChildren().addAll(addTaskDescription().description(), addTaskDescription().descriptionText());
+
+                    CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+                    if (taskCheckBox != null) {
+                        taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
+                    }
+                    updateProgressBar(selectedTitlePane);
+                    projectAccordion.getPanes().add(newTask);
+                } else {
+                    createWarningSign("Start date cannot be after due date.");
+                    hasWarningOccurred=true;
+                }
+            } else {
+                createWarningSign("No project selected");
+                hasWarningOccurred=true;
+            }
+        } catch (Exception e) {
+            createAlertSign(e, "Task Error");
+            hasWarningOccurred=true;
+        } finally {
+            if(!hasWarningOccurred){
+                taskDueDateDatePicker.setValue(null);
+                taskDueTimeTextField.clear();
+                taskStartDateDatePicker.setValue(null);
+                taskStartTimeTextField.clear();
+                taskDescriptionTextArea.clear();
+                taskNameTextField.clear();
+            }
+        }
+    }
+
     private void addTask(Task task, Project project) {
         try {
             TitledPane selectedPane = reversedMap(project);
@@ -250,16 +337,23 @@ public class HelloController {
 
             newTask.setContent(contentOfTask);
             var datePickers = getDatePicker(selectedPane);
+            var timeTextField= getTextField(selectedPane);
             if (datePickers != null) {
                 TextField taskNameTextField = new TextField();
                 taskNameTextField.setText(task.getName());
-                addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
+                addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst(),timeTextField.getFirst());
             }
             DatePicker taskStartDateDatePicker = new DatePicker();
             taskStartDateDatePicker.setValue(LocalDate.from(task.getDate_start()));
+            TextField taskStartTimeTextField = new TextField();
+            taskStartTimeTextField.setText(dateTimeFormat.toTextField(task.getDate_start()));
             DatePicker taskDueDateDatePicker = new DatePicker();
             taskDueDateDatePicker.setValue(LocalDate.from(task.getDeadline()));
-            contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
+            TextField taskDueTimeTextField = new TextField();
+            taskDueTimeTextField.setText(dateTimeFormat.toTextField(task.getDeadline()));
+            ResulDates addedDates = addDates(taskStartDateDatePicker, taskStartTimeTextField,taskDueDateDatePicker,taskDueTimeTextField);
+            contentOfTask.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.newStartTimeTextField(),
+                    addedDates.dueDate(), addedDates.newDueDatePicker(), addedDates.newDueTimeTextFiled());
             contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
 
             CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
@@ -271,53 +365,6 @@ public class HelloController {
 
         } catch (Exception e) {
             createAlertSign(e, "Task Error");
-        } finally {
-            taskDueDateDatePicker.setValue(null);
-            taskStartDateDatePicker.setValue(null);
-            taskDescriptionTextArea.clear();
-        }
-    }
-
-    private void addTask(String taskName) {
-        try {
-            if (selectedTitlePane != null && selectedTitlePane.isExpanded()) {
-                Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
-                LocalDateTime dateAdded = LocalDateTime.now();
-                if (!taskStartDateDatePicker.getValue().isAfter(taskDueDateDatePicker.getValue())) {
-                    var taskToAdd = new Task(taskName, false, dateAdded, getLocalDateTime(taskStartDateDatePicker), null, getLocalDateTime(taskDueDateDatePicker), taskDescriptionTextArea.getText());
-                    var newTask = new TitledPane();
-
-                    var contentOfTask = new AnchorPane();
-                    indexOfProject.get(selectedTitlePane).addTask(taskToAdd);
-                    indexOfTask.put(taskToAdd, newTask);
-                    indexOfTaskDateAdded.put(newTask, dateAdded);
-
-                    newTask.setContent(contentOfTask);
-                    var datePickers = getDatePicker(selectedTitlePane);
-                    if (datePickers != null) {
-                        addCheckBoxWithName(taskNameTextField, newTask, false, datePickers.getFirst());
-                    }
-                    contentOfTask.getChildren().addAll(addDates(taskStartDateDatePicker, taskDueDateDatePicker).startDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newStartDatePicker(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).dueDate(), addDates(taskStartDateDatePicker, taskDueDateDatePicker).newDueDatePicker());
-                    contentOfTask.getChildren().addAll(addTaskDescription().description(), addTaskDescription().descriptionText());
-
-                    CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
-                    if (taskCheckBox != null) {
-                        taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
-                    }
-                    updateProgressBar(selectedTitlePane);
-                    projectAccordion.getPanes().add(newTask);
-                } else {
-                    createWarningSign("Start date cannot be after due date.");
-                }
-            } else {
-                createWarningSign("No project selected");
-            }
-        } catch (Exception e) {
-            createAlertSign(e, "Task Error");
-        } finally {
-            taskDueDateDatePicker.setValue(null);
-            taskStartDateDatePicker.setValue(null);
-            taskDescriptionTextArea.clear();
         }
     }
 
@@ -514,14 +561,17 @@ public class HelloController {
         return allTasksCompleted;
     }
 
-    private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, DatePicker projectStartDateDatePicker) {
+    private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, TextField projectDueTimeTextField,DatePicker projectStartDateDatePicker,TextField projectStartTimeTextField) {
         var newProject = new TitledPane();
-        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker);
+        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker, projectStartTimeTextField);
         var projectAccordion = new Accordion();
         newProject.setContent(projectAccordion);
         var contentOfProject = new AnchorPane();
-        ResulDates addedDates = addDates(projectStartDateDatePicker, projectDueDateDatePicker);
-        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.dueDate(), addedDates.newDueDatePicker());
+        ResulDates addedDates = addDates(projectStartDateDatePicker, projectStartTimeTextField,
+                projectDueDateDatePicker, projectDueTimeTextField);
+        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(),
+                addedDates.newStartTimeTextField(), addedDates.dueDate(), addedDates.newDueDatePicker(),
+                addedDates.newDueTimeTextFiled());
         contentOfProject.getChildren().addAll(addProgressBar());
         TitledPane aboutProject = new TitledPane();
         aboutProject.setText("About Project");
@@ -536,14 +586,20 @@ public class HelloController {
         projectNameTextField.setText(project.getName());
         var projectStartDateDatePicker = new DatePicker();
         projectStartDateDatePicker.setValue(LocalDate.from(project.getDate_start()));
+        var projectStartTimeTextField = new TextField();
+        projectStartTimeTextField.setText(dateTimeFormat.toTextField(project.getDate_start()));
         var projectDueDateDatePicker = new DatePicker();
         projectDueDateDatePicker.setValue(LocalDate.from(project.getDeadline()));
-        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker);
+        var projectDueTimeTextField = new TextField();
+        projectDueTimeTextField.setText(dateTimeFormat.toTextField(project.getDeadline()));
+        addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker,projectStartTimeTextField);
         var projectAccordion = new Accordion();
         newProject.setContent(projectAccordion);
         var contentOfProject = new AnchorPane();
-        ResulDates addedDates = addDates(projectStartDateDatePicker, projectDueDateDatePicker);
-        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(), addedDates.dueDate(), addedDates.newDueDatePicker());
+        ResulDates addedDates = addDates(projectStartDateDatePicker, projectStartTimeTextField, projectDueDateDatePicker,projectDueTimeTextField);
+        contentOfProject.getChildren().addAll(addedDates.startDate(), addedDates.newStartDatePicker(),
+                addedDates.newStartTimeTextField(), addedDates.dueDate(), addedDates.newDueDatePicker(),
+                addedDates.newDueTimeTextFiled());
         contentOfProject.getChildren().addAll(addProgressBar());
         var aboutProject = new TitledPane();
         aboutProject.setText("About Project");
@@ -553,10 +609,11 @@ public class HelloController {
     }
 
 
-    private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject, DatePicker starDatePicker) {
+    private void addCheckBoxWithName(TextField nameTextField, TitledPane newTitledPane, boolean isProject, DatePicker starDatePicker, TextField startTime) {
         CheckBox checkBox = new CheckBox(nameTextField.getText());
         newTitledPane.setGraphic(checkBox);
-        checkBox.setMouseTransparent(!starDatePicker.getValue().isBefore(LocalDate.now()));
+        LocalDateTime startDateTime = dateTimeFormat.toLocalDateTime(starDatePicker,startTime);
+        checkBox.setMouseTransparent(!startDateTime.isBefore(LocalDateTime.now()));
 
         if (isProject) {
             checkBox.setOnAction(event -> {
@@ -578,7 +635,7 @@ public class HelloController {
         }
     }
 
-    private ResulDates addDates(DatePicker startDatePicker, DatePicker dueDatePicker) {
+    private ResulDates addDates(DatePicker startDatePicker,TextField startTime, DatePicker dueDatePicker,TextField DueTime) {
         var startDate = new Label("Start Date");
         startDate.setLayoutX(10);
         startDate.setLayoutY(10);
@@ -588,6 +645,12 @@ public class HelloController {
         newStartDatePicker.setLayoutY(5);
         newStartDatePicker.setValue(startDatePicker.getValue());
         newStartDatePicker.setMouseTransparent(true);
+
+        var newStartTimeTextField = new TextField();
+        newStartTimeTextField.setLayoutX(280);
+        newStartTimeTextField.setLayoutY(5);
+        newStartTimeTextField.setText(startTime.getText());
+        newStartTimeTextField.setMouseTransparent(true);
 
         var due_Date = new Label("Due Date");
         due_Date.setLayoutX(10);
@@ -599,7 +662,13 @@ public class HelloController {
         dueDate.setValue(dueDatePicker.getValue());
         dueDate.setMouseTransparent(true);
 
-        return new ResulDates(startDate, newStartDatePicker, due_Date, dueDate);
+        var dueTime = new TextField();
+        dueTime.setLayoutX(280);
+        dueTime.setLayoutY(45);
+        dueTime.setText(DueTime.getText());
+        dueTime.setMouseTransparent(true);
+
+        return new ResulDates(startDate, newStartDatePicker, newStartTimeTextField, due_Date, dueDate,dueTime);
     }
 
 
@@ -647,8 +716,8 @@ public class HelloController {
     }
 
 
-    private record ResulDates(Label startDate, DatePicker newStartDatePicker, Label dueDate,
-                              DatePicker newDueDatePicker) {
+    private record ResulDates(Label startDate, DatePicker newStartDatePicker,TextField newStartTimeTextField, Label dueDate,
+                              DatePicker newDueDatePicker, TextField newDueTimeTextFiled){
     }
 
     private taskDescription addTaskDescription() {
@@ -744,6 +813,23 @@ public class HelloController {
         }
     }
 
+    private ArrayList<TextField> getTextField(TitledPane projectPane) {
+        AnchorPane projectDetailsPane = (AnchorPane) ((Accordion) projectPane.getContent()).getPanes().getFirst().getContent();
+        ArrayList<TextField> timeTextField = new ArrayList<>();
+        for (var node : projectDetailsPane.getChildren()) {
+            if (node instanceof TextField) {
+                if(((TextField) node).getText().matches("\\d{2} : \\d{2}")){
+                    timeTextField.add((TextField) node);
+                }
+            }
+        }
+        if (timeTextField.isEmpty()) {
+            return null;
+        } else {
+            return timeTextField;
+        }
+    }
+
     private void getSelectProject(TitledPane titlePane) {
         selectedTitlePane = titlePane;
         System.out.println("Wybrano projekt: " + titlePane.getText());
@@ -762,7 +848,7 @@ public class HelloController {
         alert.showAndWait();
     }
 
-    private void createWarningSign(String s) {
+    public void createWarningSign(String s) {
         Alert alert = new Alert(Alert.AlertType.WARNING, s, ButtonType.OK);
         alert.show();
     }

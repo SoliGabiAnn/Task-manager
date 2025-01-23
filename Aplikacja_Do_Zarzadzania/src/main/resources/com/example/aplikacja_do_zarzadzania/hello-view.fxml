@@ -23,12 +23,24 @@
                                 </font>
                             </Label>
                             <DatePicker fx:id="projectStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
-                            <Label layoutX="14.0" layoutY="154.0" text="Due Date">
+                            <Label layoutX="13.0" layoutY="200.0" text="Due Date">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
                             </Label>
-                            <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
+                            <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="226.0" />
+                     <Label layoutX="16.0" layoutY="140.0" text="Time">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="projectStartTimeTextField" layoutX="14.0" layoutY="160.0" promptText="hh : mm" />
+                     <Label layoutX="18.0" layoutY="259.0" text="Time">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="projectDueTimeTextField" layoutX="16.0" layoutY="279.0" promptText="hh : mm" />
                         </AnchorPane>
                     </Tab>
                     <Tab text="Task">
@@ -39,24 +51,36 @@
                                 </font>
                             </Label>
                             <TextField fx:id="taskNameTextField" layoutX="14.0" layoutY="34.0" />
-                            <Label layoutX="14.0" layoutY="84.0" text="Start Date">
+                            <Label layoutX="12.0" layoutY="67.0" text="Start Date">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
                             </Label>
-                            <DatePicker fx:id="taskStartDateDatePicker" layoutX="14.0" layoutY="104.0" />
-                            <Label layoutX="14.0" layoutY="154.0" text="Due Date">
+                            <DatePicker fx:id="taskStartDateDatePicker" layoutX="12.0" layoutY="87.0" />
+                            <Label layoutX="12.0" layoutY="177.0" text="Due Date">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
                             </Label>
-                            <DatePicker fx:id="taskDueDateDatePicker" layoutX="14.0" layoutY="174.0" />
-                            <Label layoutX="14.0" layoutY="224.0" text="Description">
+                            <DatePicker fx:id="taskDueDateDatePicker" layoutX="13.0" layoutY="197.0" />
+                            <Label layoutX="15.0" layoutY="282.0" text="Description">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
                             </Label>
-                            <TextArea fx:id="taskDescriptionTextArea" layoutX="14.0" layoutY="244.0" prefHeight="114.0" prefWidth="151.0" />
+                            <TextArea fx:id="taskDescriptionTextArea" layoutX="14.0" layoutY="302.0" prefHeight="114.0" prefWidth="151.0" />
+                     <Label layoutX="19.0" layoutY="121.0" text="Time">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="taskStartTimeTextField" layoutX="12.0" layoutY="141.0" promptText="hh : mm" />
+                     <Label layoutX="22.0" layoutY="223.0" text="Time">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="taskDueTimeTextField" layoutX="15.0" layoutY="243.0" promptText="hh : mm" />
                         </AnchorPane>
                     </Tab>
                 </TabPane>
