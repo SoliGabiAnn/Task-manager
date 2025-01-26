@@ -192,49 +192,4 @@ public class User {
     public String getUsername() {
         return username;
     }
-//    public static void main(String args[]){
-//        User u = new User();
-//        u.setUsername("admin");
-//        u.addToDoProject("projekt1", LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,7,6,7));
-//        u.getListOfToDoProject().get(0).addTask("pranie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,5,6,7),"blabla");
-//        u.getListOfToDoProject().get(0).addTask("składanie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,6,7,4),"W kostkę");
-//        u.getListOfToDoProject().get(0).addTask("suszenie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,5,9,54),"pralkosuszarką");
-//        try {
-//            Thread.sleep(10);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//        u.addToDoProject("projekt0", LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,5,6,7));
-//        u.getListOfToDoProject().get(1).addTask("pranie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,2,6,7),"blabla");
-//        u.getListOfToDoProject().get(1).addTask("składanie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,4,7,4),"W kostkę");
-//        u.getListOfToDoProject().get(1).addTask("suszenie",LocalDateTime.of(2025,3,5,16,5), LocalDateTime.of(2025,4,3,9,54),"pralkosuszarką");
-//
-//        try {
-//            Thread.sleep(10);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        u.addToDoProject("projekt3", LocalDateTime.of(2025,1,2,16,5), LocalDateTime.of(2025,4,7,6,7));
-//        u.getListOfToDoProject().get(2).addTask("pranie",LocalDateTime.of(2025,1,2,16,5), LocalDateTime.of(2025,4,5,6,7),"blabla");
-//
-//        try {
-//            Thread.sleep(10);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        u.addToDoProject("projekt2", LocalDateTime.of(2025,1,1,16,5), LocalDateTime.of(2025,1,3,6,7));
-//        u.getListOfToDoProject().get(3).addTask("pranie",LocalDateTime.of(2025,1,2,16,5), LocalDateTime.of(2025,1,3,6,7),"blabla");
-//
-//        u.ifStarted();
-//        u.getListOfUnfinishedProject().getFirst().getListOfTask().getFirst().endTask();
-//        u.getListOfUnfinishedProject().getFirst().setState(true);
-//        u.ifFinished();
-//
-//        ArrayList<Project> sortedProjectList=u.sortProject(u.getListOfToDoProject());
-//        ArrayList<Task> sortedTaskList0=u.getListOfToDoProject().get(0).sortTask();
-//        ArrayList<Task> sortedTaskList1=u.getListOfToDoProject().get(1).sortTask();
-//        u.getListOfToDoProject().get(1).deleteTask(u.getListOfToDoProject().get(1).listOfTask.get(0).date_added);
-//    }
 }
