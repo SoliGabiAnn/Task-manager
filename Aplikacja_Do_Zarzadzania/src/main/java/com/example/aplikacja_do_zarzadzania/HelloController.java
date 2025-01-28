@@ -260,6 +260,7 @@ public class HelloController {
 
         if (project.getDate_end() != null) {
             doneProjectContainer.getChildren().add(projectTitlePane);
+            setCheckBoxesSelected(projectTitlePane, true);
         } else if (project.getDate_start().isBefore(LocalDateTime.now())) {
             doingProjectContainer.getChildren().add(projectTitlePane);
             projectTitlePane.getGraphic().setMouseTransparent(false);
@@ -558,7 +559,7 @@ public class HelloController {
             taskCheckBox.setSelected(b);
             taskCheckBox.setMouseTransparent(b);
         }
-        if (projectCheckBox != null) {
+        if (!projectCheckBox.isSelected()) {
             projectCheckBox.setSelected(b);
         }
     }
@@ -663,6 +664,7 @@ public class HelloController {
             });
         } else {
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
+            reversedMapTask(newTitledPane).endTask(LocalDateTime.now());
         }
     }
 
@@ -862,6 +864,7 @@ public class HelloController {
                 return super.fromString(value);
             } catch (Exception e) {
                 System.out.println("Exception in fromString");
+                createAlertSign(e, "Date is in wrong format!");
                 return LocalDate.now();
             }
         }
