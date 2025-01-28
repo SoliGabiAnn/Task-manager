@@ -118,9 +118,11 @@ public class User {
                     listOfIndexOfProjectToMove.add(i);
                 }
             }
-        } else {
-            clearListOfIndexOfProjectToMove();
         }
+        clearListOfIndexOfProjectToMove();
+//        } else {
+//            clearListOfIndexOfProjectToMove();
+//        }
     }
     public void ifStartedReverse() throws ProjectException {
         if (!listOfUnfinishedProject.isEmpty()) {
@@ -128,12 +130,13 @@ public class User {
                 if (listOfUnfinishedProject.get(i).getDate_start().isAfter(LocalDateTime.now())) {
                     this.addToDoProject(listOfUnfinishedProject.get(i));
                     //this.deleteToDoProject(listOfToDoProject.get(i).getDate_added());
-                    listOfIndexOfProjectToMove.add(i);
+//                    listOfIndexOfProjectToMove.add(i);
                 }
             }
-        } else {
-            clearListOfIndexOfProjectToMove();
         }
+//        } else {
+//            clearListOfIndexOfProjectToMove();
+//        }
     }
 
     public void ifFinished() {
@@ -142,6 +145,16 @@ public class User {
                 if (listOfUnfinishedProject.get(i).getState() && listOfUnfinishedProject.get(i).checkIfTasksAreFinished()) {
                     this.addFinishedProject(listOfUnfinishedProject.get(i));
                     this.deleteUnfinishedProject(listOfUnfinishedProject.get(i).getDate_added());
+                }
+            }
+        }
+    }
+    public void ifFinishedReverse() {
+        if (!listOfFinishedProject.isEmpty()) {
+            for (int i = 0; i < listOfFinishedProject.size(); i++) {//in controlls it is necessary ot change state
+                if (!listOfFinishedProject.get(i).getState()) {
+                    this.addUnfinishedProject(listOfFinishedProject.get(i));
+                    this.deleteFinishedProject(listOfFinishedProject.get(i).getDate_added());
                 }
             }
         }
