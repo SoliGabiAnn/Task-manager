@@ -118,43 +118,6 @@ public class HelloController {
                 }
             }
         }
-
-//        projectStartDateDatePicker.setConverter(new StringConverter<LocalDate>() {
-//            String pattern = "yyyy-MM-dd";
-//            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-//
-//            {
-//                projectStartDateDatePicker.setPromptText(pattern.toLowerCase());
-//            }
-//
-//            @Override
-//            public String toString(LocalDate date) {
-//                if (date != null) {
-//                    return dateFormatter.format(date);
-//                } else {
-//                    return "";
-//                }
-//            }
-//
-//            @Override
-//            public LocalDate fromString(String string) {
-//                if (string != null && !string.isEmpty()) {
-//                    return LocalDate.parse(string, dateFormatter);
-//                } else {
-//                    return null;
-//                }
-//            }
-//        });
-//        projectStartDateDatePicker.setOnAction(event -> {
-//            try{
-//                projectStartDateDatePicker.parseResolved
-//                LocalDate selectedDate = projectStartDateDatePicker.getValue();
-//
-//            }catch (DateTimeParseException e){
-//                createWarningSign("Valid date");
-//            }
-//        });
-
     }
 
     public void setStage(Stage stage) {
@@ -503,28 +466,6 @@ public class HelloController {
 
     }
 
-//    private void checkIfAfterDeadline(){
-//        var listOfProjectToMarkRed = user.getListOfUnfinishedProject();
-//        HashMap<Project, TitledPane> reversedMap = new HashMap<>();
-//        for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
-//            reversedMap.put(entry.getValue(), entry.getKey());
-//        }
-//
-//        for (Project project : listOfProjectToMarkRed) {
-//            if(project.getDeadline().isBefore(LocalDateTime.now())){
-//                var projectTitlePane = reversedMap.get(project);
-//                Node titleNode = projectTitlePane.lookup(".title");
-//                if (titleNode != null) {
-////                    var resource = getClass().getResource("/style.css");
-////
-////                    projectTitlePane.setStyle(String.valueOf(resource));
-//                }
-////                selectedTitlePane.setStyle("-fx-background-color: #CD8079; -fx-text-fill: white;");
-////                projectTitlePane.lookup(".title").setStyle("-fx-background-color: #D98782;");
-//            }
-//        }
-//    }
-
     private void moveProjectToDone(TitledPane projectTitlePane) {
         doingProjectContainer.getChildren().remove(projectTitlePane);
         doneProjectContainer.getChildren().add(projectTitlePane);
@@ -594,6 +535,7 @@ public class HelloController {
 
     private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, TextField projectDueTimeTextField, DatePicker projectStartDateDatePicker, TextField projectStartTimeTextField) {
         var newProject = new TitledPane();
+        newProject.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
         addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker, projectStartTimeTextField);
         var projectAccordion = new Accordion();
         newProject.setContent(projectAccordion);
@@ -613,6 +555,7 @@ public class HelloController {
 
     private TitledPane addProjectTitlePane(Project project) {
         var newProject = new TitledPane();
+        newProject.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
         var projectNameTextField = new TextField();
         projectNameTextField.setText(project.getName());
         var projectStartDateDatePicker = new DatePicker();
@@ -1058,6 +1001,16 @@ public class HelloController {
         alert.show();
     }
 
+    public void checkIfProjectIsBeforeDeadline(){
+        for(int i = 0; i < user.getListOfUnfinishedProject().size(); i++){
+            if(user.getListOfUnfinishedProject().get(i).getDeadline().isBefore(LocalDateTime.now())){
+                reversedMap(user.getListOfUnfinishedProject().get(i)).setStyle("-fx-border-color: #9f5959; " + "-fx-border-width: 5px;");
+
+            }
+
+        }
+    }
+
     final Timeline timeline1 = new Timeline(
             new KeyFrame(
                     Duration.seconds(1),
@@ -1073,6 +1026,7 @@ public class HelloController {
                         checkIfValidDates();
                         moveProjectFromDoingToToDo();
                         checkIfTasksStartDateCame();
+                        checkIfProjectIsBeforeDeadline();
 //                        System.err.println("Finished after " + (System.currentTimeMillis() - start) + "ms");
                     }
             )
