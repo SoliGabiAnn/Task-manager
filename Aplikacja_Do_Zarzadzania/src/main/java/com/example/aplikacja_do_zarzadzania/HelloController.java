@@ -157,6 +157,7 @@ public class HelloController {
     public void setStage(Stage stage) {
         stage.setOnCloseRequest(event -> {
             try {
+                user.clearListOfIndexOfProjectToMove();
                 handler.writeToJsonFile(user);
                 System.out.println("User data saved successfully.");
             } catch (IOException e) {
@@ -256,7 +257,7 @@ public class HelloController {
 
         if (project.getDate_end() != null) {
             doneProjectContainer.getChildren().add(projectTitlePane);
-        } else if (project.getDate_start().isBefore(project.getDate_added())) {
+        } else if (project.getDate_start().isBefore(LocalDateTime.now())) {
             doingProjectContainer.getChildren().add(projectTitlePane);
             projectTitlePane.getGraphic().setMouseTransparent(false);
         } else {
@@ -465,7 +466,7 @@ public class HelloController {
             }
             for (int i = 0; i < index; i++) {
                 var projectToMove = user.getListOfToDoProject().get(listOfProjectsToMove.get(i));
-                user.deleteToDoProject(user.getListOfToDoProject().get(i).getDate_added());
+                user.deleteToDoProject(projectToMove.getDate_added());
                 var titlePaneToMove = reversedMap.get(projectToMove);
                 toDoProjectContainer.getChildren().remove(titlePaneToMove);
                 doingProjectContainer.getChildren().add(titlePaneToMove);

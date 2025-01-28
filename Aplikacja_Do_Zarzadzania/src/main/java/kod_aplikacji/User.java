@@ -99,11 +99,10 @@ public class User {
     }
 
     //lista indeksów projektów, które będą zmieniały stan
-    @JsonProperty("listOfIndexOfProjectToMove")
     ArrayList<Integer> listOfIndexOfProjectToMove = new ArrayList<>();
 
     public ArrayList<Integer> getListOfIndexOfProjectToMove() {
-        return listOfIndexOfProjectToMove;
+        return this.listOfIndexOfProjectToMove;
     }
 
     public void clearListOfIndexOfProjectToMove() {
