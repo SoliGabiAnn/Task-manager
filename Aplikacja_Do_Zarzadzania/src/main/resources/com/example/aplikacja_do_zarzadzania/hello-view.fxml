@@ -29,18 +29,18 @@
                                 </font>
                             </Label>
                             <DatePicker fx:id="projectDueDateDatePicker" layoutX="14.0" layoutY="226.0" />
-                     <Label layoutX="16.0" layoutY="140.0" text="Time">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
-                     <TextField fx:id="projectStartTimeTextField" layoutX="14.0" layoutY="160.0" promptText="hh : mm" />
-                     <Label layoutX="18.0" layoutY="259.0" text="Time">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
-                     <TextField fx:id="projectDueTimeTextField" layoutX="16.0" layoutY="279.0" promptText="hh : mm" />
+                            <Label layoutX="16.0" layoutY="140.0" text="Time">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="projectStartTimeTextField" layoutX="14.0" layoutY="160.0" promptText="hh : mm" />
+                            <Label layoutX="18.0" layoutY="259.0" text="Time">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="projectDueTimeTextField" layoutX="16.0" layoutY="279.0" promptText="hh : mm" />
                         </AnchorPane>
                     </Tab>
                     <Tab text="Task">
@@ -69,18 +69,18 @@
                                 </font>
                             </Label>
                             <TextArea fx:id="taskDescriptionTextArea" layoutX="14.0" layoutY="302.0" prefHeight="114.0" prefWidth="151.0" />
-                     <Label layoutX="19.0" layoutY="121.0" text="Time">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
-                     <TextField fx:id="taskStartTimeTextField" layoutX="12.0" layoutY="141.0" promptText="hh : mm" />
-                     <Label layoutX="22.0" layoutY="223.0" text="Time">
-                        <font>
-                           <Font size="14.0" />
-                        </font>
-                     </Label>
-                     <TextField fx:id="taskDueTimeTextField" layoutX="15.0" layoutY="243.0" promptText="hh : mm" />
+                            <Label layoutX="19.0" layoutY="121.0" text="Time">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="taskStartTimeTextField" layoutX="12.0" layoutY="141.0" promptText="hh : mm" />
+                            <Label layoutX="22.0" layoutY="223.0" text="Time">
+                                <font>
+                                    <Font size="14.0" />
+                                </font>
+                            </Label>
+                            <TextField fx:id="taskDueTimeTextField" layoutX="15.0" layoutY="243.0" promptText="hh : mm" />
                         </AnchorPane>
                     </Tab>
                 </TabPane>
@@ -97,13 +97,25 @@
             <center>
                 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                     <Tab text="To Do">
-                        <VBox fx:id="toDoProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true">
+                            <content>
+                                <VBox fx:id="toDoProjectContainer" />
+                            </content>
+                        </ScrollPane>
                     </Tab>
                     <Tab text="Doing">
-                        <VBox fx:id="doingProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                              <VBox fx:id="doingProjectContainer" />
+                     </content>
+                  </ScrollPane>
                     </Tab>
                     <Tab text="Done">
-                        <VBox fx:id="doneProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                  <ScrollPane fitToHeight="true" fitToWidth="true">
+                     <content>
+                              <VBox fx:id="doneProjectContainer" prefHeight="200.0" prefWidth="100.0" />
+                     </content>
+                  </ScrollPane>
                     </Tab>
                 </TabPane>
             </center>

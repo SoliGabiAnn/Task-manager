@@ -1,5 +1,6 @@
 package kod_aplikacji;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -27,9 +28,11 @@ public class GenerateReport{
         var first=earliestOfAll();
         var last=lastOfAll();
         if(first!=null && last!=null){
-            long timeframe=ChronoUnit.SECONDS.between(first, last);
+            long timeframe=ChronoUnit.MINUTES.between(first, last);
             float totalCount=counterTasks(user.listOfUnfinishedProject)+counterTasks(user.listOfFinishedProject)+counterTasks(user.listOfToDoProject);
-            return (totalCount / timeframe);
+            DecimalFormat decimalFormat=new DecimalFormat("#.####");
+            float result=totalCount / timeframe;
+            return Float.parseFloat(decimalFormat.format(result));
         }
         return (float) 0;
     }
@@ -99,12 +102,13 @@ public class GenerateReport{
             last=latestDateOfList(user.listOfUnfinishedProject);
         }
         if(last!=null && !user.listOfFinishedProject.isEmpty()){
-            if(last.isBefore(earliestDateOfList(user.listOfFinishedProject))){
-                last= latestDateOfList(user.listOfFinishedProject);
+            if(last.isBefore(latestDateOfList(user.listOfFinishedProject))) {
+                last = latestDateOfList(user.listOfFinishedProject);
+            }
         } else if (!user.listOfFinishedProject.isEmpty()) {
                 last=latestDateOfList(user.listOfFinishedProject);
-            }
         }
+
         return last;
     }
     private float counterTasks(ArrayList<Project> listOfProject) {
@@ -140,7 +144,7 @@ public class GenerateReport{
         long sum=0;
         for (Project project : user.listOfFinishedProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
-                sum += ChronoUnit.SECONDS.between(project.getListOfTask().get(j).getDate_start(), project.getListOfTask().get(j).getDate_end());
+                sum += ChronoUnit.MINUTES.between(project.getListOfTask().get(j).getDate_start(), project.getListOfTask().get(j).getDate_end());
             }
         }
         return (float) sum/counterTasks(user.listOfFinishedProject);

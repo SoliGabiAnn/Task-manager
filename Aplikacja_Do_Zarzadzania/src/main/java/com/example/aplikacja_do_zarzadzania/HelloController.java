@@ -535,6 +535,7 @@ public class HelloController {
 
     private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, TextField projectDueTimeTextField, DatePicker projectStartDateDatePicker, TextField projectStartTimeTextField) {
         var newProject = new TitledPane();
+
         newProject.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
         addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker, projectStartTimeTextField);
         var projectAccordion = new Accordion();
