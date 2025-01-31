@@ -19,6 +19,10 @@ public class Task extends Basic_Info{
         this.setState(true);
         this.setDate_end(end);
     }
+    public void endTaskReversed(){
+        this.setState(false);
+        this.setDate_end(null);
+    }
 
     public String getDescription() {
         return description;

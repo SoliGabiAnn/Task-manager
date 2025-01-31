@@ -85,6 +85,10 @@ public class Project extends Basic_Info {
         this.setState(true);
         this.setDate_end(end);
     }
+    public void endProjectReversed(){
+        this.setState(false);
+        this.setDate_end(null);
+    }
 
     public ArrayList<Task> getListOfTask() {
         return listOfTask;

@@ -105,6 +105,7 @@ public class HelloController {
                     addTask(task, project);
                 }
             }
+            setCheckBoxesSelected(reversedMap(project), true);
         }
         for (Project project : user.getListOfFinishedProject()) {
             addProject(project);
@@ -249,6 +250,14 @@ public class HelloController {
                     createWarningSign("Time was chosen wrongly");
                     hasWarningOccurred = true;
                 } else if (!dateStart.isAfter(deadline)) {
+
+                    if (taskDescriptionTextArea.getText().trim().isEmpty()) {
+                        boolean confirmed = confirmTaskWithoutDescription();
+                        if (!confirmed) {
+                            return;
+                        }
+                    }
+
                     var taskToAdd = new Task(taskName, false, dateAdded, dateStart, null, deadline, taskDescriptionTextArea.getText());
                     var newTask = new TitledPane();
 
@@ -477,10 +486,6 @@ public class HelloController {
 
         indexOfProject.get(projectTitlePane).setState(true);
         setCheckBoxesSelected(projectTitlePane, true);
-        var listOfTask = indexOfProject.get(projectTitlePane).getListOfTask();
-//        for (Task task : listOfTask) {
-//            indexOfTask.get(task).getGraphic().setMouseTransparent(true);
-//        }
     }
 
     private void moveProjectFromDoneToDoing(TitledPane projectTitledPane) {
@@ -502,12 +507,14 @@ public class HelloController {
         var project = indexOfProject.get(projectTitlePane);
         for (int i = 0; i < project.getListOfTask().size(); i++) {
             TitledPane taskPane = indexOfTask.get(project.getListOfTask().get(i));
-            CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
-            taskCheckBox.setSelected(b);
-            taskCheckBox.setMouseTransparent(b);
+            if(project.getListOfTask().get(i).getState()){
+                CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
+                taskCheckBox.setSelected(b);
+            }
         }
-        if (!projectCheckBox.isSelected()) {
+        if(project.getState()){
             projectCheckBox.setSelected(b);
+
         }
     }
 
@@ -599,17 +606,24 @@ public class HelloController {
                     if (checkIfTaskAreFinished(newTitledPane)) {
                         moveProjectToDone(newTitledPane);
                     }
-//                    checkBox.setMouseTransparent(false);
                 }
                 if (!checkBox.isSelected()) {
                     moveProjectFromDoneToDoing(newTitledPane);
-//                    checkBox.setMouseTransparent(false);
+                    indexOfProject.get(newTitledPane).endProjectReversed();
                     user.ifFinishedReverse();
+
                 }
             });
         } else {
+            checkBox.setOnAction(event -> {
+                if(checkBox.isSelected()){
+                    reversedMapTask(newTitledPane).endTask(LocalDateTime.now());
+                }
+                if (!checkBox.isSelected()) {
+                    reversedMapTask(newTitledPane).endTaskReversed();
+                }
+            });
             checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedTitlePane));
-            reversedMapTask(newTitledPane).endTask(LocalDateTime.now());
         }
     }
 
@@ -770,14 +784,14 @@ public class HelloController {
 
                                 if (!indexOfProject.get(selectedTitlePane).getDate_start().isAfter(taskStartDate)) {
                                     if (!taskStartDate.isAfter(taskDeadline)) {
-                                        if(!indexOfProject.get(selectedTitlePane).getDeadline().isBefore(taskDeadline)){
+                                        if (!indexOfProject.get(selectedTitlePane).getDeadline().isBefore(taskDeadline)) {
                                             if (!taskDeadline.isBefore(taskStartDate)) {
                                                 task.setDateStart(taskStartDate);
                                                 task.setDeadline(taskDeadline);
                                             } else {
                                                 createWarningSign("Due date cannot be before start date");
                                             }
-                                        }else {
+                                        } else {
                                             createWarningSign("Task' due date cannot be after project start date");
                                         }
 
@@ -1036,6 +1050,16 @@ public class HelloController {
     public void createWarningSign(String s) {
         Alert alert = new Alert(Alert.AlertType.WARNING, s, ButtonType.OK);
         alert.show();
+    }
+
+    private boolean confirmTaskWithoutDescription() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Brak opisu zadania");
+        alert.setHeaderText(null);
+        alert.setContentText("Nie dodałeś opisu zadania. Czy na pewno chcesz kontynuować?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     public void checkIfProjectIsBeforeDeadline() {
