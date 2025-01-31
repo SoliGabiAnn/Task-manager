@@ -119,24 +119,29 @@ public class User {
                 }
             }
         }
-        clearListOfIndexOfProjectToMove();
-//        } else {
-//            clearListOfIndexOfProjectToMove();
-//        }
     }
+
+    //lista indeksów projektów, które będą zmieniały stan
+    ArrayList<Integer> listOfIndexOfProjectToMoveToDo = new ArrayList<>();
+
+    public ArrayList<Integer> getListOfIndexOfProjectToMoveToDo() {
+        return this.listOfIndexOfProjectToMoveToDo;
+    }
+
+    public void clearListOfIndexOfProjectToMoveToDo() {
+        listOfIndexOfProjectToMoveToDo.clear();
+    }
+
     public void ifStartedReverse() throws ProjectException {
         if (!listOfUnfinishedProject.isEmpty()) {
             for (int i = 0; i < listOfUnfinishedProject.size(); i++) {
                 if (listOfUnfinishedProject.get(i).getDate_start().isAfter(LocalDateTime.now())) {
                     this.addToDoProject(listOfUnfinishedProject.get(i));
                     //this.deleteToDoProject(listOfToDoProject.get(i).getDate_added());
-//                    listOfIndexOfProjectToMove.add(i);
+                    listOfIndexOfProjectToMoveToDo.add(i);
                 }
             }
         }
-//        } else {
-//            clearListOfIndexOfProjectToMove();
-//        }
     }
 
     public void ifFinished() {

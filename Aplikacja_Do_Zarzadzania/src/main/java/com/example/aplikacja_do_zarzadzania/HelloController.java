@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
@@ -109,14 +108,14 @@ public class HelloController {
         }
         for (Project project : user.getListOfFinishedProject()) {
             addProject(project);
-            CheckBox graphicCheckBox = (CheckBox) reversedMap(project).getGraphic();
-            graphicCheckBox.setSelected(true);
-
             if (!project.getListOfTask().isEmpty()) {
                 for (Task task : project.getListOfTask()) {
                     addTask(task, project);
                 }
             }
+            setCheckBoxesSelected(reversedMap(project), true);
+            CheckBox graphicCheckBox = (CheckBox) reversedMap(project).getGraphic();
+            graphicCheckBox.setSelected(true);
         }
     }
 
@@ -196,6 +195,7 @@ public class HelloController {
                 } else {
                     user.addToDoProject(projectToAdd);
                     toDoProjectContainer.getChildren().add(projectTitlePane);
+                    projectTitlePane.getGraphic().setMouseTransparent(true);
                 }
                 projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
             } else {
@@ -223,12 +223,15 @@ public class HelloController {
 
         if (project.getDate_end() != null) {
             doneProjectContainer.getChildren().add(projectTitlePane);
-            setCheckBoxesSelected(projectTitlePane, true);
+            projectTitlePane.getGraphic().setMouseTransparent(false);
+
         } else if (project.getDate_start().isBefore(LocalDateTime.now())) {
             doingProjectContainer.getChildren().add(projectTitlePane);
             projectTitlePane.getGraphic().setMouseTransparent(false);
         } else {
             toDoProjectContainer.getChildren().add(projectTitlePane);
+            projectTitlePane.getGraphic().setMouseTransparent(true);
+
         }
         projectTitlePane.setOnMouseClicked(event -> getSelectProject(projectTitlePane));
     }
@@ -326,6 +329,7 @@ public class HelloController {
             contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
 
             CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+            taskCheckBox.setMouseTransparent(true);
             if (taskCheckBox != null) {
                 taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedPane));
             }
@@ -415,7 +419,7 @@ public class HelloController {
         var projectAccordion = (Accordion) selectedTitlePane.getContent();
 
         if (projectAccordion.getPanes().size() > 1) {
-            TitledPane firstPane = projectAccordion.getPanes().get(0);
+            TitledPane firstPane = projectAccordion.getPanes().getFirst();
             projectAccordion.getPanes().clear();
             projectAccordion.getPanes().add(firstPane);
         }
@@ -428,17 +432,17 @@ public class HelloController {
         var listOfProjectsToMove = user.getListOfIndexOfProjectToMove();
         var index = listOfProjectsToMove.size();
         if (index > 0) {
-            HashMap<Project, TitledPane> reversedMap = new HashMap<>();
-            for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
-                reversedMap.put(entry.getValue(), entry.getKey());
-            }
-            for (int i = 0; i < index; i++) {
-                var projectToMove = user.getListOfToDoProject().get(listOfProjectsToMove.get(i));
+            for (Integer integer : listOfProjectsToMove) {
+                var projectToMove = user.getListOfToDoProject().get(integer);
                 user.deleteToDoProject(projectToMove.getDate_added());
-                var titlePaneToMove = reversedMap.get(projectToMove);
+                var titlePaneToMove = reversedMap(projectToMove);
                 toDoProjectContainer.getChildren().remove(titlePaneToMove);
                 doingProjectContainer.getChildren().add(titlePaneToMove);
                 titlePaneToMove.getGraphic().setMouseTransparent(false);
+
+                for(int i = 0; i<projectToMove.getListOfTask().size(); i++){
+                    indexOfTask.get(projectToMove.getListOfTask().get(i)).getGraphic().setMouseTransparent(false);
+                }
             }
             user.clearListOfIndexOfProjectToMove();
         }
@@ -446,35 +450,37 @@ public class HelloController {
     }
 
     private void moveProjectFromDoingToToDo() {
-        var listOfProjectsToMove = user.getListOfIndexOfProjectToMove();
+        var listOfProjectsToMove = user.getListOfIndexOfProjectToMoveToDo();
         var index = listOfProjectsToMove.size();
         if (index > 0) {
-            HashMap<Project, TitledPane> reversedMap = new HashMap<>();
-            for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
-                reversedMap.put(entry.getValue(), entry.getKey());
+            for (Integer integer : listOfProjectsToMove) {
+                var projectToMove = user.getListOfUnfinishedProject().get(integer);
+                user.deleteUnfinishedProject(projectToMove.getDate_added());
+                var titledPaneToMove = reversedMap(projectToMove);
+                doingProjectContainer.getChildren().remove(titledPaneToMove);
+                toDoProjectContainer.getChildren().add(titledPaneToMove);
+                titledPaneToMove.getGraphic().setMouseTransparent(true);
+                var listOfTask = indexOfProject.get(titledPaneToMove).getListOfTask();
+                for (Task task : listOfTask) {
+                    task.setState(false);
+                    indexOfTask.get(task).getGraphic().setMouseTransparent(true);
+                }
             }
-            for (int i = 0; i < index; i++) {
-                var projectToMove = user.getListOfUnfinishedProject().get(listOfProjectsToMove.get(i));
-                user.deleteUnfinishedProject(user.getListOfUnfinishedProject().get(i).getDate_added());
-                var titlePaneToMove = reversedMap.get(projectToMove);
-                doingProjectContainer.getChildren().remove(titlePaneToMove);
-                toDoProjectContainer.getChildren().add(titlePaneToMove);
-                titlePaneToMove.getGraphic().setMouseTransparent(true);
-            }
-            user.clearListOfIndexOfProjectToMove();
+            user.clearListOfIndexOfProjectToMoveToDo();
         }
-
     }
 
     private void moveProjectToDone(TitledPane projectTitlePane) {
         doingProjectContainer.getChildren().remove(projectTitlePane);
         doneProjectContainer.getChildren().add(projectTitlePane);
+        projectTitlePane.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
+
         indexOfProject.get(projectTitlePane).setState(true);
         setCheckBoxesSelected(projectTitlePane, true);
         var listOfTask = indexOfProject.get(projectTitlePane).getListOfTask();
-        for (Task task : listOfTask) {
-            indexOfTask.get(task).getGraphic().setMouseTransparent(false);
-        }
+//        for (Task task : listOfTask) {
+//            indexOfTask.get(task).getGraphic().setMouseTransparent(true);
+//        }
     }
 
     private void moveProjectFromDoneToDoing(TitledPane projectTitledPane) {
@@ -493,9 +499,9 @@ public class HelloController {
     private void setCheckBoxesSelected(TitledPane projectTitlePane, boolean b) {
         CheckBox projectCheckBox = (CheckBox) projectTitlePane.getGraphic();
 
-        var projectContent = (Accordion) projectTitlePane.getContent();
-        for (int i = 1; i < projectContent.getPanes().size(); i++) {
-            TitledPane taskPane = projectContent.getPanes().get(i);
+        var project = indexOfProject.get(projectTitlePane);
+        for (int i = 0; i < project.getListOfTask().size(); i++) {
+            TitledPane taskPane = indexOfTask.get(project.getListOfTask().get(i));
             CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
             taskCheckBox.setSelected(b);
             taskCheckBox.setMouseTransparent(b);
@@ -521,21 +527,16 @@ public class HelloController {
     }
 
     private void checkIfTasksStartDateCame() {
-        for (Map.Entry<TitledPane, Project> entry : indexOfProject.entrySet()) {
-            var projectPane = entry.getKey();
-            Accordion projectAccordion = (Accordion) projectPane.getContent();
-            for (int i = 1; i < projectAccordion.getPanes().size(); i++) {
-                TitledPane taskPane = projectAccordion.getPanes().get(i);
-                CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
-                taskCheckBox.setMouseTransparent(!reversedMapTask(taskPane).getDate_start().isBefore(LocalDateTime.now()));
+        for(int i = 0; i < user.getListOfUnfinishedProject().size(); i++){
+            for(int j = 0; j < user.getListOfUnfinishedProject().get(i).getListOfTask().size(); j++){
+                var task = user.getListOfUnfinishedProject().get(i).getListOfTask().get(j);
+                indexOfTask.get(task).getGraphic().setMouseTransparent(!task.getDate_start().isBefore(LocalDateTime.now()));
             }
         }
-
     }
 
     private TitledPane addProjectTitlePane(TextField projectNameTextField, DatePicker projectDueDateDatePicker, TextField projectDueTimeTextField, DatePicker projectStartDateDatePicker, TextField projectStartTimeTextField) {
         var newProject = new TitledPane();
-
         newProject.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
         addCheckBoxWithName(projectNameTextField, newProject, true, projectStartDateDatePicker, projectStartTimeTextField);
         var projectAccordion = new Accordion();
@@ -598,11 +599,11 @@ public class HelloController {
                     if (checkIfTaskAreFinished(newTitledPane)) {
                         moveProjectToDone(newTitledPane);
                     }
-                    checkBox.setMouseTransparent(false);
+//                    checkBox.setMouseTransparent(false);
                 }
                 if (!checkBox.isSelected()) {
                     moveProjectFromDoneToDoing(newTitledPane);
-                    checkBox.setMouseTransparent(false);
+//                    checkBox.setMouseTransparent(false);
                     user.ifFinishedReverse();
                 }
             });
@@ -685,6 +686,10 @@ public class HelloController {
                 var taskTimes = getTaskTextField(selectedTask);
                 taskTimes.getFirst().setMouseTransparent(true);
                 taskTimes.get(1).setMouseTransparent(true);
+                if(!projectAccordion.getPanes().getFirst().isExpanded()){
+                    getTaskDescription(selectedTask).setMouseTransparent(true);
+
+                }
             }
         }
 
@@ -755,6 +760,9 @@ public class HelloController {
                                 task.setDateStart(taskStartDate);
                                 task.setDeadline(taskDeadline);
 
+                                var taskDescription = getTaskDescription(expandedTask);
+                                reversedMapTask(expandedTask).setDescription(taskDescription.getText());
+
                                 break;
                             }
                         }
@@ -778,25 +786,27 @@ public class HelloController {
             var taskTimes = getTaskTextField(selectedTask);
             taskTimes.getFirst().setMouseTransparent(false);
             taskTimes.get(1).setMouseTransparent(false);
+            if(!projectAccordion.getPanes().getFirst().isExpanded()){
+                var taskDescription = getTaskDescription(selectedTask);
+                taskDescription.setEditable(true);
+            }
+
             refresh();
         }
-//        else {
-//            setTransparentToChangeDate(false, selectedTitlePane);
-//            var checkBox = (CheckBox) selectedTitlePane.getGraphic();
-//            checkBox.setOnMouseClicked(event -> {
-//                if (event.getClickCount() == 2) { // Podwójne kliknięcie
-//                    TextField editField = new TextField(checkBox.getText());
-//                    selectedTitlePane.setGraphic(editField);
-//
-//                    // Obsługa zdarzenia, gdy użytkownik naciśnie Enter
-//                    editField.setOnAction(e -> {
-//                        checkBox.setText(editField.getText()); // Zapisanie nowego tekstu
-//                        selectedTitlePane.setGraphic(checkBox);
-//                    });
-//                }
-//            });
-//            refresh();
-//        }
+    }
+
+    public TextArea getTaskDescription(TitledPane taskTitledPane) {
+        if (taskTitledPane.getContent() instanceof AnchorPane) {
+            AnchorPane anchorPane = (AnchorPane) taskTitledPane.getContent();
+
+            for (Node node : anchorPane.getChildren()) {
+                if (node instanceof TextArea) {
+                    TextArea textArea = (TextArea) node;
+                    return textArea;
+                }
+            }
+        }
+        return null;
     }
 
     LocalDateStringConverter localDateStringConverter = new LocalDateStringConverter() {
@@ -965,8 +975,7 @@ public class HelloController {
         ArrayList<TextField> timeTextFields = new ArrayList<>();
 
         for (Node node : taskDetailsPane.getChildren()) {
-            if (node instanceof TextField) {
-                TextField textField = (TextField) node;
+            if (node instanceof TextField textField) {
                 if (textField.getText().matches("\\d{2} : \\d{2}")) { // Format godziny hh : mm
                     timeTextFields.add(textField);
                 } else if (!textField.getText().isEmpty()) { // Dodajemy też nazwę zadania, jeśli nie jest pusta
@@ -1002,13 +1011,13 @@ public class HelloController {
         alert.show();
     }
 
-    public void checkIfProjectIsBeforeDeadline(){
-        for(int i = 0; i < user.getListOfUnfinishedProject().size(); i++){
-            if(user.getListOfUnfinishedProject().get(i).getDeadline().isBefore(LocalDateTime.now())){
+    public void checkIfProjectIsBeforeDeadline() {
+        for (int i = 0; i < user.getListOfUnfinishedProject().size(); i++) {
+            if (user.getListOfUnfinishedProject().get(i).getDeadline().isBefore(LocalDateTime.now())) {
                 reversedMap(user.getListOfUnfinishedProject().get(i)).setStyle("-fx-border-color: #9f5959; " + "-fx-border-width: 5px;");
-
+            } else {
+                reversedMap(user.getListOfUnfinishedProject().get(i)).setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
             }
-
         }
     }
 
@@ -1021,11 +1030,11 @@ public class HelloController {
                         moveProjectToDoing();
                         try {
                             user.ifStartedReverse();
+                            moveProjectFromDoingToToDo();
                         } catch (ProjectException e) {
                             throw new RuntimeException(e);
                         }
                         checkIfValidDates();
-                        moveProjectFromDoingToToDo();
                         checkIfTasksStartDateCame();
                         checkIfProjectIsBeforeDeadline();
 //                        System.err.println("Finished after " + (System.currentTimeMillis() - start) + "ms");
@@ -1033,4 +1042,3 @@ public class HelloController {
             )
     );
 }
-
