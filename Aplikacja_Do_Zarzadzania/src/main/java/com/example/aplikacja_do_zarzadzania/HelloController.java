@@ -440,7 +440,7 @@ public class HelloController {
                 doingProjectContainer.getChildren().add(titlePaneToMove);
                 titlePaneToMove.getGraphic().setMouseTransparent(false);
 
-                for(int i = 0; i<projectToMove.getListOfTask().size(); i++){
+                for (int i = 0; i < projectToMove.getListOfTask().size(); i++) {
                     indexOfTask.get(projectToMove.getListOfTask().get(i)).getGraphic().setMouseTransparent(false);
                 }
             }
@@ -527,8 +527,8 @@ public class HelloController {
     }
 
     private void checkIfTasksStartDateCame() {
-        for(int i = 0; i < user.getListOfUnfinishedProject().size(); i++){
-            for(int j = 0; j < user.getListOfUnfinishedProject().get(i).getListOfTask().size(); j++){
+        for (int i = 0; i < user.getListOfUnfinishedProject().size(); i++) {
+            for (int j = 0; j < user.getListOfUnfinishedProject().get(i).getListOfTask().size(); j++) {
                 var task = user.getListOfUnfinishedProject().get(i).getListOfTask().get(j);
                 indexOfTask.get(task).getGraphic().setMouseTransparent(!task.getDate_start().isBefore(LocalDateTime.now()));
             }
@@ -676,6 +676,8 @@ public class HelloController {
             return;
         }
 
+        var project = indexOfProject.get(selectedTitlePane);
+
         setTransparentToChangeDate(true, selectedTitlePane);
 
         Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
@@ -686,13 +688,12 @@ public class HelloController {
                 var taskTimes = getTaskTextField(selectedTask);
                 taskTimes.getFirst().setMouseTransparent(true);
                 taskTimes.get(1).setMouseTransparent(true);
-                if(!projectAccordion.getPanes().getFirst().isExpanded()){
+                if (!projectAccordion.getPanes().getFirst().isExpanded()) {
                     getTaskDescription(selectedTask).setMouseTransparent(true);
 
                 }
             }
         }
-
         refresh();
     }
 
@@ -739,8 +740,17 @@ public class HelloController {
                 LocalDateTime startDate = dateTimeFormat.toLocalDateTime(datePickers.get(0), projectTasks.get(0));
                 LocalDateTime deadline = dateTimeFormat.toLocalDateTime(datePickers.get(1), projectTasks.get(1));
                 if (indexOfProject.containsKey(selectedTitlePane)) {
-                    indexOfProject.get(selectedTitlePane).setDateStart(startDate);
-                    indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                    if (!startDate.isAfter(deadline)) {
+                        if (!deadline.isBefore(startDate)) {
+                            indexOfProject.get(selectedTitlePane).setDateStart(startDate);
+                            indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                        } else {
+                            createWarningSign("Due date cannot be before start date");
+                        }
+                    } else {
+                        createWarningSign("Start date cannot be after due date");
+                    }
+
                 }
             }
 
@@ -757,8 +767,27 @@ public class HelloController {
                                 LocalDateTime taskDeadline = dateTimeFormat.toLocalDateTime(taskDatePickers.get(1), taskTimes.get(1));
 
                                 Task task = entry.getKey();
-                                task.setDateStart(taskStartDate);
-                                task.setDeadline(taskDeadline);
+
+                                if (!indexOfProject.get(selectedTitlePane).getDate_start().isAfter(taskStartDate)) {
+                                    if (!taskStartDate.isAfter(taskDeadline)) {
+                                        if(!indexOfProject.get(selectedTitlePane).getDeadline().isBefore(taskDeadline)){
+                                            if (!taskDeadline.isBefore(taskStartDate)) {
+                                                task.setDateStart(taskStartDate);
+                                                task.setDeadline(taskDeadline);
+                                            } else {
+                                                createWarningSign("Due date cannot be before start date");
+                                            }
+                                        }else {
+                                            createWarningSign("Task' due date cannot be after project start date");
+                                        }
+
+                                    } else {
+                                        createWarningSign("Start date cannot be after due date");
+                                    }
+                                } else {
+                                    createWarningSign("Task's start date cannot be before project's start date");
+                                }
+
 
                                 var taskDescription = getTaskDescription(expandedTask);
                                 reversedMapTask(expandedTask).setDescription(taskDescription.getText());
@@ -786,12 +815,10 @@ public class HelloController {
             var taskTimes = getTaskTextField(selectedTask);
             taskTimes.getFirst().setMouseTransparent(false);
             taskTimes.get(1).setMouseTransparent(false);
-            if(!projectAccordion.getPanes().getFirst().isExpanded()){
+            if (!projectAccordion.getPanes().getFirst().isExpanded()) {
                 var taskDescription = getTaskDescription(selectedTask);
                 taskDescription.setEditable(true);
             }
-
-            refresh();
         }
     }
 
