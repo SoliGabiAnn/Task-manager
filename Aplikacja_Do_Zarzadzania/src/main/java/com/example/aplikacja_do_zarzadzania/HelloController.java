@@ -105,7 +105,7 @@ public class HelloController {
                     addTask(task, project);
                 }
             }
-            setCheckBoxesSelected(reversedMap(project), true);
+            setCheckBoxesSelected(reversedMap(project));
         }
         for (Project project : user.getListOfFinishedProject()) {
             addProject(project);
@@ -114,7 +114,7 @@ public class HelloController {
                     addTask(task, project);
                 }
             }
-            setCheckBoxesSelected(reversedMap(project), true);
+            setCheckBoxesSelected(reversedMap(project));
             CheckBox graphicCheckBox = (CheckBox) reversedMap(project).getGraphic();
             graphicCheckBox.setSelected(true);
         }
@@ -486,7 +486,12 @@ public class HelloController {
         projectTitlePane.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
 
         indexOfProject.get(projectTitlePane).setState(true);
-        setCheckBoxesSelected(projectTitlePane, true);
+        setCheckBoxesSelected(projectTitlePane);
+
+        var listOfTask = indexOfProject.get(projectTitlePane).getListOfTask();
+        for (Task task : listOfTask) {
+            indexOfTask.get(task).getGraphic().setMouseTransparent(true);
+        }
     }
 
     private void moveProjectFromDoneToDoing(TitledPane projectTitledPane) {
@@ -502,30 +507,29 @@ public class HelloController {
 
     }
 
-    private void setCheckBoxesSelected(TitledPane projectTitlePane, boolean b) {
+    private void setCheckBoxesSelected(TitledPane projectTitlePane) {
         CheckBox projectCheckBox = (CheckBox) projectTitlePane.getGraphic();
 
         var project = indexOfProject.get(projectTitlePane);
         for (int i = 0; i < project.getListOfTask().size(); i++) {
             TitledPane taskPane = indexOfTask.get(project.getListOfTask().get(i));
-            if(project.getListOfTask().get(i).getState()){
+            if (project.getListOfTask().get(i).getState()) {
                 CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
-                taskCheckBox.setSelected(b);
+                taskCheckBox.setSelected(true);
             }
         }
-        if(project.getState()){
-            projectCheckBox.setSelected(b);
-
+        if (project.getState()) {
+            projectCheckBox.setSelected(true);
         }
     }
 
     private Boolean checkIfTaskAreFinished(TitledPane projectPane) {
         if (projectPane == null) return false;
-        Accordion projectAccordion = (Accordion) projectPane.getContent();
+        var projectAccordion = (Accordion) projectPane.getContent();
         boolean allTasksCompleted = true;
         for (int i = 1; i < projectAccordion.getPanes().size(); i++) {
-            TitledPane taskPane = projectAccordion.getPanes().get(i);
-            CheckBox taskCheckBox = (CheckBox) taskPane.getGraphic();
+            var taskPane = projectAccordion.getPanes().get(i);
+            var taskCheckBox = (CheckBox) taskPane.getGraphic();
             if (taskCheckBox != null && !taskCheckBox.isSelected()) {
                 allTasksCompleted = false;
                 break;
@@ -617,7 +621,7 @@ public class HelloController {
             });
         } else {
             checkBox.setOnAction(event -> {
-                if(checkBox.isSelected()){
+                if (checkBox.isSelected()) {
                     reversedMapTask(newTitledPane).endTask(LocalDateTime.now());
                 }
                 if (!checkBox.isSelected()) {
