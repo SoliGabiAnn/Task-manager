@@ -18,7 +18,7 @@ public class GenerateReport {
         report.add((float) user.listOfUnfinishedProject.size());
         report.add((float) user.listOfFinishedProject.size());
         report.add(counterUnfinishedTasks(user.listOfToDoProject) + counterUnfinishedTasks(user.listOfUnfinishedProject));
-        report.add(counterDoneTasks(user.listOfFinishedProject) + counterDoneTasks(user.listOfUnfinishedProject));
+        report.add(counterDoneTasks(user.listOfToDoProject)+counterDoneTasks(user.listOfFinishedProject) + counterDoneTasks(user.listOfUnfinishedProject));
         report.add(averageFreqOfTasks());
         report.add(averageTimeOfCompletingTasks());
         return report;

@@ -338,6 +338,7 @@ public class HelloController {
             contentOfTask.getChildren().addAll(addTaskDescription(task).description(), addTaskDescription(task).descriptionText());
 
             CheckBox taskCheckBox = (CheckBox) newTask.getGraphic();
+            taskCheckBox.setSelected(task.getState());
             taskCheckBox.setMouseTransparent(true);
             if (taskCheckBox != null) {
                 taskCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> updateProgressBar(selectedPane));
