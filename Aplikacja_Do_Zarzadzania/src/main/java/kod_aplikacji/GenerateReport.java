@@ -1,9 +1,11 @@
 package kod_aplikacji;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class GenerateReport {
     private User user;
@@ -30,7 +32,8 @@ public class GenerateReport {
         if (first != null && last != null) {
             long timeframe = ChronoUnit.MINUTES.between(first, last);
             float totalCount = counterTasks(user.listOfUnfinishedProject) + counterTasks(user.listOfFinishedProject) + counterTasks(user.listOfToDoProject);
-            DecimalFormat decimalFormat = new DecimalFormat("#.####");
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+            DecimalFormat decimalFormat = new DecimalFormat("#.####",symbols);
             float result = totalCount / timeframe;
             return Float.parseFloat(decimalFormat.format(result));
         }
