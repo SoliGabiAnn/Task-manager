@@ -5,7 +5,7 @@ public class Silnik extends Komponent{
     private int obroty = 0;
     private boolean stanSilnika = false;
 
-    Silnik(String nazwa, int wagaSilnik, int cenaSilnik, int maxObroty) {
+    public Silnik(String nazwa, int wagaSilnik, int cenaSilnik, int maxObroty) {
         super(nazwa, wagaSilnik, cenaSilnik);
         this.maxObroty = maxObroty;
     }
