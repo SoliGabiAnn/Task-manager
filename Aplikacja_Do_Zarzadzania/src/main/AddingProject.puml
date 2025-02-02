@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Person -> HelloController: onAddButton()
+HelloController --> HelloController: checks if it is task or project
+HelloController -> HelloController: addProject(name)
+Project <- HelloController : projectToAdd=new Project(...)
+HelloController -> HelloController: addProjectTitlePane(...)
+HelloController --> HelloController: checks to which list and container it belongs
+HelloController -> User: user.addToDoProject(projectToAdd) or user.addUnfinishedProject()
+HelloController -> Person: add Project Title Pane to right container
+HelloController -> Person : All fields are cleared
+@enduml
