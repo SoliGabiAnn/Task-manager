@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,12 @@ import java.util.Objects;
 
 
 public class HelloController {
-    public Label markaLabel;
-    public Label modelTextField;
-    public Label nrRejTextField;
-    public Label pozycjaXLabel;
-    public Label pozycjaYLabel;
-    public Button dodajSamochodButton;
+    @FXML public Label markaLabel;
+    @FXML public Label modelTextField;
+    @FXML public Label nrRejTextField;
+    @FXML public Label pozycjaXLabel;
+    @FXML public Label pozycjaYLabel;
+    public Button dodajSamochdoButton;
     public Button usunSamochodButton;
 
     public ToggleGroup stanSamochodu;
@@ -107,21 +109,21 @@ public class HelloController {
     @FXML
     public void initialize() {
         System.out.println("HelloController initialized");      // Load and set the car image
+
         Image mapa = new Image(Objects.requireNonNull(getClass().getResource("/mapa.jpg")).toExternalForm());
         Image carImage = new Image(Objects.requireNonNull(getClass().getResource("/car.jpg")).toExternalForm());
-        System.out.println("Image width: " + carImage.getWidth() + ", height: " + carImage.getHeight());
-        mapaImageView.setImage(mapa);
-//        carImageView.setImage(carImage);
-//        carImageView.setFitWidth(50);                           // Set appropriate dimensions for your image
-//        carImageView.setFitHeight(50);
-//        carImageView.setTranslateX(0);
-//        carImageView.setTranslateY(0);
+//        Image mapa = new Image(Objects.requireNonNull(getClass().getResource("/mapa.jpg")).toExternalForm());
+//        Image carImage = new Image(Objects.requireNonNull(getClass().getResource("/car.jng")).toExternalForm());
 
-//        mapa.setOnMouseClicked(event -> { double x = event.getX();
-//            double y = event.getY();
-//            Pozycja nowaPozycja = new Pozycja(x, y);
-//            samochod.jedzDo(nowaPozycja);
-//        });
+        mapaImageView.setImage(mapa);
+        carImageView.setImage(carImage);
+
+        mapaImageView.setOnMouseClicked(event -> {
+            double x = event.getX();
+            double y = event.getY();
+            carImageView.setLayoutX(x);
+            carImageView.setLayoutY(y);
+        });
 
         wybierzSamochodComboBox.setItems(samochody);
         wybierzSamochodComboBox.setCellFactory(new Callback<ListView<Samochod>, ListCell<Samochod>>() {
@@ -155,6 +157,17 @@ public class HelloController {
             samochod = wybierzSamochodComboBox.getSelectionModel().getSelectedItem();
             refresh();
         });
+    }
+
+    @FXML
+    private void moveCar(MouseEvent event) {
+        double newX = event.getX() - carImageView.getFitWidth() / 2;
+        double newY = event.getY() - carImageView.getFitHeight() / 2;
+
+        carImageView.setX(newX);
+        carImageView.setY(newY);
+
+        System.out.println("Samochód przesunięty na: X=" + newX + " Y=" + newY);
     }
 
     public void openAddCarWindow() throws IOException {
