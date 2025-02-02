@@ -1,0 +1,64 @@
+@startuml
+
+' General settings
+top to bottom direction
+skinparam roundcorner 15
+skinparam linetype ortho
+skinparam classBackgroundColor LightGray
+skinparam classBorderColor Black
+skinparam classArrowColor DarkBlue
+skinparam classFontSize 12
+skinparam shadowing false
+
+' Grouping related classes
+package "Controller" {
+    class DateTimeFormat
+    class reportController
+    class HelloApplication
+    class HelloController
+}
+
+' Force a gap between the packages (stack vertically)
+Controller -- Main_Components
+
+package "kod_aplikacji" as Main_Components {
+    together{
+        class Project
+        class Task
+        class User
+        class Basic_Info
+    }
+    class GenerateReport
+    class FileHandler
+    class ProjectException
+    class TaskException
+}
+
+
+
+class Exception
+
+ProjectException -|> Exception
+TaskException -|> Exception
+Project -|> Basic_Info
+Task -|> Basic_Info
+
+
+
+Project  <- Task
+User  <-  Project
+GenerateReport  <-  User
+
+HelloController  <-  DateTimeFormat
+HelloController  <-  FileHandler
+HelloController  <-  Project
+HelloController  <-  Task
+HelloController  <-  User
+
+
+reportController  <-  GenerateReport
+reportController  ->  HelloController
+User - ProjectException
+Project -TaskException
+
+@enduml
