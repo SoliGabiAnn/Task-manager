@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.samochód.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,22 +11,29 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class HelloController {
-    @FXML public Label markaLabel;
-    @FXML public Label modelTextField;
-    @FXML public Label nrRejTextField;
-    @FXML public Label pozycjaXLabel;
-    @FXML public Label pozycjaYLabel;
+public class HelloController implements WebSocket.Listener {
+    @FXML
+    public Label markaLabel;
+    @FXML
+    public Label modelTextField;
+    @FXML
+    public Label nrRejTextField;
+    @FXML
+    public Label pozycjaXLabel;
+    @FXML
+    public Label pozycjaYLabel;
     public Button dodajSamochdoButton;
     public Button usunSamochodButton;
 
@@ -59,6 +67,7 @@ public class HelloController {
 
     public ImageView carImageView;
     public ImageView mapaImageView;
+    public Pane mapa;
 
     @FXML
     private ComboBox<Samochod> wybierzSamochodComboBox;
@@ -71,7 +80,6 @@ public class HelloController {
     static Samochod samochod;
 
     public void addCarToList(String sprzegloNazwa, int sprzegloWaga, int sprzegloCena, int iloscBiegow, int skrzyniaCena, int skrzyniaWaga, String skrzyniaNazwa, int maxObroty, String silnikNazwa, int silnikWaga, int silnikCena, String numerRejs, String model, String marka, int waga, int x, int y, int maxspeed) {
-        System.out.println("Naciśnięto");
         createdCars.add(newCar(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga, x, y, maxspeed));
         carModels.add(samochod.getModel());
         samochody.add(samochod);
@@ -110,19 +118,27 @@ public class HelloController {
     public void initialize() {
         System.out.println("HelloController initialized");      // Load and set the car image
 
-        Image mapa = new Image(Objects.requireNonNull(getClass().getResource("/mapa.jpg")).toExternalForm());
         Image carImage = new Image(Objects.requireNonNull(getClass().getResource("/car.jpg")).toExternalForm());
-//        Image mapa = new Image(Objects.requireNonNull(getClass().getResource("/mapa.jpg")).toExternalForm());
-//        Image carImage = new Image(Objects.requireNonNull(getClass().getResource("/car.jng")).toExternalForm());
-
-        mapaImageView.setImage(mapa);
         carImageView.setImage(carImage);
+        carImageView.setFitWidth(60); // Set appropriat dimensions for your image
+        carImageView.setFitHeight(60);
+        carImageView.setTranslateX(0);
+        carImageView.setTranslateY(0);
 
-        mapaImageView.setOnMouseClicked(event -> {
-            double x = event.getX();
-            double y = event.getY();
-            carImageView.setLayoutX(x);
-            carImageView.setLayoutY(y);
+
+        mapa.setOnMouseClicked(event -> {
+            if (samochod != null) {
+
+                double x = event.getX() - 30;
+                double y = event.getY() - 30;
+                Pozycja nowaPozycja = new Pozycja(x, y);
+                try {
+                    samochod.jedzDo(nowaPozycja);
+                } catch (SkrzyniaException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
         });
 
         wybierzSamochodComboBox.setItems(samochody);
@@ -153,22 +169,24 @@ public class HelloController {
                 }
             }
         });
-        wybierzSamochodComboBox.setOnAction(event -> {
+
+        wybierzSamochodComboBox.setOnAction(event ->
+        {
             samochod = wybierzSamochodComboBox.getSelectionModel().getSelectedItem();
             refresh();
         });
     }
 
-    @FXML
-    private void moveCar(MouseEvent event) {
-        double newX = event.getX() - carImageView.getFitWidth() / 2;
-        double newY = event.getY() - carImageView.getFitHeight() / 2;
-
-        carImageView.setX(newX);
-        carImageView.setY(newY);
-
-        System.out.println("Samochód przesunięty na: X=" + newX + " Y=" + newY);
-    }
+//    @FXML
+//    private void moveCar(MouseEvent event) {
+//        double newX = event.getX() - carImageView.getFitWidth() / 2;
+//        double newY = event.getY() - carImageView.getFitHeight() / 2;
+//
+//        carImageView.setX(newX);
+//        carImageView.setY(newY);
+//
+//        System.out.println("Samochód przesunięty na: X=" + newX + " Y=" + newY);
+//    }
 
     public void openAddCarWindow() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DodajSamochod.fxml"));
@@ -200,6 +218,11 @@ public class HelloController {
         aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
         maksymalneObrotyLabel.setText(String.valueOf(samochod.maxObroty()));
         stanWlaczeniaSilnikaLabel.setText(stanSilnika());
+
+        Platform.runLater(() -> {
+            carImageView.setTranslateX(samochod.getpozX());
+            carImageView.setTranslateY(samochod.getpozY());
+        });
     }
 
     @FXML
@@ -242,7 +265,7 @@ public class HelloController {
     }
 
     @FXML
-    public void zwiekszBieg() throws SamochodException, SprzegloException, SkrzyniaException, SilnikException  {
+    public void zwiekszBieg() throws SamochodException, SprzegloException, SkrzyniaException, SilnikException {
         try {
             samochod.skrzyniaZwiekszB();
             System.out.println("Zwiekszam bieg!");
@@ -298,7 +321,7 @@ public class HelloController {
         refresh();
     }
 
-    public void zmniejszObroty() throws SamochodException, SilnikException{
+    public void zmniejszObroty() throws SamochodException, SilnikException {
         try {
             samochod.zmniejszObroty();
         } catch (SamochodException e) {
@@ -320,6 +343,13 @@ public class HelloController {
 
     public void onUsunSamochod(ActionEvent actionEvent) {
         samochody.remove(samochod);
+        wybierzSamochodComboBox.getSelectionModel().selectFirst();
+    }
+
+    public void onCarDeleteButton(ActionEvent actionEvent) {
+//        samochod.removeListener(this);
+        samochody.remove(samochod);
+        wybierzSamochodComboBox.setItems(samochody);
         wybierzSamochodComboBox.getSelectionModel().selectFirst();
     }
 }

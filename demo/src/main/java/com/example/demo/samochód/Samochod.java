@@ -1,6 +1,8 @@
 package com.example.demo.samochód;
 import com.example.demo.HelloController;
 
+import static java.lang.Math.abs;
+
 public class Samochod extends Thread {
     private boolean stanWlaczenia = false;
     private String nrRej = "";
@@ -25,17 +27,17 @@ public class Samochod extends Thread {
         this.marka = marka;
     }
 
-    @Override
-    public void run() {
-        double deltat = 0.1;
-        while (true) {
-            if (cel != null) {
-                double odleglosc = Math.sqrt(Math.pow(cel.getX() - aktualnapozycja.getX(), 2) + Math.pow(cel.getX() - aktualnapozycja.getY(), 2));
-                double dx = getPredkosc() * deltat * (cel.getX() - aktualnapozycja.getX()) / odleglosc;
-                double dy = getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) / odleglosc;
-            }
-        }
-    }
+//    @Override
+//    public void run() {
+//        double deltat = 0.1;
+//        while (true) {
+//            if (cel != null) {
+//                double odleglosc = Math.sqrt(Math.pow(cel.getX() - aktualnapozycja.getX(), 2) + Math.pow(cel.getX() - aktualnapozycja.getY(), 2));
+//                double dx = getPredkosc() * deltat * (cel.getX() - aktualnapozycja.getX()) / odleglosc;
+//                double dy = getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) / odleglosc;
+//            }
+//        }
+//    }
 
     public void wlacz() {
         if (skrzynia.getSprzeglo().getstanSp()) {
@@ -161,16 +163,7 @@ public class Samochod extends Thread {
     }
 
     public void jedzDo(Pozycja cel) throws SkrzyniaException {
-        stanWlaczenia = true;
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
-        skrzynia.zwiekszBieg();
         aktualnapozycja = cel;
-        stanWlaczenia = false;
     }
 
     public int getWagaSamochodu() {
@@ -206,14 +199,41 @@ public class Samochod extends Thread {
     }
 
     public int getpozX() {
-        return aktualnapozycja.getX();
+        return (int) aktualnapozycja.getX();
     }
 
     public int getpozY() {
-        return aktualnapozycja.getY();
+        return (int) aktualnapozycja.getY();
     }
 
     public int getaktBieg() {
         return skrzynia.getAktBieg();
+    }
+
+    public void run(){
+        double deltat = 0.1;
+
+        while (true) {
+            if (cel != null) {
+                if(abs(cel.getX()-getpozX())>5 && abs(cel.getY()-getpozY())>5){
+                    double odleglosc = Math.sqrt(Math.pow(cel.getX() - getpozX(), 2) +
+                            Math.pow(cel.getY() - getpozY(), 2));
+                    double dx = this.getPredkosc() * deltat * (cel.getY() - getpozY()) /
+                            odleglosc;
+                    double dy = this.getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) /
+                            odleglosc;
+
+
+                    aktualnapozycja.setX((int) (aktualnapozycja.getX() + dx));
+                    aktualnapozycja.setY((int) (aktualnapozycja.getY() + dy));
+//                    this.notifyListeners();
+                }
+            }
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
