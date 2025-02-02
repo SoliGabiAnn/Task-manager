@@ -15,11 +15,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.awt.event.MouseEvent;
+
 import java.io.IOException;
 import java.net.http.WebSocket;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Objects;
 
 
@@ -72,16 +71,16 @@ public class HelloController implements WebSocket.Listener {
     @FXML
     private ComboBox<Samochod> wybierzSamochodComboBox;
     private ObservableList<Samochod> samochody = FXCollections.observableArrayList();
-    @FXML
-    Samochod tmpCar;
-    List<Samochod> createdCars = new ArrayList<>();
-    List<String> carModels = new ArrayList<>();
+//    @FXML
+//    Samochod tmpCar;
+//    List<Samochod> createdCars = new ArrayList<>();
+//    List<String> carModels = new ArrayList<>();
 
     static Samochod samochod;
 
     public void addCarToList(String sprzegloNazwa, int sprzegloWaga, int sprzegloCena, int iloscBiegow, int skrzyniaCena, int skrzyniaWaga, String skrzyniaNazwa, int maxObroty, String silnikNazwa, int silnikWaga, int silnikCena, String numerRejs, String model, String marka, int waga, int x, int y, int maxspeed) {
-        createdCars.add(newCar(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga, x, y, maxspeed));
-        carModels.add(samochod.getModel());
+        var samochod = newCar(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow, skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa, silnikCena, silnikWaga, numerRejs, model, marka, waga, x, y, maxspeed);
+//        carModels.add(samochod.getModel());
         samochody.add(samochod);
 
         samochod.setController(this);
@@ -99,6 +98,8 @@ public class HelloController implements WebSocket.Listener {
         aktualneObrotyLabel.setText(String.valueOf(samochod.aktualneObroty()));
         maksymalneObrotyLabel.setText(String.valueOf(samochod.maxObroty()));
         stanWlaczeniaSilnikaLabel.setText(stanSilnika());
+        wybierzSamochodComboBox.getSelectionModel().select(samochod);
+
     }
 
     public Samochod newCar(String nazwaSprzeglo, int wagaSprzeglo, int cenaSprzeglo, int iloscBiegow, int cenaSkrzynia, int wagaSkrzynia, String nazwaSkrzynia, int maxObroty, String nazwaSilnik, int wagaSilnik, int cenaSilnik, String nrRejestracyjny, String model, String marka, int waga, int x, int y, int maxpredkosc) {
@@ -173,7 +174,8 @@ public class HelloController implements WebSocket.Listener {
         wybierzSamochodComboBox.setOnAction(event ->
         {
             samochod = wybierzSamochodComboBox.getSelectionModel().getSelectedItem();
-            refresh();
+            this.refresh();
+
         });
     }
 
@@ -229,13 +231,14 @@ public class HelloController implements WebSocket.Listener {
     private void wlaczSamochod() throws SamochodException, SprzegloException {
         try {
             samochod.wlacz();
-            System.out.println("Samochód włączony!");
+            this.refresh();
         } catch (SprzegloException e) {
             alertDialog("Sprzęgło", e);
         }
         if (samochod.getSkrzynia().getSprzeglo().getstanSp()) {
             samochod.uruchomSilnik();
-            refresh();
+            this.refresh();
+
         }
     }
 
@@ -272,7 +275,8 @@ public class HelloController implements WebSocket.Listener {
             while (samochod.aktualneObroty() > 2000) {
                 samochod.zmniejszObroty();
             }
-            refresh();
+            this.refresh();
+
         } catch (SamochodException e) {
             alertDialog("Samochód", e);
         } catch (SilnikException e1) {
@@ -288,6 +292,8 @@ public class HelloController implements WebSocket.Listener {
     public void zmniejszBieg() throws SilnikException, SprzegloException, SkrzyniaException, SamochodException {
         try {
             samochod.skrzyniaZmniejszB();
+            this.refresh();
+
             System.out.println("Zmniejszam bieg!");
         } catch (SamochodException e) {
             alertDialog("Samochód", e);
@@ -303,6 +309,8 @@ public class HelloController implements WebSocket.Listener {
 
     public void zwolnijSprzeglo() {
         samochod.sprzegloZwolnij();
+        this.refresh();
+
     }
 
     public void wcisnijSprzeglo() throws SkrzyniaException, SprzegloException {
@@ -310,6 +318,7 @@ public class HelloController implements WebSocket.Listener {
         if (samochod.isStanWlaczenia()) {
             stanWlaczeniaSilnikaLabel.setText("Włączony");
         }
+        this.refresh();
     }
 
     public void zwiekszObroty() throws SilnikException, SprzegloException, SkrzyniaException {
@@ -318,7 +327,7 @@ public class HelloController implements WebSocket.Listener {
         } catch (SamochodException e) {
             alertDialog("Samochód", e);
         }
-        refresh();
+        this.refresh();
     }
 
     public void zmniejszObroty() throws SamochodException, SilnikException {
@@ -329,7 +338,8 @@ public class HelloController implements WebSocket.Listener {
         } catch (SilnikException e1) {
             alertDialog("Silnik", e1);
         }
-        refresh();
+        this.refresh();
+
     }
 
 
@@ -341,10 +351,6 @@ public class HelloController implements WebSocket.Listener {
     }
 
 
-    public void onUsunSamochod(ActionEvent actionEvent) {
-        samochody.remove(samochod);
-        wybierzSamochodComboBox.getSelectionModel().selectFirst();
-    }
 
     public void onCarDeleteButton(ActionEvent actionEvent) {
 //        samochod.removeListener(this);

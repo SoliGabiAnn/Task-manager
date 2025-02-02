@@ -1,6 +1,9 @@
 package com.example.demo.samochód;
 import com.example.demo.HelloController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.abs;
 
 public class Samochod extends Thread {
@@ -15,6 +18,8 @@ public class Samochod extends Thread {
     private Pozycja aktualnapozycja = new Pozycja(0, 0);
     private HelloController controller;
     private Pozycja cel;
+    private List<Listener> listeners = new ArrayList<>();
+
 
 
     public Samochod(int iloscBiegow, int maxObroty, String nrRejest, String marka, String model, int maxSpeed, String nazwaSilnik, String nazwaSkrzynia, String nazwaSprzeglo, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
@@ -226,7 +231,7 @@ public class Samochod extends Thread {
 
                     aktualnapozycja.setX((int) (aktualnapozycja.getX() + dx));
                     aktualnapozycja.setY((int) (aktualnapozycja.getY() + dy));
-//                    this.notifyListeners();
+                    this.notifyListeners();
                 }
             }
             try {
@@ -234,6 +239,17 @@ public class Samochod extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+    public void removeListener(Listener listener) {
+        listeners.remove(listener);
+    }
+    private void notifyListeners() {
+        for (Listener listener : listeners) {
+            listener.update();
         }
     }
 }
