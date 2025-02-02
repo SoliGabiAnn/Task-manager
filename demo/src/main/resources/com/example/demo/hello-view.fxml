@@ -5,84 +5,79 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0"
-            prefWidth="1551.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.demo.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="772.0" prefWidth="1551.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.HelloController">
     <left>
         <VBox prefHeight="694.0" prefWidth="611.0" BorderPane.alignment="CENTER">
             <TitledPane animated="false" prefHeight="244.0" prefWidth="331.0" text="Samochód">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="330.0">
                     <Label fx:id="markaLabel" layoutX="171.0" layoutY="14.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="138.0" text="Marka">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="modelTextField" layoutX="171.0" layoutY="44.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0" text="Model">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="nrRejTextField" layoutX="171.0" layoutY="77.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="77.0" prefHeight="18.0" prefWidth="138.0" text="Numer Rejestracyjny">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="96.0" prefHeight="66.0" prefWidth="138.0" text="Aktualna pozycja">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="pozycjaXLabel" layoutX="171.0" layoutY="107.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="pozycjaYLabel" layoutX="171.0" layoutY="137.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="152.0" layoutY="107.0" prefHeight="18.0" prefWidth="138.0" text="X">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="152.0" layoutY="137.0" prefHeight="18.0" prefWidth="138.0" text="Y">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
 
                     <Pane layoutY="157.0" prefHeight="56.0" prefWidth="232.0">
-                        <ToggleButton fx:id="wlaczSamochodButton" layoutX="14.0" layoutY="20.0" mnemonicParsing="false"
-                                      onAction="#wlaczSamochod" text="Włącz">
+                        <ToggleButton fx:id="wlaczSamochodButton" layoutX="14.0" layoutY="20.0" mnemonicParsing="false" onAction="#wlaczSamochod" text="Włącz">
                             <toggleGroup>
-                                <ToggleGroup fx:id="stanSamochodu"/>
+                                <ToggleGroup fx:id="stanSamochodu" />
                             </toggleGroup>
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </ToggleButton>
-                        <ToggleButton fx:id="wylaczSamochodButton" layoutX="119.0" layoutY="20.0"
-                                      mnemonicParsing="false" onAction="#wylaczSamochod" text="Wyłącz"
-                                      toggleGroup="$stanSamochodu">
+                        <ToggleButton fx:id="wylaczSamochodButton" layoutX="119.0" layoutY="20.0" mnemonicParsing="false" onAction="#wylaczSamochod" text="Wyłącz" toggleGroup="$stanSamochodu">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </ToggleButton>
                     </Pane>
@@ -92,64 +87,62 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="239.0" prefWidth="330.0">
                     <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="73.0" text="Nazwa">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="nazwaSkrzyniaLabel" layoutX="171.0" layoutY="14.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0" text="Cena">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="cenaSkrzyniaLabel" layoutX="171.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0" text="Waga">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="wagaSkrzyniaLabel" layoutX="171.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
-                    <Button fx:id="zwiekszBiegButton" layoutX="9.0" layoutY="198.0" mnemonicParsing="false"
-                            onAction="#zwiekszBieg" text="Zwiększ bieg">
+                    <Button fx:id="zwiekszBiegButton" layoutX="9.0" layoutY="198.0" mnemonicParsing="false" onAction="#zwiekszBieg" text="Zwiększ bieg">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Button>
-                    <Button fx:id="zmniejszBiegButton" layoutX="117.0" layoutY="198.0" mnemonicParsing="false"
-                            onAction="#zmniejszBieg" text="Zmniejsz bieg">
+                    <Button fx:id="zmniejszBiegButton" layoutX="117.0" layoutY="198.0" mnemonicParsing="false" onAction="#zmniejszBieg" text="Zmniejsz bieg">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Button>
                     <Label layoutX="14.0" layoutY="144.0" prefHeight="20.0" prefWidth="125.0" text="Aktulany bieg">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="aktbiegLabel" layoutX="171.0" layoutY="144.0" prefHeight="20.0" prefWidth="125.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="111.0" prefHeight="20.0" prefWidth="148.0" text="Ilość biegów">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="iloscBiegowLabel" layoutX="171.0" layoutY="111.0" prefHeight="20.0" prefWidth="148.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                 </AnchorPane>
@@ -157,45 +150,41 @@
             <TitledPane animated="false" prefHeight="187.0" prefWidth="331.0" text="Sprzeglo">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="232.0" prefWidth="457.0">
                     <Pane layoutX="14.0" layoutY="110.0" prefHeight="54.0" prefWidth="238.0">
-                        <ToggleButton fx:id="zwolnijSprzegloButton" layoutX="113.0" mnemonicParsing="false"
-                                      onAction="#zwolnijSprzeglo" prefHeight="29.0" prefWidth="103.0"
-                                      text="Zwolnij sprzęgło">
+                        <ToggleButton fx:id="zwolnijSprzegloButton" layoutX="113.0" mnemonicParsing="false" onAction="#zwolnijSprzeglo" prefHeight="29.0" prefWidth="103.0" text="Zwolnij sprzęgło">
                             <toggleGroup>
-                                <ToggleGroup fx:id="stanSprzegla"/>
+                                <ToggleGroup fx:id="stanSprzegla" />
                             </toggleGroup>
                         </ToggleButton>
-                        <ToggleButton fx:id="wscisnijSprzegloButton" layoutX="-4.0" mnemonicParsing="false"
-                                      onAction="#wcisnijSprzeglo" prefHeight="29.0" prefWidth="103.0"
-                                      text="Wciśnij sprzęgło" toggleGroup="$stanSprzegla"/>
+                        <ToggleButton fx:id="wscisnijSprzegloButton" layoutX="-4.0" mnemonicParsing="false" onAction="#wcisnijSprzeglo" prefHeight="29.0" prefWidth="103.0" text="Wciśnij sprzęgło" toggleGroup="$stanSprzegla" />
                     </Pane>
                     <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="73.0" text="Nazwa">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="nazwaSprzegloLabel" layoutX="14.0" layoutY="171.0" prefHeight="18.0" prefWidth="73.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0" text="Cena">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="cenaSprzegloLabel" layoutX="171.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label layoutX="14.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0" text="Waga">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                     <Label fx:id="wagaSprzegloLabel" layoutX="171.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0">
                         <font>
-                            <Font size="14.0"/>
+                            <Font size="14.0" />
                         </font>
                     </Label>
                 </AnchorPane>
@@ -204,109 +193,100 @@
     </left>
     <top>
         <AnchorPane prefHeight="34.0" prefWidth="951.0" BorderPane.alignment="CENTER">
-            <ComboBox fx:id="wybierzSamochodComboBox" layoutX="103.0" layoutY="1.0" prefWidth="150.0"/>
+            <ComboBox fx:id="wybierzSamochodComboBox" layoutX="103.0" layoutY="1.0" prefWidth="150.0" />
             <Label layoutX="6.0" layoutY="7.0" prefHeight="18.0" prefWidth="138.0" text="Samochód">
                 <font>
-                    <Font size="14.0"/>
+                    <Font size="14.0" />
                 </font>
             </Label>
-            <Button fx:id="dodajSamochdoButton" layoutX="381.0" layoutY="5.0" mnemonicParsing="false"
-                    onAction="#openAddCarWindow" text="Dodaj samochód"/>
+            <Button fx:id="dodajSamochdoButton" layoutX="381.0" layoutY="5.0" mnemonicParsing="false" onAction="#openAddCarWindow" text="Dodaj samochód" />
+         <Button fx:id="usunSamochodButton" layoutX="524.0" layoutY="5.0" mnemonicParsing="false" text="Usuń samochód" onAction="#onCarDeleteButton" />
         </AnchorPane>
     </top>
     <center>
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <top>
-                <TitledPane animated="false" prefHeight="244.0" prefWidth="940.0" text="Silnik"
-                            BorderPane.alignment="CENTER">
+                <TitledPane animated="false" prefHeight="244.0" prefWidth="940.0" text="Silnik" BorderPane.alignment="CENTER">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="254.0" prefWidth="938.0">
                         <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="73.0" text="Nazwa">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                         <Label fx:id="nazwaSilnikLabel" layoutX="171.0" layoutY="14.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                         <Label layoutX="14.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0" text="Cena">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="cenaSilnikLabel" layoutX="171.0" layoutY="44.0" prefHeight="18.0"
-                               prefWidth="73.0">
+                        <Label fx:id="cenaSilnikLabel" layoutX="171.0" layoutY="44.0" prefHeight="18.0" prefWidth="73.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                         <Label layoutX="14.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0" text="Waga">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="wagaSilnikLabel" layoutX="171.0" layoutY="74.0" prefHeight="18.0"
-                               prefWidth="73.0">
+                        <Label fx:id="wagaSilnikLabel" layoutX="171.0" layoutY="74.0" prefHeight="18.0" prefWidth="73.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                         <AnchorPane layoutX="29.0" layoutY="114.0" prefHeight="44.0" prefWidth="258.0">
-                            <Button fx:id="zwiekszObrotyButton" layoutY="15.0" mnemonicParsing="false"
-                                    onAction="#zwiekszObroty" text="Zwiększ obroty">
+                            <Button fx:id="zwiekszObrotyButton" layoutY="15.0" mnemonicParsing="false" onAction="#zwiekszObroty" text="Zwiększ obroty">
                                 <font>
-                                    <Font size="14.0"/>
+                                    <Font size="14.0" />
                                 </font>
                             </Button>
-                            <Button fx:id="zmniejszObrotyButton" layoutX="139.0" layoutY="16.0" mnemonicParsing="false"
-                                    onAction="#zmniejszObroty" text="Zmniejsz obroty">
+                            <Button fx:id="zmniejszObrotyButton" layoutX="139.0" layoutY="16.0" mnemonicParsing="false" onAction="#zmniejszObroty" text="Zmniejsz obroty">
                                 <font>
-                                    <Font size="14.0"/>
+                                    <Font size="14.0" />
                                 </font>
                             </Button>
                         </AnchorPane>
-                        <Label layoutX="330.0" layoutY="14.0" prefHeight="20.0" prefWidth="131.0"
-                               text="Aktualne obroty">
+                        <Label layoutX="330.0" layoutY="14.0" prefHeight="20.0" prefWidth="131.0" text="Aktualne obroty">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="aktualneObrotyLabel" layoutX="472.0" layoutY="14.0" prefHeight="20.0"
-                               prefWidth="131.0">
+                        <Label fx:id="aktualneObrotyLabel" layoutX="472.0" layoutY="14.0" prefHeight="20.0" prefWidth="131.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label layoutX="330.0" layoutY="44.0" prefHeight="20.0" prefWidth="177.0"
-                               text="Maksymalne obroty">
+                        <Label layoutX="330.0" layoutY="44.0" prefHeight="20.0" prefWidth="177.0" text="Maksymalne obroty">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="maksymalneObrotyLabel" layoutX="472.0" layoutY="44.0" prefHeight="20.0"
-                               prefWidth="177.0">
+                        <Label fx:id="maksymalneObrotyLabel" layoutX="472.0" layoutY="44.0" prefHeight="20.0" prefWidth="177.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                         <Label layoutX="330.0" layoutY="74.0" prefHeight="20.0" prefWidth="131.0" text="Stan włączenia">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="stanWlaczeniaSilnikaLabel" layoutX="472.0" layoutY="74.0" prefHeight="20.0"
-                               prefWidth="131.0">
+                        <Label fx:id="stanWlaczeniaSilnikaLabel" layoutX="472.0" layoutY="74.0" prefHeight="20.0" prefWidth="131.0">
                             <font>
-                                <Font size="14.0"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
                     </AnchorPane>
                 </TitledPane>
             </top>
             <center>
-                    <ImageView fx:id="mapaImageView" fitWidth="600" fitHeight="400" layoutX="10" layoutY="10" />
-                    <ImageView fx:id="carImageView" fitWidth="50" fitHeight="50" layoutX="10" layoutY="10" />
+                <Pane fx:id="mapa">
+                    <ImageView fx:id="carImageView" />
+                </Pane>
             </center>
         </BorderPane>
     </center>
