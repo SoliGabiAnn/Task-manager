@@ -57,7 +57,7 @@ HelloController  <-  User
 
 
 reportController  <-  GenerateReport
-reportController  <-  HelloController
+reportController  ->  HelloController
 User - ProjectException
 Project -TaskException
 
