@@ -9,11 +9,16 @@ public class SkrzyniaBiegow extends Komponent {
 
     private Sprzeglo spr;
 
-    public SkrzyniaBiegow(int iloscBiegow, String nazwa, String nazwaSprzeglo,int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
+    public SkrzyniaBiegow(int iloscBiegow, String nazwa, String nazwaSprzeglo, int wagaSkrzynia, int wagaSprzeglo, int cenaSkrzynia, int cenaSprzeglo) {
         super(nazwa, wagaSkrzynia, cenaSkrzynia);
         this.iloscBiegow = iloscBiegow;
         this.spr = new Sprzeglo(nazwaSprzeglo, wagaSprzeglo, cenaSprzeglo);
 
+    }
+
+    public SkrzyniaBiegow(int iloscBiegow, String nazwa, int wagaSkrzynia, int cenaSkrzynia) {
+        super(nazwa, wagaSkrzynia, cenaSkrzynia);
+        this.iloscBiegow = iloscBiegow;
     }
 
     public void zwiekszBieg() throws SkrzyniaException, SprzegloException {
@@ -41,6 +46,10 @@ public class SkrzyniaBiegow extends Komponent {
 
     }
 
+    public void wyzerujBieg() {
+        aktualnyBieg = 0;
+    }
+
     public int getAktBieg() {
         return aktualnyBieg;
     }
@@ -49,13 +58,18 @@ public class SkrzyniaBiegow extends Komponent {
         return aktualnePrzelozenie;
     }
 
+    //    public int getWagaSkrzynia() {
+//        return (this.getWaga() + spr.getWaga());
+//    }
     public int getWagaSkrzynia() {
-        return getWaga() + spr.getWaga();
+        return this.getWaga() + spr.getWaga();
     }
-    public int getIloscBiegow(){
+
+    public int getIloscBiegow() {
         return iloscBiegow;
     }
-    public Sprzeglo getSprzeglo(){
+
+    public Sprzeglo getSprzeglo() {
         return spr;
     }
 

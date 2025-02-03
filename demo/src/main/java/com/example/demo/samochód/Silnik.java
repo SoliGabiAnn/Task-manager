@@ -20,7 +20,11 @@ public class Silnik extends Komponent{
         stanSilnika = false;
     }
     public void zwiekszObroty(){
-        obroty += 100;
+        if( obroty < maxObroty ){
+            obroty += 100;
+        } else {
+            throw new SilnikException("Osiągnięto już maksymalne obroty");
+        }
     }
     public void zmniejszObroty(){
         if(obroty < 0){
