@@ -1,28 +1,32 @@
 package com.example.demo.samochód;
+
 import com.example.demo.HelloController;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
-
 public class Samochod extends Thread {
     private boolean stanWlaczenia = false;
-    private String nrRej = "";
-    private String model = "";
-    private String marka = " ";
-    private int maxSpeed;
+    private final String nrRej;
+    private final String model;
+    private final String marka;
+    private final int maxSpeed;
+    private final double waga;
 
     private final SkrzyniaBiegow skrzynia;
     private final Silnik silnik;
     private Pozycja aktualnapozycja = new Pozycja(0, 0);
     private HelloController controller;
     private Pozycja cel;
-    private List<Listener> listeners = new ArrayList<>();
+    private final List<Listener> listeners = new ArrayList<>();
+
+    private final boolean isRunning = true;
+
+    private static final double SPEED_FACTOR = 0.1;
 
 
-
-    public Samochod(int iloscBiegow, int maxObroty, String nrRejest, String marka, String model, int maxSpeed, String nazwaSilnik, String nazwaSkrzynia, String nazwaSprzeglo, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
+    public Samochod(int iloscBiegow, int maxObroty, String nrRejest, String marka, String model, int maxSpeed, double waga,String nazwaSilnik, String nazwaSkrzynia, String nazwaSprzeglo, int wagaSilnik, int wagaSkrzynia, int wagaSprzeglo, int cenaSilnik, int cenaSkrzynia, int cenaSprzeglo) {
         silnik = new Silnik(nazwaSilnik, wagaSilnik, cenaSilnik, maxObroty);
         skrzynia = new SkrzyniaBiegow(iloscBiegow, nazwaSkrzynia, nazwaSprzeglo, wagaSkrzynia, wagaSprzeglo, cenaSkrzynia, cenaSprzeglo);
         stanWlaczenia = false;
@@ -30,19 +34,10 @@ public class Samochod extends Thread {
         this.model = model;
         this.maxSpeed = maxSpeed;
         this.marka = marka;
+        this.waga = waga;
+        this.start();
     }
 
-//    @Override
-//    public void run() {
-//        double deltat = 0.1;
-//        while (true) {
-//            if (cel != null) {
-//                double odleglosc = Math.sqrt(Math.pow(cel.getX() - aktualnapozycja.getX(), 2) + Math.pow(cel.getX() - aktualnapozycja.getY(), 2));
-//                double dx = getPredkosc() * deltat * (cel.getX() - aktualnapozycja.getX()) / odleglosc;
-//                double dy = getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) / odleglosc;
-//            }
-//        }
-//    }
 
     public void wlacz() {
         if (skrzynia.getSprzeglo().getstanSp()) {
@@ -57,6 +52,7 @@ public class Samochod extends Thread {
         if (skrzynia.getSprzeglo().getstanSp()) {
             stanWlaczenia = false;
             silnik.zatrzymaj();
+            skrzynia.wyzerujBieg();
         } else {
             throw new SprzegloException("Sprzeglo nie jest wściśnięte - nie można wyłączyć samochodu oraz silnika");
         }
@@ -64,7 +60,7 @@ public class Samochod extends Thread {
 
     public void skrzyniaZwiekszB() throws SkrzyniaException, SamochodException, SilnikException {
         if (stanWlaczenia) {
-            if (silnik.getObroty() >= 3000) {
+            if (silnik.getObroty() >= 2500) {
                 skrzynia.zwiekszBieg();
             } else {
                 throw new SilnikException("Za małe obroty - nie można zwiększyć biegu!");
@@ -85,6 +81,7 @@ public class Samochod extends Thread {
             throw new SamochodException("Samochód wyłączony");
         }
     }
+
     public void sprzegloWcisnij() throws SkrzyniaException, SprzegloException {
         skrzynia.getSprzeglo().wcisnij();
     }
@@ -99,9 +96,9 @@ public class Samochod extends Thread {
 
     public void zwiekszObroty() throws SamochodException {
         if (stanWlaczenia) {
-            if(!stansprzegla()){
+            if (!stansprzegla()) {
                 silnik.zwiekszObroty();
-            }else{
+            } else {
                 throw new SprzegloException("Sprzęgło jest wciśnięte");
             }
         } else {
@@ -111,13 +108,13 @@ public class Samochod extends Thread {
 
     public void zmniejszObroty() throws SamochodException, SilnikException {
         if (stanWlaczenia) {
-            if(!stansprzegla()){
+            if (!stansprzegla()) {
                 if (silnik.getObroty() > 800) {
                     silnik.zmniejszObroty();
                 } else {
                     throw new SilnikException("Zbyt małe obroty - nie można bardziej zmniejszyć!");
                 }
-            }else{
+            } else {
                 throw new SprzegloException("Sprzęgło jest wciśnięte");
             }
 
@@ -167,17 +164,24 @@ public class Samochod extends Thread {
         return stanWlaczenia;
     }
 
-    public void jedzDo(Pozycja cel) throws SkrzyniaException {
-        aktualnapozycja = cel;
+    public void jedzDo(Pozycja nowaPozycja) throws SkrzyniaException {
+        // Set the target instead of immediately updating position
+        this.cel = nowaPozycja;
     }
 
-    public int getWagaSamochodu() {
-        return skrzynia.getWagaSkrzynia() + silnik.getWagaSilnik();
+
+    public double getWagaSamochodu() {
+        return silnik.getWaga()+skrzynia.getWaga()+this.waga;
     }
 
     public int getPredkosc() {
-        return 0;
+        if (!stanWlaczenia || skrzynia.getAktBieg() == 0) {
+            return 0;
+        }
+        return (silnik.getObroty() / 400) * skrzynia.getAktBieg() * 5;
     }
+
+
 
     public void setController(HelloController controller) {
         this.controller = controller;
@@ -215,38 +219,62 @@ public class Samochod extends Thread {
         return skrzynia.getAktBieg();
     }
 
-    public void run(){
-        double deltat = 0.1;
+    @Override
+    public void run() {
+        while (isRunning) {
+            if (cel != null && stanWlaczenia) {
+                double currentX = aktualnapozycja.getX();
+                double currentY = aktualnapozycja.getY();
+                double targetX = cel.getX();
+                double targetY = cel.getY();
 
-        while (true) {
-            if (cel != null) {
-                if(abs(cel.getX()-getpozX())>5 && abs(cel.getY()-getpozY())>5){
-                    double odleglosc = Math.sqrt(Math.pow(cel.getX() - getpozX(), 2) +
-                            Math.pow(cel.getY() - getpozY(), 2));
-                    double dx = this.getPredkosc() * deltat * (cel.getY() - getpozY()) /
-                            odleglosc;
-                    double dy = this.getPredkosc() * deltat * (cel.getY() - aktualnapozycja.getY()) /
-                            odleglosc;
+                double dx = targetX - currentX;
+                double dy = targetY - currentY;
+                double distance = Math.sqrt(dx * dx + dy * dy);
 
+                if (distance > 10.0) {
+                    double speed = getPredkosc() * SPEED_FACTOR;
 
-                    aktualnapozycja.setX((int) (aktualnapozycja.getX() + dx));
-                    aktualnapozycja.setY((int) (aktualnapozycja.getY() + dy));
-                    this.notifyListeners();
+                    speed = Math.max(speed, 0.5);
+
+                    double moveX = (dx / distance) * speed;
+                    double moveY = (dy / distance) * speed;
+
+                    aktualnapozycja.setX( (currentX + moveX));
+                    aktualnapozycja.setY( (currentY + moveY));
+
+                    if (controller != null) {
+                        Platform.runLater(() -> controller.refresh());
+                    }
+                } else {
+                    aktualnapozycja.setX( targetX);
+                    aktualnapozycja.setY( targetY);
+                    cel = null;
+
+                    if (controller != null) {
+                        Platform.runLater(() -> controller.refresh());
+                    }
                 }
+                this.notifyListeners();
             }
+
             try {
-                sleep(50);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                break;
             }
         }
     }
+
     public void addListener(Listener listener) {
         listeners.add(listener);
     }
+
     public void removeListener(Listener listener) {
         listeners.remove(listener);
     }
+
     private void notifyListeners() {
         for (Listener listener : listeners) {
             listener.update();

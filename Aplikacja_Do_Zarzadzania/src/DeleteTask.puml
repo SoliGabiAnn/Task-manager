@@ -1,0 +1,11 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+Person -->Person : Clicks on title pane
+Person -> HelloController: onDeleteButton()
+HelloController --> HelloController: checks if task title pane was choosen
+HelloController -> HelloController: projectAccordion.getPanes().remove(selectedTask);
+HelloController -> Project: indexOfProject.get(selectedTitlePane).deleteTask(indexOfTaskDateAdded.get(selectedTask));
+HelloController -> HelloController : indexOfTaskDateAdded.remove(selectedTask);
+@enduml

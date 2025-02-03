@@ -114,8 +114,8 @@ public class DodajSamochodController {
 
     private void initializeComboBoxes() {
         wybierzSkrzynieComboBox.setItems(FXCollections.observableArrayList(
-                new SkrzyniaBiegow(6, "C30 1.6 3M5R7002NE", "Manual 6-speed", 120, 50, 3000, 500),
-                new SkrzyniaBiegow(5, "B20 1.4 2M4R5001NE", "Manual 5-speed", 100, 45, 2500, 400)
+                new SkrzyniaBiegow(6, "C30 1.6 3M5R7002NE", 12, 3000),
+                new SkrzyniaBiegow(5, "B20 1.4 2M4R5001NE", 10, 2500)
         ));
 
         wybierzSkrzynieComboBox.setCellFactory(param -> new ListCell<SkrzyniaBiegow>() {
@@ -143,8 +143,8 @@ public class DodajSamochodController {
         });
 
         wybierzSprzegloComboBox.setItems(FXCollections.observableArrayList(
-                new Sprzeglo("SP240, Sport Clutch", 80, 1500),
-                new Sprzeglo("SP180, Standard Clutch", 60, 1200)
+                new Sprzeglo("SP240, Sport Clutch", 8, 1500),
+                new Sprzeglo("SP180, Standard Clutch", 6, 1200)
         ));
 
         wybierzSprzegloComboBox.setCellFactory(param -> new ListCell<Sprzeglo>() {
@@ -172,8 +172,8 @@ public class DodajSamochodController {
         });
 
         wybierzSilnikComboBox.setItems(FXCollections.observableArrayList(
-                new Silnik("2.0T, Turbo Engine", 6000, 200, 2500),
-                new Silnik("1.8N, Natural Engine", 5500, 150, 2000)
+                new Silnik("2.0T, Turbo Engine", 25, 3000, 6000),
+                new Silnik("1.8N, Natural Engine", 20, 2500, 5000)
         ));
 
 
@@ -270,6 +270,15 @@ public class DodajSamochodController {
             parentController.addCarToList(sprzegloNazwa, sprzegloWaga, sprzegloCena, iloscBiegow,
                     skrzyniaCena, skrzyniaWaga, skrzyniaNazwa, maxObroty, silnikNazwa,
                     silnikWaga, silnikCena, numerRejs, model, marka, waga, 0, 0, maxspeed);
+
+            parentController.wylaczSamochodButton.setDisable(false);
+            parentController.wlaczSamochodButton.setDisable(false);
+            parentController.zwiekszBiegButton.setDisable(false);
+            parentController.zmniejszBiegButton.setDisable(false);
+            parentController.wscisnijSprzegloButton.setDisable(false);
+            parentController.zwolnijSprzegloButton.setDisable(false);
+            parentController.zwiekszObrotyButton.setDisable(false);
+            parentController.zmniejszObrotyButton.setDisable(false);
 
             onCancelButton();
         } catch (NumberFormatException e) {
