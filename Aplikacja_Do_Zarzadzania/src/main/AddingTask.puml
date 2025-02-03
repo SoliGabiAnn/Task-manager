@@ -5,12 +5,12 @@ autonumber
 
 Person -> HelloController: onAddButton()
 HelloController --> HelloController: checks if it is task or project
-HelloController -> HelloController: addTask(name)
-HelloController -> HelloController: confirmTaskWithoutDescription()
-
+HelloController --> HelloController: addTask(name)
+HelloController -> GuiView: confirmTaskWithoutDescription()
+GuiView -> Person: Confirmation Dialog
+HelloController -> GuiView: addTaskTitledPane(...)
 Task <- HelloController : taskToAdd = new Task(...)
-HelloController -> HelloController: newTaskTitledPane(...)
 HelloController -> Project: listOfTask.add(task);
-HelloController -> Person: add Task Title Pane to right Project Titled Pane
+GuiView -> Person: add Task Title Pane to right Project Titled Pane
 HelloController -> Person : All fields are cleared
 @enduml

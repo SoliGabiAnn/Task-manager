@@ -232,7 +232,7 @@ public class Samochod extends Thread {
                 double dy = targetY - currentY;
                 double distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance > 5.0) {
+                if (distance > 10.0) {
                     double speed = getPredkosc() * SPEED_FACTOR;
 
                     speed = Math.max(speed, 0.5);
