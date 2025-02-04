@@ -223,50 +223,6 @@ public class Samochod extends Thread {
 
     @Override
     public void run() {
-//        while (isRunning) {
-//            if (cel != null && stanWlaczenia) {
-//                double currentX = aktualnapozycja.getX();
-//                double currentY = aktualnapozycja.getY();
-//                double targetX = cel.getX();
-//                double targetY = cel.getY();
-//
-//                double dx = targetX - currentX;
-//                double dy = targetY - currentY;
-//                double distance = Math.sqrt(dx * dx + dy * dy);
-//
-//                if (distance > 10.0) {
-//                    double speed = getPredkosc() * SPEED_FACTOR;
-//
-//                    speed = Math.max(speed, 0.5);
-//
-//                    double moveX = (dx / distance) * speed;
-//                    double moveY = (dy / distance) * speed;
-//
-//                    aktualnapozycja.setX( (currentX + moveX));
-//                    aktualnapozycja.setY( (currentY + moveY));
-//
-//                    if (controller != null) {
-//                        Platform.runLater(() -> controller.refresh());
-//                    }
-//                } else {
-//                    aktualnapozycja.setX( targetX);
-//                    aktualnapozycja.setY( targetY);
-//                    cel = null;
-//
-//                    if (controller != null) {
-//                        Platform.runLater(() -> controller.refresh());
-//                    }
-//                }
-//                this.notifyListeners();
-//            }
-//
-//            try {
-//                Thread.sleep(50);
-//            } catch (InterruptedException e) {
-//                Thread.currentThread().interrupt();
-//                break;
-//            }
-//        }
         double deltat = 0.1;
 
         while (true) {
@@ -289,7 +245,7 @@ public class Samochod extends Thread {
                 }
             }
             try {
-                sleep(50);
+                sleep(40);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
