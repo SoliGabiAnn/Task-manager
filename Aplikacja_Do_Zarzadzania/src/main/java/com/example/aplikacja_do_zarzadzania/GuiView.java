@@ -125,6 +125,7 @@ public class GuiView {
         projectLabel.setLayoutX(10);
         projectLabel.setLayoutY(85);
         TitledPane aboutProject = new TitledPane();
+        contentOfProject.getChildren().add(projectLabel);
         aboutProject.setText("About Project");
         projectAccordion.getPanes().add(aboutProject);
         aboutProject.setContent(contentOfProject);
