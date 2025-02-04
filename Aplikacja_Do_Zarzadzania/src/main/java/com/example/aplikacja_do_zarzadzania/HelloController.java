@@ -6,11 +6,9 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -18,7 +16,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.converter.LocalDateStringConverter;
 import kod_aplikacji.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXML;
 
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 
 public class HelloController {
@@ -403,30 +399,33 @@ public class HelloController {
     }
 
     private void moveProjectToDone(TitledPane projectTitlePane) {
-        doingProjectContainer.getChildren().remove(projectTitlePane);
-        doneProjectContainer.getChildren().add(projectTitlePane);
-        projectTitlePane.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
+        if(indexOfProject.get(projectTitlePane).checkIfTasksAreFinished()) {
+            doingProjectContainer.getChildren().remove(projectTitlePane);
+            doneProjectContainer.getChildren().add(projectTitlePane);
+            projectTitlePane.setStyle("-fx-border-color: #7b8bac; " + "-fx-border-width: 5px;");
 
-        indexOfProject.get(projectTitlePane).setState(true);
-        setCheckBoxesSelected(projectTitlePane);
+            indexOfProject.get(projectTitlePane).setState(true);
+            setCheckBoxesSelected(projectTitlePane);
 
-        var listOfTask = indexOfProject.get(projectTitlePane).getListOfTask();
-        for (Task task : listOfTask) {
-            indexOfTask.get(task).getGraphic().setMouseTransparent(true);
+            var listOfTask = indexOfProject.get(projectTitlePane).getListOfTask();
+            for (Task task : listOfTask) {
+                indexOfTask.get(task).getGraphic().setMouseTransparent(true);
+            }
         }
     }
 
     private void moveProjectFromDoneToDoing(TitledPane projectTitledPane) {
-        doneProjectContainer.getChildren().remove(projectTitledPane);
-        doingProjectContainer.getChildren().add(projectTitledPane);
-        indexOfProject.get(projectTitledPane).setDate_end(null);
-        indexOfProject.get(projectTitledPane).setState(false);
+        if(doneProjectContainer.getChildren().contains(projectTitledPane)) {
+            doneProjectContainer.getChildren().remove(projectTitledPane);
+            doingProjectContainer.getChildren().add(projectTitledPane);
+            indexOfProject.get(projectTitledPane).setDate_end(null);
+            indexOfProject.get(projectTitledPane).setState(false);
 
-        var listOfTask = indexOfProject.get(projectTitledPane).getListOfTask();
-        for (Task task : listOfTask) {
-            indexOfTask.get(task).getGraphic().setMouseTransparent(false);
+            var listOfTask = indexOfProject.get(projectTitledPane).getListOfTask();
+            for (Task task : listOfTask) {
+                indexOfTask.get(task).getGraphic().setMouseTransparent(false);
+            }
         }
-
     }
 
     private void setCheckBoxesSelected(TitledPane projectTitlePane) {
@@ -464,10 +463,10 @@ public class HelloController {
         if (isProject) {
             checkBox.setOnAction(event -> {
                 if (checkBox.isSelected()) {
-                    indexOfProject.get(newTitledPane).endProject(LocalDateTime.now());
-                    user.ifFinished();
-                    if (view.checkIfTaskAreFinished(this,newTitledPane)) {
+                    if (view.checkIfTaskAreFinished(newTitledPane)) {
                         moveProjectToDone(newTitledPane);
+                        indexOfProject.get(newTitledPane).endProject(LocalDateTime.now());
+                        user.ifFinished();
                     }
                 }
                 if (!checkBox.isSelected()) {

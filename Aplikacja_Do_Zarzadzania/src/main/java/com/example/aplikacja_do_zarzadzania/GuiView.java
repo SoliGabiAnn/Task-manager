@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class GuiView {
 
-    Boolean checkIfTaskAreFinished(HelloController controller, TitledPane projectPane) {
+    Boolean checkIfTaskAreFinished( TitledPane projectPane) {
         if (projectPane == null) return false;
         var projectAccordion = (Accordion) projectPane.getContent();
         boolean allTasksCompleted = true;

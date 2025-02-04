@@ -1,4 +1,4 @@
-@startuml
+a@startuml
 
 ' General settings
 top to bottom direction
@@ -16,6 +16,9 @@ package "Controller" {
     class reportController
     class HelloApplication
     class HelloController
+}
+package "GUI"{
+    class GuiView
 }
 
 ' Force a gap between the packages (stack vertically)
@@ -54,11 +57,13 @@ HelloController  <-  FileHandler
 HelloController  <-  Project
 HelloController  <-  Task
 HelloController  <-  User
+HelloController <- GuiView
 
 
 reportController  <-  GenerateReport
 reportController  ->  HelloController
 User - ProjectException
 Project -TaskException
+GuiView <- HelloController
 
 @enduml
