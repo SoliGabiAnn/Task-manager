@@ -90,6 +90,31 @@ public class Project extends Basic_Info {
         this.setDate_end(null);
     }
 
+    public LocalDateTime latestDate(){
+        if(!listOfTask.isEmpty()){
+            LocalDateTime last = listOfTask.getFirst().getDeadline();
+            for (Task task : listOfTask) {
+                if (task.getDeadline().isAfter(last)) {
+                    last = task.getDeadline();
+                }
+            }
+            return last;
+        }
+        return null;
+    }
+    public LocalDateTime earliestDate(){
+        if(!listOfTask.isEmpty()){
+            LocalDateTime first = LocalDateTime.now();
+            for (Task task : listOfTask) {
+                if (task.getDate_start().isBefore(first)) {
+                    first = task.getDate_start();
+                }
+            }
+            return first;
+        }
+        return null;
+    }
+
     public ArrayList<Task> getListOfTask() {
         return listOfTask;
     }
