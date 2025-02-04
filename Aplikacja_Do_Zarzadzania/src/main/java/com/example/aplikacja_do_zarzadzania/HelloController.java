@@ -534,6 +534,7 @@ public class HelloController {
     }
 
     public void refresh() {
+        GenerateReport generate = new GenerateReport(user);
         if (selectedTitlePane != null) {
             ArrayList<DatePicker> datePickers = view.getDatePicker(selectedTitlePane);
             Accordion projectAccordion = (Accordion) selectedTitlePane.getContent();
@@ -547,8 +548,20 @@ public class HelloController {
                 if (indexOfProject.containsKey(selectedTitlePane)) {
                     if (!startDate.isAfter(deadline)) {
                         if (!deadline.isBefore(startDate)) {
-                            indexOfProject.get(selectedTitlePane).setDateStart(startDate);
-                            indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                            LocalDateTime last=indexOfProject.get(selectedTitlePane).latestDate();
+                            LocalDateTime first=indexOfProject.get(selectedTitlePane).earliestDate();
+                            if(last!=null && first!=null) {
+                                if (last.isBefore(deadline) && first.isAfter(startDate)) {
+                                    indexOfProject.get(selectedTitlePane).setDateStart(startDate);
+                                    indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                                }
+                                else{
+                                   view.createWarningSign("Project timeframe must include tasks timeframe");
+                                }
+                            }else{
+                                indexOfProject.get(selectedTitlePane).setDateStart(startDate);
+                                indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                            }
                         } else {
                             view.createWarningSign("Due date cannot be before start date");
                         }

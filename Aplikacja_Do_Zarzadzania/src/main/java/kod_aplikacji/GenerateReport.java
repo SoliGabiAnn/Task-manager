@@ -40,7 +40,7 @@ public class GenerateReport {
         return (float) 0;
     }
 
-    private LocalDateTime earliestDateOfList(ArrayList<Project> listOfProject) {
+    public LocalDateTime earliestDateOfList(ArrayList<Project> listOfProject) {
         LocalDateTime first = LocalDateTime.now();
         for (Project project : listOfProject) {
             for (int j = 0; j < project.getListOfTask().size(); j++) {
@@ -53,7 +53,7 @@ public class GenerateReport {
 
     }
 
-    private LocalDateTime latestDateOfList(ArrayList<Project> listOfProject) {
+    public LocalDateTime latestDateOfList(ArrayList<Project> listOfProject) {
         if (!listOfProject.isEmpty()) {
             LocalDateTime last = listOfProject.getFirst().getDate_added();
             for (Project project : listOfProject) {
