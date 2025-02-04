@@ -545,30 +545,33 @@ public class HelloController {
 
                 LocalDateTime startDate = dateTimeFormat.toLocalDateTime(datePickers.get(0), projectTasks.get(0));
                 LocalDateTime deadline = dateTimeFormat.toLocalDateTime(datePickers.get(1), projectTasks.get(1));
-                if (indexOfProject.containsKey(selectedTitlePane)) {
-                    if (!startDate.isAfter(deadline)) {
-                        if (!deadline.isBefore(startDate)) {
-                            LocalDateTime last=indexOfProject.get(selectedTitlePane).latestDate();
-                            LocalDateTime first=indexOfProject.get(selectedTitlePane).earliestDate();
-                            if(last!=null && first!=null) {
-                                if (last.isBefore(deadline) && first.isAfter(startDate)) {
+                if(startDate!=null && deadline!=null) {
+                    if (indexOfProject.containsKey(selectedTitlePane)) {
+                        if (!startDate.isAfter(deadline)) {
+                            if (!deadline.isBefore(startDate)) {
+                                LocalDateTime last = indexOfProject.get(selectedTitlePane).latestDate();
+                                LocalDateTime first = indexOfProject.get(selectedTitlePane).earliestDate();
+                                if (last != null && first != null) {
+                                    if (last.isBefore(deadline) && first.isAfter(startDate)) {
+                                        indexOfProject.get(selectedTitlePane).setDateStart(startDate);
+                                        indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                                    } else {
+                                        view.createWarningSign("Project timeframe must include tasks timeframe");
+                                    }
+                                } else {
                                     indexOfProject.get(selectedTitlePane).setDateStart(startDate);
                                     indexOfProject.get(selectedTitlePane).setDeadline(deadline);
                                 }
-                                else{
-                                   view.createWarningSign("Project timeframe must include tasks timeframe");
-                                }
-                            }else{
-                                indexOfProject.get(selectedTitlePane).setDateStart(startDate);
-                                indexOfProject.get(selectedTitlePane).setDeadline(deadline);
+                            } else {
+                                view.createWarningSign("Due date cannot be before start date");
                             }
                         } else {
-                            view.createWarningSign("Due date cannot be before start date");
+                            view.createWarningSign("Start date cannot be after due date");
                         }
-                    } else {
-                        view.createWarningSign("Start date cannot be after due date");
-                    }
 
+                    }
+                }else{
+                    view.createWarningSign("Wrong time format (hh : mm)");
                 }
             }
 
@@ -585,25 +588,28 @@ public class HelloController {
                                 LocalDateTime taskDeadline = dateTimeFormat.toLocalDateTime(taskDatePickers.get(1), taskTimes.get(1));
 
                                 Task task = entry.getKey();
-
-                                if (!indexOfProject.get(selectedTitlePane).getDate_start().isAfter(taskStartDate)) {
-                                    if (!taskStartDate.isAfter(taskDeadline)) {
-                                        if (!indexOfProject.get(selectedTitlePane).getDeadline().isBefore(taskDeadline)) {
-                                            if (!taskDeadline.isBefore(taskStartDate)) {
-                                                task.setDateStart(taskStartDate);
-                                                task.setDeadline(taskDeadline);
+                                if(taskDeadline!=null && taskStartDate!=null) {
+                                    if (!indexOfProject.get(selectedTitlePane).getDate_start().isAfter(taskStartDate)) {
+                                        if (!taskStartDate.isAfter(taskDeadline)) {
+                                            if (!indexOfProject.get(selectedTitlePane).getDeadline().isBefore(taskDeadline)) {
+                                                if (!taskDeadline.isBefore(taskStartDate)) {
+                                                    task.setDateStart(taskStartDate);
+                                                    task.setDeadline(taskDeadline);
+                                                } else {
+                                                    view.createWarningSign("Due date cannot be before start date");
+                                                }
                                             } else {
-                                                view.createWarningSign("Due date cannot be before start date");
+                                                view.createWarningSign("Task' due date cannot be after project start date");
                                             }
-                                        } else {
-                                            view.createWarningSign("Task' due date cannot be after project start date");
-                                        }
 
+                                        } else {
+                                            view.createWarningSign("Start date cannot be after due date");
+                                        }
                                     } else {
-                                        view.createWarningSign("Start date cannot be after due date");
+                                        view.createWarningSign("Task's start date cannot be before project's start date");
                                     }
-                                } else {
-                                    view.createWarningSign("Task's start date cannot be before project's start date");
+                                }else{
+                                    view.createWarningSign("Wrong time format (hh : mm)");
                                 }
 
 
