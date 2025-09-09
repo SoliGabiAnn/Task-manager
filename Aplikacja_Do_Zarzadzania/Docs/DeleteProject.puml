@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+Person -->Person : Clicks on title pane
+Person -> HelloController: onDeleteButton()
+HelloController --> HelloController: checks if task title pane was choosen
+Person --> HelloController: gets selected Project Pane
+HelloController -> HelloController:indexOfProject.get(selectedTitlePane)
+HelloController --> HelloController: checks to which list and container it belongs
+HelloController -> User: user.deleteToDoProject(projectToAdd), user.delete...
+HelloController -> Person: remove Project Title Pane to right container
+HelloController -> HelloController : indexOfProject.remove(...)
+HelloController -> HelloController : selectedTitlePane=null
+@enduml

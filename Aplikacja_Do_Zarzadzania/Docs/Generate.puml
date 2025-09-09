@@ -1,0 +1,11 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+Person ->HelloController : onGenerateReportButton()
+HelloController -> reportController: load()
+reportController->reportController : fillReport()
+reportController <--GenerateReport : generate()
+GenerateReport <-- User: gets data
+reportController ->Person: show()
+@enduml

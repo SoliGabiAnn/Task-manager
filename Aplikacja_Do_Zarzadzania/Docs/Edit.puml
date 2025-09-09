@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+Person -->Person : Clicks on titled pane
+Person -> HelloController: onEditToggleButton()
+HelloController --> HelloController: checks if project or task titled pane was choosen
+HelloController -> Person: set enable properties on project or task content
+Person -> HelloController: onOkToggleButton()
+HelloController --> user: transfer data
+HelloController -> Person : set disable properties on project or task content
+@enduml
