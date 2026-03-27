@@ -4,48 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="501b6f27-b78c-4015-9b0f-c1d32baaf78f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TaskManager/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/AddingProject.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/AddingProject.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/AddingTask.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/AddingTask.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/AllClasses.plantuml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/AllClasses.plantuml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/Aplikacaj.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/Aplikacaj.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/DeleteProject.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/DeleteProject.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/DeleteTask.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/DeleteTask.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/Edit.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/Edit.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/Docs/Generate.puml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/Docs/Generate.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/com/example/aplikacja_do_zarzadzania/DateTimeFormat.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/util/DateTimeFormat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/com/example/aplikacja_do_zarzadzania/GuiView.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/controller/GuiView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/com/example/aplikacja_do_zarzadzania/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/com/example/aplikacja_do_zarzadzania/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/controller/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/com/example/aplikacja_do_zarzadzania/reportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/controller/ReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/Basic_Info.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/model/Basic_Info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/FileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/util/FileHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/GenerateReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/util/GenerateReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/model/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/ProjectException.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/exception/ProjectException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/model/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/TaskException.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/exception/TaskException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/kod_aplikacji/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/java/taskmanager/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/java/module-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/resources/com/example/aplikacja_do_zarzadzania/Report.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/resources/view/Report.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/main/resources/com/example/aplikacja_do_zarzadzania/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/main/resources/view/hello-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/test/java/kod_aplikacji/GenerateReportTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/test/java/util/GenerateReportTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/test/java/kod_aplikacji/ProjectTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/test/java/model/ProjectTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/test/java/kod_aplikacji/TaskTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/test/java/model/TaskTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Aplikacja_Do_Zarzadzania/src/test/java/kod_aplikacji/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/src/test/java/model/UserTest.java" afterDir="false" />
+    <list default="true" id="501b6f27-b78c-4015-9b0f-c1d32baaf78f" name="Changes" comment="refactor: apply MVC architecture and translate project to English">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,25 +15,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "AgataSlusarczyk"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AgataSlusarczyk&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SoliGabiAnn/Task-manager.git",
-    "accountId": "5c1ef1eb-77c9-45cd-ac01-1f1a1f4fdd9b"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SoliGabiAnn/Task-manager.git&quot;,
+    &quot;accountId&quot;: &quot;5c1ef1eb-77c9-45cd-ac01-1f1a1f4fdd9b&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="3BUiB4d40MydUGYqnm6CrT0UzKK" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -88,6 +48,7 @@
     "JUnit.UserTest.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -100,6 +61,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
@@ -183,17 +145,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="TaskManager" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="TaskManager" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
@@ -219,11 +170,36 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774549911919</updated>
-      <workItem from="1774549913068" duration="2205000" />
+      <workItem from="1774549913068" duration="3449000" />
+      <workItem from="1774601780494" duration="1358000" />
     </task>
+    <task id="LOCAL-00001" summary="refactor: apply MVC architecture and translate project to English">
+      <option name="closed" value="true" />
+      <created>1774552209487</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1774552209487</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor: apply MVC architecture and translate project to English" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: apply MVC architecture and translate project to English" />
   </component>
 </project>
